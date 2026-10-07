@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Per-unit plant data: published parameters and torque-speed limits.
 
 Data comes from the per-unit sim packages on the site downloads (copied into

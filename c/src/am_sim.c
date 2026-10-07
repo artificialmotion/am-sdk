@@ -683,7 +683,7 @@ static void make_telemetry(const am_sim_joint *sj, am_telemetry *t)
     uint8_t sio = 0;
     memset(t, 0, sizeof *t);
     if (!sj->sto_active) {
-        sio = AM_SIO_STO1 | AM_SIO_STO2 | AM_SIO_VM_GD_PRESENT;
+        sio = AM_SIO_STO1 | AM_SIO_STO2 | AM_SIO_GATE_SUPPLY_PRESENT;
         if (sj->state == AM_DS_OPERATION_ENABLED) sio |= AM_SIO_ENABLE_READBACK;
     }
     t->t_ns = sj->t_ns;
@@ -807,7 +807,7 @@ void am__sim_identity(const am_sim_joint *sj, am_identity *out)
     }
     out->ratio_num = ud->ratio_num;
     out->ratio_den = ud->ratio_den;
-    out->fw_cm7 = out->fw_cm4 = out->fw_boot = AM_VERSION_PACK(0, 0, 0);
+    out->fw_main = out->fw_motor = out->fw_boot = AM_VERSION_PACK(0, 0, 0);
     if (snprintf(out->device_name, sizeof out->device_name, "AM %s (sim)", ud->unit) < 0) out->device_name[0] = '\0';
     am__copy_str(out->user_label, sizeof out->user_label, sj->label);
 }
@@ -844,7 +844,7 @@ void am__sim_fault_info(const am_sim_joint *sj, am_fault_info *out)
     out->first_fault = sj->first_fault;
     out->warning_word = sj->warn;
     out->boot_block = 0;
-    out->safety_io = sj->sto_active ? 0 : (uint8_t)(AM_SIO_STO1 | AM_SIO_STO2 | AM_SIO_VM_GD_PRESENT);
+    out->safety_io = sj->sto_active ? 0 : (uint8_t)(AM_SIO_STO1 | AM_SIO_STO2 | AM_SIO_GATE_SUPPLY_PRESENT);
     out->latched = sj->n_faults > 0;
 }
 
@@ -1040,8 +1040,8 @@ am_status am__sim_sdo_read(am_sim_joint *sj, uint16_t index, uint8_t sub, void *
         am__put_u32(raw, id.cal_record_version);
         am__put_u32(raw + 4, id.cal_record_crc32);
         return put_raw(raw, 8, buf, cap, len);
-    case K(0x2100, 1): return put(T_U32, id.fw_cm7, buf, cap, len);
-    case K(0x2100, 2): return put(T_U32, id.fw_cm4, buf, cap, len);
+    case K(0x2100, 1): return put(T_U32, id.fw_main, buf, cap, len);
+    case K(0x2100, 2): return put(T_U32, id.fw_motor, buf, cap, len);
     case K(0x2100, 3): return put(T_U32, id.fw_boot, buf, cap, len);
     case K(0x2300, 1): return put(T_F32, c->current_A, buf, cap, len);
     case K(0x2300, 4): return put(T_F32, lim->speed_rad_s, buf, cap, len);
@@ -1055,7 +1055,7 @@ am_status am__sim_sdo_read(am_sim_joint *sj, uint16_t index, uint8_t sub, void *
     case K(0x2620, 1): {
         uint8_t sio = 0;
         if (!sj->sto_active) {
-            sio = AM_SIO_STO1 | AM_SIO_STO2 | AM_SIO_VM_GD_PRESENT;
+            sio = AM_SIO_STO1 | AM_SIO_STO2 | AM_SIO_GATE_SUPPLY_PRESENT;
             if (sj->state == AM_DS_OPERATION_ENABLED) sio |= AM_SIO_ENABLE_READBACK;
         }
         return put(T_U8, sio, buf, cap, len);

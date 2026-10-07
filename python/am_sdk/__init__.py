@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Artificial Motion joint SDK for Python.
 
 Same call names as the C header (c/include/am_api.h). Backends: the built-in simulator

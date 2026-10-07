@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """CAN-FD transport on python-can. Install with: pip install "am-sdk[can]".
 
     cfg = am.AmSessionConfig(bus=am.AmBus.CANFD, interface="can:socketcan:can0", canfd_compact=True)

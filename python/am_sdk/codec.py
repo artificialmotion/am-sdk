@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """L1 codec: pure functions, no I/O. Same names and byte layouts as the C codec (am_codec_*).
 
 Host side (what a controller needs):
@@ -114,6 +115,8 @@ class AmCodec:
 
 def am_codec_init(rated_torque_mNm: int, rated_current_mA: int, compact_k_mNm_per_rad_lsb: int = 20,
                   compact_d_mNm_s_per_rad_lsb: int = 1, compact_slot: int = 0) -> AmCodec:
+    """Per-joint scaling from 0x6076 (mNm), 0x6075 (mA), 0x2A20:1/2 (compact LSBs) and 0x2902:3 (slot).
+    Raises AM_ERR_PARAM on a zero scale or a slot above 3. [RT]"""
     if rated_torque_mNm <= 0 or rated_current_mA <= 0 or compact_k_mNm_per_rad_lsb <= 0 \
             or compact_d_mNm_s_per_rad_lsb <= 0 or not 0 <= compact_slot <= 3:
         raise AmError(AmStatus.AM_ERR_PARAM, "codec scaling out of range")

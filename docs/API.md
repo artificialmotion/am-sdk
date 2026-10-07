@@ -1,8 +1,8 @@
-# Artificial Motion joint API, version 0.1.0
+# Artificial Motion joint API, version 0.2.0 (pre-release)
 
 This document specifies the host API for Artificial Motion joints: the wire level (CiA 402 object dictionary over EtherCAT and CAN-FD), the C library (`c/include/am_api.h`) and the Python package (`python/am_sdk`). The object dictionary is in [`object_dictionary.csv`](object_dictionary.csv).
 
-The joints are pre-hardware. Everything below runs today against the simulator in this repository. Values that depend on a unit (ratings, inertia, envelopes) are read from the unit; the simulator reports design values with data basis 1.
+The joints are pre-hardware. Everything below runs today against the simulator in this repository; nothing here has been measured on a joint yet. Values that depend on a unit (ratings, inertia, envelopes) are read from the unit; the simulator reports typical design values (simulated, data basis 1).
 
 ---
 
@@ -21,7 +21,7 @@ The joints are pre-hardware. Everything below runs today against the simulator i
  Joint firmware (Artificial Motion, closed)
 ```
 
-- **L0 is the contract.** Any CiA 402 master (TwinCAT, CODESYS, acontis, SOEM or IgH based stacks) can drive a joint with the ESI file, without this SDK. The SDK is a convenience, not a gate.
+- **L0 is the contract.** Any CiA 402 master (TwinCAT, CODESYS, acontis, SOEM or IgH based stacks) can drive a joint with the ESI file, without this SDK. The SDK is a convenience, not a gate. The ESI file is published with the evaluation units.
 - **L1 has no I/O.** If you already own an EtherCAT master, call `am_codec_pack_rx1601()` and `am_codec_unpack_tx1a00()` / `am_codec_unpack_tx1a01()` inside your own cyclic task.
 - **L2 owns a bus** through `am_transport_ops` (your master or CAN driver) or runs the built-in simulator.
 - **Python** has the same calls and the same simulator, plus EtherCAT (pysoem) and CAN-FD (python-can) transports. Use it for development, commissioning and identification; run 1 kHz control on hardware from C.
@@ -60,7 +60,7 @@ No customer code runs on the joint in v1. Your program is the stream of commands
 | Impedance (AM) | −1 | q_ref 0x607A, qd_ref 0x60FF, τ_ff 0x2A10:1, K 0x2A00:1, D 0x2A00:2 | as CSP | τ = K(q*−q) + D(q̇*−q̇) + τ_ff, saturated by the limit chain |
 | Cyclic current (AM) | −2 | iq 0x2A11:1 (PDO), id 0x2A11:2 (SDO only) | 0x2811:1/2 | off until 0x2A11:3 = 1; every drive clamp still applies |
 
-Mode changes while enabled: CSP, CSV, CST and impedance switch bumplessly. Entry into −2 requires a state below Operation enabled; `am_set_mode()` returns `AM_ERR_STATE` otherwise.
+Mode changes while enabled: CSP, CSV, CST and impedance switch bumplessly. Entry into −2 requires a state below Operation enabled (`am_set_mode()` returns `AM_ERR_STATE` otherwise), the current-mode capability bit and 0x2A11:3 = 1 (`AM_ERR_NOT_SUPPORTED` otherwise).
 
 Limit chain: the effective torque limit is the minimum of the joint ceiling, the thermal and magnet ceilings, 0x6072, 0x60E0/0x60E1 and the input-current limiter. Statusword bit 11 reports that a limit is active.
 
@@ -316,7 +316,7 @@ Every drive on a bus receives the group command frame at the same instant and ti
 | Faults | `am_get_faults`, `am_clear_faults`, `am_get_fault_history`, `am_fault_name`, `am_last_abort_code`, event callback |
 | Configuration | `am_set_limits` / `am_get_limits` (lower-only), `am_set_loop_gains` / `am_get_loop_gains`, `am_store_parameters`, `am_restore_defaults`, `am_set_user_label`, `am_sdo_read` / `am_sdo_write` |
 | Bus | `am_get_control_bus`, `am_set_control_bus` |
-| Diagnostics | `am_trace_arm`, `am_trace_read` (not available in 0.1.0) |
+| Diagnostics | `am_trace_arm`, `am_trace_read` (return `AM_ERR_NOT_SUPPORTED` in 0.x) |
 | L1 codec | `am_codec_init`, `am_codec_pack_rx1600/1601`, `am_codec_unpack_tx1a00/1a01`, `am_codec_pack_cfd_slot`, `am_codec_unpack_cfd_fb`, `am_codec_compact_mode`, `am_codec_decode_state`, `am_codec_next_controlword` |
 | Estimation (`am_est.h`) [RT] | `am_est_calibration_default`, `am_est_calibration_check`, `am_est_config_default`, `am_est_init`, `am_est_reset`, `am_est_update`, `am_est_input_from_telemetry`, `am_est_current_model`, `am_est_kt_at`, `am_est_friction_at`, `am_est_efficiency_at`, `am_est_stick_band`, `am_est_dither_amplitude_max`, `am_est_dither_torque`, `am_collision_config_default`, `am_collision_init`, `am_collision_reset`, `am_collision_update`, `am_collision_calibrate_threshold`. Estimates only, simulated; see [ESTIMATION.md](ESTIMATION.md) |
 | Simulator (`am_sim.h`) | `am_sim_of`, `am_sim_configure`, `am_sim_set_external_torque`, `am_sim_set_sto`, `am_sim_inject_fault`, `am_sim_clear_fault_cause`, `am_sim_set_ambient`, `am_sim_set_bus_voltage`, `am_sim_set_load_inertia`, `am_sim_power_cycle`, `am_sim_get_plant`, `am_sim_set_plant`, `am_sim_set_external_plant`, `am_sim_transport_open/joint/close` |
@@ -329,7 +329,7 @@ SDK units are SI floats (positions as double). Conversion to OD integers happens
 
 - [RT] functions allocate nothing, make no blocking system call and take bounded time.
 - One thread per session calls `am_cycle()` once per cycle.
-- The 0.1.0 reference implementation is single-threaded: `am_enable()` and `am_clear_faults()` run session cycles themselves while they wait, and the event callback runs at the end of `am_cycle()` on the cycle thread. Call the [NRT] functions from the cycle thread, or serialise them with it.
+- The reference implementation is single-threaded: `am_enable()` and `am_clear_faults()` run session cycles themselves while they wait, and the event callback runs at the end of `am_cycle()` on the cycle thread. Call the [NRT] functions from the cycle thread, or serialise them with it.
 - On EtherCAT, mailbox traffic shares the frame with process data as your master schedules it. On CAN-FD, SDO traffic uses the leftover part of each cycle.
 - Recommended host: PREEMPT_RT Linux, an isolated core, locked memory, a dedicated NIC or CAN adapter.
 - Python runs the cycle on the host clock. A 1 kHz control loop on hardware belongs in C.
@@ -347,9 +347,58 @@ SDK units are SI floats (positions as double). Conversion to OD integers happens
 
 Fault history record (0x2601:1..32, newest first, 24 B): code UINT16, drive state UINT8, pad, time UINT64 ns, bus voltage INT32 mV, iq INT32 mA, winding temperature INT16 0.1 °C, power-stage temperature INT16 0.1 °C. 0x2601:0 is the count.
 
+**Family fault codes.** Code = 0x1000 + bit n of the fault word 0x2600:1. 0x603F carries the code of the active fault. Every code below latches: the drive removes torque (the joint coasts) and stays in Fault until `am_clear_faults()` and a new enable walk. `am_fault_name()` returns the name.
+
+| Code | Name | Meaning |
+|---|---|---|
+| 0x1000 | DRV_NFAULT | the gate driver reported a fault |
+| 0x1001 | OVERCURRENT | phase current above the trip level |
+| 0x1002 | CUR_SAT | current measurement saturated |
+| 0x1003 | CUR_IMPLAUS | current measurement implausible |
+| 0x1004 | CUR_KCL | phase currents do not sum to zero |
+| 0x1005 | CUR_INVALID | no valid current measurement |
+| 0x1006 | POS_INVALID | motor position invalid |
+| 0x1007 | POS_STALE | motor position not updated in time |
+| 0x1008 | VBUS | bus voltage outside the operating window |
+| 0x1009 | ISR_OVERRUN | motor-control cycle overrun |
+| 0x100A | DRV_READBACK | gate-driver configuration readback mismatch |
+| 0x100B | HOST_STALE | no fresh command from the control bus within the drive's command timeout |
+| 0x100C | CLOCK_ORDER | a request arrived out of time order |
+| 0x100D | SEQUENCE | internal sequence check failed |
+| 0x100E | RAIL | an internal supply rail is out of range |
+| 0x100F | NOCAL | calibration missing or invalid |
+| 0x1010 | PT1000 | winding temperature sensor fault (units with the sensor) |
+| 0x1011 | INPUT_CURRENT | input (DC) current above the limiter's trip level (units with the limiter) |
+
+More codes (over-temperature, encoder cross-check, reference lost, comms lost, configuration) are added before OD 1.0. Codes are never renumbered or reused (4.7).
+
 ### 4.5 Status codes
 
-`am_status`: 0 = OK; −1…−17 specific errors; −99 internal. `am_status_str()` gives the text. SDO aborts keep their CiA 301 code (`am_last_abort_code()`). Python raises `AmError` with the same code in `.status`.
+`am_status`: 0 = OK, negative = error. `am_status_str()` gives the text. SDO aborts keep their CiA 301 code (`am_last_abort_code()`). Python raises `AmError` with the same code in `.status`.
+
+| Code | Name | Returned when |
+|---|---|---|
+| 0 | `AM_OK` | success |
+| −1 | `AM_ERR_PARAM` | NULL pointer, NaN, a value outside its type or the SDK sanity range, unknown mode or interface |
+| −2 | `AM_ERR_STATE` | the call is not allowed in the current drive or session state (session not started, mode not set, wrong mode for a setter, limits or gains while enabled) |
+| −3 | `AM_ERR_TIMEOUT` | no answer, or the enable or clear walk did not finish, within the timeout |
+| −4 | `AM_ERR_BUS` | link down, frame lost, working-counter error, no feedback |
+| −5 | `AM_ERR_NO_DEVICE` | address not found, or not an AM unit |
+| −6 | `AM_ERR_SDO_ABORT` | the drive aborted an object access; `am_last_abort_code()` has the CiA 301 code |
+| −7 | `AM_ERR_NOT_SUPPORTED` | feature absent on this unit, bus, firmware or SDK version |
+| −8 | `AM_ERR_LIMIT` | value above the AM ceiling or envelope; nothing written, nothing clamped |
+| −9 | `AM_ERR_AUTHORITY` | command on a bus without control authority (3.6) |
+| −10 | `AM_ERR_FAULT` | the joint is in Fault, or a fault clear did not succeed; read `am_get_faults()` |
+| −11 | `AM_ERR_VERSION` | OD major not supported by this SDK |
+| −12 | `AM_ERR_IMAGE` | reserved for the firmware update tools |
+| −13 | `AM_ERR_BUSY` | another non-real-time operation is running on the joint (not returned by the 0.x reference implementation) |
+| −14 | `AM_ERR_NO_MEMORY` | allocation failed |
+| −15 | `AM_ERR_STALE` | telemetry older than `stale_limit_cycles` |
+| −16 | `AM_ERR_STO` | STO active; torque cannot be enabled |
+| −17 | `AM_ERR_REFERENCE` | absolute output reference not valid (statusword bit 14) |
+| −99 | `AM_ERR_INTERNAL` | SDK bug; please report it |
+
+Status codes are part of the API: a code is never renumbered, and new codes are added, not reused.
 
 ### 4.6 Error semantics
 
@@ -361,11 +410,18 @@ Fault history record (0x2601:1..32, newest first, 24 B): code UINT16, drive stat
 | Item | Rule |
 |---|---|
 | SDK API | SemVer. MAJOR = a function removed or its signature or meaning changed. MINOR = functions, enum values or macros added. PATCH = fixes. Released structs are never changed: a new field means a new struct and a new function (`..._v2`). 0.y.z carries no compatibility promise. |
-| SDK ABI | Stable within a MAJOR on each published platform (Linux x86-64 and aarch64, Windows x64). |
+| SDK ABI | From 1.0: stable within a MAJOR on each published platform (Linux x86-64 and aarch64, Windows x64). |
 | Object dictionary | Additive = minor; remove, retype or renumber = major; indices and fault codes are never reused. SDK MAJOR N supports OD majors N and N−1; `am_open_joint()` refuses others with `AM_ERR_VERSION`. |
 | PDO maps | 0x1600, 0x1601, 0x1A00 and 0x1A01 are frozen per OD major. New maps get new indices. |
 | Deprecation | A deprecated function or object stays for at least one MAJOR and 12 months, whichever is longer. |
 | 1.0.0 | API and OD 1.0.0 are frozen with the first evaluation units. Until then, 0.x with change notes in CHANGELOG.md. |
+| Python package | Same MAJOR.MINOR.PATCH as the C API. Pre-releases use PEP 440 (`0.2.0.dev0` is C API `0.2.0`, unreleased). |
+
+**What the compatibility promise covers from 1.0.** The C API in `am_api.h` and `am_est.h` (functions, structs, enum values, macros, status codes); the Python names exported by `am_sdk` and `am_sdk.estimation`; the object dictionary, the PDO maps and the CAN-FD compact profile; the calibration record `am_est_cal_v1` and the actuator spec schema `am-actuator-spec/1`.
+
+**Not covered** (may change in a MINOR release, with a CHANGELOG note): the simulator controls in `am_sim.h` and the simulator internals (`SimOptions`, `TruthPlant`), the ROS 2 packages, the Isaac Lab class, the optional UKF and learned residuals, `tools/`, and every unit value. Unit values are data, not API: today they are simulated typical design values, and they change to measured values without a version bump. Read them from the unit or with `am_get_transparency()`.
+
+**Deprecation in practice.** A deprecated C function keeps working and is marked in the header and in CHANGELOG.md; a deprecated Python name emits `DeprecationWarning`.
 
 ### 4.8 Python package
 

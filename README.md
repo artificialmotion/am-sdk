@@ -94,7 +94,7 @@ All of this is simulated today. Accuracy targets are in [docs/ESTIMATION.md](doc
 `am_sdk.actuator_model` is an open, thermal-aware actuator model that works with any actuator: an AM unit, a catalogue unit or your own. It needs only the standard library.
 
 - **Spec.** A JSON file that any datasheet fits: ratio, torque-speed curves per bus voltage, the rating and its conditions (or `unstated`), a 1-node or 2-node thermal network, friction, inertia, gear efficiency, and optional Kt, resistance and current limit. Every value that does not come from the source is listed as an assumption.
-- **Runtime.** A torque limit that depends on speed, temperature and the peak budget. I²R and speed-dependent losses, winding and housing temperatures, derate, trip, duty-cycle statistics and events. About 13 µs per step in CPython.
+- **Runtime.** A torque limit that depends on speed, temperature and the peak budget. I²R and speed-dependent losses, winding and housing temperatures, derate, trip, duty-cycle statistics and events. About 13 µs per step in CPython on a desktop CPU.
 - **MuJoCo.** `MujocoActuatorBank` works on any MJCF from a joint-to-spec mapping. MJCF snippets cover armature, friction and motors.
 - **Isaac Lab.** An `IdealPDActuator` subclass, written against the documented API. It is untested on Isaac Lab; its torch core is tested.
 - **Shipped specs.** The six AM units, plus five catalogue units at their published face values, with source URLs and `conditions unstated` flags.
@@ -151,6 +151,26 @@ Firmware update and service tools come with the evaluation units.
 
 ## Status
 
-Version 0.2.0 in development (0.1.0 released). The API is stable in shape and can still change before 1.0, which freezes with the first evaluation units. Changes go in [CHANGELOG.md](CHANGELOG.md).
+Version 0.2.0 in development. The API is stable in shape and can still change before 1.0, which freezes with the first evaluation units. Changes go in [CHANGELOG.md](CHANGELOG.md). What 1.0 freezes, and what stays free to change, is in [docs/API.md 4.7](docs/API.md#47-versioning).
+
+The joints are not built yet. Every unit value in this repository (ratings, curves, inertia, friction, thermal data) is a simulated typical design value, not a measurement, and no accuracy or performance figure here is a specification. Values change to measured ones with the evaluation units.
+
+## Third-party software
+
+am-sdk bundles no third-party code. The core C library and Python package need nothing beyond the C and Python standard libraries. Optional extras install other projects under their own licences:
+
+| Extra or use | Project | Licence |
+|---|---|---|
+| `[can]` | python-can | LGPL-3.0 |
+| `[ecat]` | pysoem | MIT; it bundles SOEM, which has its own licence (GPL-based, with a commercial option). Check it before you ship a product on it |
+| `[mujoco]` | MuJoCo | Apache-2.0 |
+| `[batch]`, `[pinn]` | NumPy | BSD-3-Clause |
+| `BatchActuatorModel` with torch | PyTorch | BSD-3-Clause |
+| `[dev]` | pytest | MIT |
+| `ros2/` | ROS 2, ros2_control | Apache-2.0 |
+
+`ros2/am_ros2_control/test/mock_ros/` holds small test-only stand-ins for ROS 2 interfaces, written for this repository.
+
+Product names in `python/am_sdk/actuator_model/specs/catalogue/` are trademarks of their owners. Those files carry the vendors' published values for illustration; they are not endorsed or verified by the vendors or by Artificial Motion.
 
 [artificialmotion.com](https://artificialmotion.com)

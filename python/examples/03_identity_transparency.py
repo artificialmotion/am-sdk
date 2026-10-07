@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Read identity and transparency data from every unit, then measure backdrive breakaway.
 
 The transparency record is what the drive itself publishes (object 0x2D00); the SDK returns

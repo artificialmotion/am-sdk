@@ -45,7 +45,8 @@ Your own master: implement `am_sdk.Transport` (process-data exchange plus object
 simulator behind that same interface, byte for byte.
 
 Torque estimation and collision detection (simulated, pre-hardware): `am_sdk.estimation`, see
-`docs/ESTIMATION.md` and `examples/05_torque_estimation_collision.py`.
+[docs/ESTIMATION.md](https://github.com/artificialmotion/am-sdk/blob/main/docs/ESTIMATION.md) and
+`examples/05_torque_estimation_collision.py`.
 
 Examples are in `examples/`, tests in `tests/` (`python -m pytest`). The tests include a cross-check
 against the C library when it is built (see the top-level README).
@@ -53,7 +54,10 @@ against the C library when it is built (see the top-level README).
 Python runs the cycle with the host clock. Use it for development, commissioning and identification.
 Run 1 kHz control on hardware from C.
 
-Apache-2.0. See the top-level README for the full picture.
+Apache-2.0 (LICENSE, NOTICE). See the [top-level README](https://github.com/artificialmotion/am-sdk) for the full picture.
 
 Actuator model for any actuator (MuJoCo, Isaac Lab, your own simulator): `am_sdk.actuator_model`,
-documented in `../docs/ACTUATOR_MODEL.md`.
+documented in [docs/ACTUATOR_MODEL.md](https://github.com/artificialmotion/am-sdk/blob/main/docs/ACTUATOR_MODEL.md).
+
+The API reference is [docs/API.md](https://github.com/artificialmotion/am-sdk/blob/main/docs/API.md). The joints are
+not built yet: every unit value in this package is a simulated typical design value, not a measurement.

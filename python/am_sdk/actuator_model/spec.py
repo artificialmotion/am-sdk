@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Actuator spec: a JSON description any vendor's datasheet fits.
 
 A spec holds what a datasheet states (ratio, torque-speed curves, ratings and their conditions,

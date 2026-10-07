@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Actuator model basics: load a spec, read limits, run a duty cycle, read temperatures and events.
 
     python 05_actuator_model_basics.py [spec id or path]     (default AM-M; try RobStride-04)

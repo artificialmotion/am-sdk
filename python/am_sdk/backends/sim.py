@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Sim backend: one plant plus one drive model per joint, in virtual time.
 
 Per joint:
@@ -31,7 +32,7 @@ from ..codec import (CW_FAULT_RESET, SW_INTERNAL_LIMIT, SW_REF_VALID, SW_REMOTE,
                      SW_WARNING, STATE_TO_SW)
 from ..am_types import (AM_CAP_ETHERCAT, AM_CAP_CANFD_CONTROL, AM_CAP_MODE_CURRENT, AM_CAP_OUTPUT_ABS_ENCODER,
                      AM_CAP_STO, AM_CAP_WINDING_SENSOR, AM_SIO_ENABLE_READBACK, AM_SIO_STO1, AM_SIO_STO2,
-                     AM_SIO_VM_GD_PRESENT, AM_SYNC_DC_LOCKED, AM_SYNC_TIMESTAMP_VALID, AM_SYNC_CAN_LOCKED,
+                     AM_SIO_GATE_SUPPLY_PRESENT, AM_SYNC_DC_LOCKED, AM_SYNC_TIMESTAMP_VALID, AM_SYNC_CAN_LOCKED,
                      AM_WARN_PEAK_BUDGET_EMPTY, AM_WARN_SPEED_LIMIT, AM_WARN_THERMAL_DERATE,
                      FAULT_COMMS_LOST, FAULT_MOTOR_OVERTEMP, FAULT_VBUS, OD_MAJOR_SUPPORTED, AmBus, AmCommand,
                      AmDataBasis, AmDeviceInfo, AmDriveState, AmError, AmEventKind, AmFaultInfo, AmFaultRecord,
@@ -684,7 +685,7 @@ class SimJoint(JointBackend):
                 fw |= 1 << (c - 0x1000)
         sio = 0
         if not self.sto_active:
-            sio |= AM_SIO_STO1 | AM_SIO_STO2 | AM_SIO_VM_GD_PRESENT
+            sio |= AM_SIO_STO1 | AM_SIO_STO2 | AM_SIO_GATE_SUPPLY_PRESENT
             if self.state == AmDriveState.OPERATION_ENABLED:
                 sio |= AM_SIO_ENABLE_READBACK
         t = AmTelemetry(
@@ -723,7 +724,7 @@ class SimJoint(JointBackend):
             capabilities=(AM_CAP_OUTPUT_ABS_ENCODER | AM_CAP_WINDING_SENSOR | AM_CAP_ETHERCAT |
                           AM_CAP_CANFD_CONTROL | AM_CAP_STO | AM_CAP_MODE_CURRENT),
             cal_record_version=0, cal_record_crc32=zlib.crc32(("SIM-CAL-" + ud.unit).encode()) & 0xFFFFFFFF,
-            ratio_num=n, ratio_den=d, fw_cm7=am_version_pack(0, 0, 0), fw_cm4=am_version_pack(0, 0, 0),
+            ratio_num=n, ratio_den=d, fw_main=am_version_pack(0, 0, 0), fw_motor=am_version_pack(0, 0, 0),
             fw_boot=am_version_pack(0, 0, 0), device_name="AM %s (sim)" % ud.unit, user_label=self.label)
 
     def transparency(self) -> AmTransparency:
@@ -745,7 +746,7 @@ class SimJoint(JointBackend):
         for c in self.faults:
             if 0x1000 <= c < 0x1020:
                 fw |= 1 << (c - 0x1000)
-        sio = 0 if self.sto_active else (AM_SIO_STO1 | AM_SIO_STO2 | AM_SIO_VM_GD_PRESENT)
+        sio = 0 if self.sto_active else (AM_SIO_STO1 | AM_SIO_STO2 | AM_SIO_GATE_SUPPLY_PRESENT)
         return AmFaultInfo(error_code=self.error_code, fault_word=fw, first_fault=self.first_fault,
                            warning_word=self.warn, boot_block=0, safety_io=sio,
                            latched=bool(self.faults), codes=list(self.faults))
@@ -849,8 +850,8 @@ class SimJoint(JointBackend):
             (0x2000, 6): ("<I", lambda: ident.od_version, None),
             (0x2000, 8): ("<I", lambda: ident.capabilities, None),
             (0x2000, 9): ("raw", lambda: struct.pack("<II", ident.cal_record_version, ident.cal_record_crc32), None),
-            (0x2100, 1): ("<I", lambda: ident.fw_cm7, None),
-            (0x2100, 2): ("<I", lambda: ident.fw_cm4, None),
+            (0x2100, 1): ("<I", lambda: ident.fw_main, None),
+            (0x2100, 2): ("<I", lambda: ident.fw_motor, None),
             (0x2100, 3): ("<I", lambda: ident.fw_boot, None),
             (0x2300, 1): ("<f", lambda: c.current_A, None),
             (0x2300, 4): ("<f", lambda: lim.speed_rad_s, lim_set("speed_rad_s", float, 1e-3)),
@@ -939,7 +940,7 @@ class SimJoint(JointBackend):
     def _safety_io(self) -> int:
         if self.sto_active:
             return 0
-        sio = AM_SIO_STO1 | AM_SIO_STO2 | AM_SIO_VM_GD_PRESENT
+        sio = AM_SIO_STO1 | AM_SIO_STO2 | AM_SIO_GATE_SUPPLY_PRESENT
         if self.state == AmDriveState.OPERATION_ENABLED:
             sio |= AM_SIO_ENABLE_READBACK
         return sio

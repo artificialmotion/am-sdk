@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """am_sdk.estimation: calibration record, current model, quality flags, collision observer, UKF,
 learned residual hooks and the simulator harness. SIMULATED values only; the bounds asserted here are
 regression limits for the simulator, not product accuracy."""

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Torque estimation and collision detection without a torque sensor, in the simulator.
 
 SIMULATED, PRE-HARDWARE. Reproduces the collision case of the S_torque_sensing_R1 study on one

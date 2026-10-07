@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Estimator calibration record (schema am_est_cal_v1).
 
 One record per joint. It holds the physical model the torque estimator inverts: torque constant

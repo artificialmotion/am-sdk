@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Runtime actuator model: speed- and temperature-dependent torque limit, losses, thermal network,
 peak budget, derate, trip, duty-cycle tracking and events. Pure Python, one actuator per object.
 

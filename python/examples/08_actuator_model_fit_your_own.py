@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Fit your own actuator: build a spec from minimal datasheet data, see what was assumed, save it.
 
     python 08_actuator_model_fit_your_own.py [out.json]

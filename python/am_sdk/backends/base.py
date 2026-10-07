@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Pluggable backend interface.
 
 A Backend owns the transport (sim plant, EtherCAT, CAN-FD). The SDK layer (am_sdk.api)

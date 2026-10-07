@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Optional: drive a MuJoCo joint through the same API calls (needs mujoco)."""
 import math
 

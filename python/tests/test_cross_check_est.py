@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The C estimator (c/src/am_est.c) and the Python estimator (am_sdk.estimation) must agree.
 
 c/tests/am_est_xcheck runs a fixed synthetic sequence (moving, a hold, missing temperature, dither,

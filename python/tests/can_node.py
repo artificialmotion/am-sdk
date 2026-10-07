@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Simulated CAN-FD joints on the python-can virtual bus, for the CAN-FD transport tests.
 
 A thread answers NMT, the SDO protocol (CiA 301 expedited and segmented), group command frames

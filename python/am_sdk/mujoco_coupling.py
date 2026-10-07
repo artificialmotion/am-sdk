@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Optional MuJoCo coupling: drive a MuJoCo model's joints through the same am_* calls.
 
     import mujoco, am_sdk as am

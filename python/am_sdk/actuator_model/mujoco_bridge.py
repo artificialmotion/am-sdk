@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """MuJoCo integration: apply ActuatorModel limits and heating per actuator inside an mjData loop.
 
 Two pieces:

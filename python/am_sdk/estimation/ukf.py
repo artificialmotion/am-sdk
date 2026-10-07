@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Optional UKF torque estimator and learned-residual hooks (standard library only).
 
 SIMULATED, PRE-HARDWARE. Adopt the UKF or a learned residual on a joint only where it beats the

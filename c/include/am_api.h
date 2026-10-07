@@ -176,7 +176,9 @@ typedef struct am_identity {
     uint32_t cal_record_version;   /**< 0x2000:9 calibration record version      */
     uint32_t cal_record_crc32;     /**< 0x2000:9 calibration record CRC32        */
     uint32_t ratio_num, ratio_den; /**< 0x6091:1/:2 exact gear ratio            */
-    uint32_t fw_cm7, fw_cm4, fw_boot; /**< 0x2100:1..3 firmware versions         */
+    uint32_t fw_main;              /**< 0x2100:1 firmware version, main core     */
+    uint32_t fw_motor;             /**< 0x2100:2 firmware version, motor-control core */
+    uint32_t fw_boot;              /**< 0x2100:3 bootloader version              */
     char     device_name[32];      /**< 0x1008                                   */
     char     user_label[32];       /**< 0x2E00:1 (customer-writable)             */
 } am_identity;
@@ -274,7 +276,7 @@ typedef struct am_telemetry {
 /* Safety I/O bits (0x2620:1). */
 #define AM_SIO_STO1              (1u << 0)   /**< 1 = input energised (run)          */
 #define AM_SIO_STO2              (1u << 1)
-#define AM_SIO_VM_GD_PRESENT     (1u << 2)
+#define AM_SIO_GATE_SUPPLY_PRESENT (1u << 2) /**< gate-driver supply present     */
 #define AM_SIO_ENABLE_READBACK   (1u << 3)
 #define AM_SIO_DISCREPANCY       (1u << 4)
 
@@ -481,10 +483,10 @@ AM_API am_status am_get_identity(const am_joint *j, am_identity *out);
 AM_API am_status am_get_transparency(const am_joint *j, am_transparency *out);
 
 /** Select the mode used from the next cycle. CSP, CSV, CST and impedance can be switched
- *  while Operation enabled (bumpless). AM_MODE_CURRENT also requires AM_CAP_MODE_CURRENT,
- *  the enable object 0x2A11:3 = 1 and entry before Operation enabled (AM_ERR_STATE
- *  otherwise). The command is reset: until the next setter call the joint holds position
- *  in CSP and applies zero torque in the other modes. [NRT] */
+ *  while Operation enabled (bumpless). AM_MODE_CURRENT also requires AM_CAP_MODE_CURRENT and
+ *  the enable object 0x2A11:3 = 1 (AM_ERR_NOT_SUPPORTED otherwise), and entry before
+ *  Operation enabled (AM_ERR_STATE otherwise). The command is reset: until the next setter
+ *  call the joint holds position in CSP and applies zero torque in the other modes. [NRT] */
 AM_API am_status am_set_mode(am_joint *j, am_mode mode);
 
 /** Walk Shutdown -> Switch on -> Enable operation. Needs a mode, reference valid, STO
@@ -497,7 +499,7 @@ AM_API am_status am_enable(am_joint *j, uint32_t timeout_ms);
  *  cycle; the drive lands in Ready to switch on. [RT] */
 AM_API am_status am_disable(am_joint *j);
 
-/** Quick stop (ramp to zero speed, then Switch on disabled; not safety-rated). Follow with
+/** Quick stop (torque ramp 0x6087 per 0x605A, then Switch on disabled; not safety-rated). Follow with
  *  STO from your safety controller where the risk assessment requires it. [RT] */
 AM_API am_status am_quick_stop(am_joint *j);
 
@@ -583,10 +585,10 @@ AM_API am_status am_sdo_write(am_joint *j, uint16_t index, uint8_t sub,
 /** Read the calibration record (am_cal.json) into buf, NUL-terminated when it fits. [NRT] */
 AM_API am_status am_read_calibration(am_joint *j, char *buf, size_t cap, size_t *len);
 
-/** Arm the 20 kHz trace buffer (0x2810). Returns AM_ERR_NOT_SUPPORTED in SDK 0.1.0. [NRT] */
+/** Arm the 20 kHz trace buffer (0x2810). Returns AM_ERR_NOT_SUPPORTED in SDK 0.x. [NRT] */
 AM_API am_status am_trace_arm(am_joint *j, uint16_t trigger_signal, float trigger_level,
                               uint16_t length, uint16_t pretrigger);
-/** Read a completed trace. Returns AM_ERR_NOT_SUPPORTED in SDK 0.1.0. [NRT] */
+/** Read a completed trace. Returns AM_ERR_NOT_SUPPORTED in SDK 0.x. [NRT] */
 AM_API am_status am_trace_read(am_joint *j, float *buf, size_t cap_samples, size_t *n_samples,
                                am_progress_cb cb, void *user);
 

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """A stand-in for the pysoem module, backed by am_sdk SimNode drives, so the EtherCAT transport runs without a NIC.
 
 It mirrors the pysoem calls EtherCatTransport uses (checked against pysoem 1.1.13): Master.open, config_init,

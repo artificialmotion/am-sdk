@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Bus backends built on a small Transport interface (the Python form of am_transport_ops in the C header).
 
 A Transport moves bytes: one cyclic process-data exchange for all opened joints, and confirmed
@@ -133,7 +134,7 @@ class TransportJoint(JointBackend):
             vendor_id=rd(0x1018, 1), sku=sku, revision=rd(0x1018, 3), serial=rd(0x1018, 4),
             uid=self._rd(0x2000, 5)[:12].ljust(12, b"\0"), od_version=rd(0x2000, 6), capabilities=rd(0x2000, 8),
             cal_record_version=_u(cal[:4], "<I"), cal_record_crc32=_u(cal[4:8], "<I"),
-            ratio_num=rd(0x6091, 1), ratio_den=rd(0x6091, 2), fw_cm7=rd(0x2100, 1), fw_cm4=rd(0x2100, 2),
+            ratio_num=rd(0x6091, 1), ratio_den=rd(0x6091, 2), fw_main=rd(0x2100, 1), fw_motor=rd(0x2100, 2),
             fw_boot=rd(0x2100, 3), device_name=self._rd(0x1008, 0).decode(errors="replace").rstrip("\0"),
             user_label=self._rd(0x2E00, 1).decode(errors="replace").rstrip("\0"))
         rated_mNm = rd(0x6076, 0)

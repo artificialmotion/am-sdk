@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Run the estimators against the simulator: ground truth next to the estimate, collision events.
 
 SIMULATED, PRE-HARDWARE. The ground truth is the simulator's own plant (SimJoint.truth); on hardware
