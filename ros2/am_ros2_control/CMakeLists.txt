@@ -85,7 +85,7 @@ add_library(am_ros2_control SHARED src/am_system_interface.cpp)
 target_include_directories(am_ros2_control PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/am_ros2_control>)
-target_link_libraries(am_ros2_control PRIVATE am_ros2_control_core)
+target_link_libraries(am_ros2_control am_ros2_control_core)
 target_compile_options(am_ros2_control PRIVATE ${AM_ROS2_WARN})
 ament_target_dependencies(am_ros2_control hardware_interface pluginlib rclcpp rclcpp_lifecycle)
 
