@@ -899,7 +899,7 @@ am_status am_get_faults(am_joint *j, am_fault_info *out)
     TRY(rd_u(j, 0x2600, 1, 4, &out->fault_word));
     TRY(rd_u(j, 0x2600, 2, 4, &out->first_fault));
     TRY(rd_u(j, 0x2602, 1, 4, &out->warning_word));
-    TRY(rd_u(j, 0x2603, 1, 4, &out->boot_block));
+    TRY(rd_u(j, 0x2603, 1, 4, &out->start_inhibit));
     TRY(rd_u(j, 0x2620, 1, 1, &v)); out->safety_io = (uint8_t)v;
     out->latched = out->fault_word != 0 || out->error_code != 0 || (j->have_tlm && is_fault(j->tlm.state));
     return AM_OK;

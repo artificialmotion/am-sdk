@@ -1,4 +1,4 @@
-# Artificial Motion joint API, version 0.2.0 (pre-release)
+# Artificial Motion joint API, version 0.2.0
 
 This document specifies the host API for Artificial Motion joints: the wire level (CiA 402 object dictionary over EtherCAT and CAN-FD), the C library (`c/include/am_api.h`) and the Python package (`python/am_sdk`). The object dictionary is in [`object_dictionary.csv`](object_dictionary.csv).
 
@@ -144,9 +144,9 @@ Codec rule: the pack functions round half away from zero and return `AM_ERR_PARA
 | 0x2300–0x2302 | Limits | ceilings (factory), speed limit, lowering, comms-loss time | lower-only RW_U |
 | 0x2400–0x2401 | Thermal | sensor availability, ambient reference, temperatures | RO; ambient reference RW_U |
 | 0x2500–0x2504 | Reference | reference state, output and motor angles, cross-check thresholds | RO |
-| 0x2600–0x2603 | Faults | fault word, first fault, clear, history, warnings, boot block | RO; clear |
+| 0x2600–0x2603 | Faults | fault word, first fault, clear, history, warnings, start-inhibit reasons (0x2603:1), extended active fault set (0x2600:10) | RO; clear |
 | 0x2620–0x2621 | STO | safety I/O status (PDO), discrepancy timer, event counter; STO settings (factory) | RO |
-| 0x2700 | Supervisor | state, epochs | RO |
+| 0x2700 | Supervisor | state, request and rearm epochs (0x2700:2), condition bitmap (0x2700:3) | RO |
 | 0x2800–0x2806 | Telemetry | estimator telemetry, processing descriptor | RO; sample mode RW_U |
 | 0x2810–0x2811 | Trace / current | 20 kHz trace buffer; high-resolution iq/id | RW_U / RO |
 | 0x2900–0x2902 | Communication | CAN-FD node and bit timing, EtherCAT alias, control authority 0x2901, CAN-FD cyclic profile 0x2902 | RW_U |
@@ -434,9 +434,9 @@ Status codes are part of the API: a code is never renumbered, and new codes are 
 | PDO maps | 0x1600, 0x1601, 0x1A00 and 0x1A01 are frozen per OD major. New maps get new indices. |
 | Deprecation | A deprecated function or object stays for at least one MAJOR and 12 months, whichever is longer. |
 | 1.0.0 | API and OD 1.0.0 are frozen with the first evaluation units. Until then, 0.x with change notes in CHANGELOG.md. |
-| Python package | Same MAJOR.MINOR.PATCH as the C API. Pre-releases use PEP 440 (`0.2.0.dev0` is C API `0.2.0`, unreleased). |
+| Python package | Same MAJOR.MINOR.PATCH as the C API. Pre-releases use PEP 440 (`0.2.0` is C API `0.2.0`). |
 
-**What the compatibility promise covers from 1.0.** The C API in `am_api.h` and `am_est.h` (functions, structs, enum values, macros, status codes); the Python names exported by `am_sdk` and `am_sdk.estimation`; the object dictionary, the PDO maps and the CAN-FD compact profile; the calibration record `am_est_cal_v1` and the actuator spec schema `am-actuator-spec/1`.
+**What the compatibility promise covers from 1.0 (scope accepted by the founder, 2026-10-07).** The C API in `am_api.h` and `am_est.h` (functions, structs, enum values, macros, status codes); the Python names exported by `am_sdk` and `am_sdk.estimation`; the object dictionary, the PDO maps and the CAN-FD compact profile; the calibration record `am_est_cal_v1` and the actuator spec schema `am-actuator-spec/1`.
 
 **Not covered** (may change in a MINOR release, with a CHANGELOG note): the simulator controls in `am_sim.h` and the simulator internals (`SimOptions`, `TruthPlant`), the ROS 2 packages, the Isaac Lab class, the optional UKF and learned residuals, `tools/`, and every unit value. Unit values are data, not API: today they are simulated typical design values, and they change to measured values without a version bump. Read them from the unit or with `am_get_transparency()`.
 

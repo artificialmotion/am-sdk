@@ -254,7 +254,7 @@ class TransportJoint(JointBackend):
             codes.append(err)
         st = self.tlm.state if self.tlm is not None else AmDriveState.NOT_READY_TO_SWITCH_ON
         return AmFaultInfo(error_code=err, fault_word=fw, first_fault=rd(0x2600, 2), warning_word=rd(0x2602, 1),
-                           boot_block=rd(0x2603, 1), safety_io=rd(0x2620, 1, "<B"),
+                           start_inhibit=rd(0x2603, 1), safety_io=rd(0x2620, 1, "<B"),
                            latched=bool(fw) or bool(err) or st in (AmDriveState.FAULT, AmDriveState.FAULT_REACTION_ACTIVE),
                            codes=codes)
 

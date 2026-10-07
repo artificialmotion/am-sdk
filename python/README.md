@@ -54,7 +54,7 @@ against the C library when it is built (see the top-level README).
 Python runs the cycle with the host clock. Use it for development, commissioning and identification.
 Run 1 kHz control on hardware from C.
 
-Apache-2.0 (LICENSE, NOTICE). See the [top-level README](https://github.com/artificialmotion/am-sdk) for the full picture.
+Apache-2.0 for the code, the unit data and the specs (LICENSE, NOTICE). See the [top-level README](https://github.com/artificialmotion/am-sdk) for the full picture.
 
 Actuator model for any actuator (MuJoCo, Isaac Lab, your own simulator): `am_sdk.actuator_model`,
 documented in [docs/ACTUATOR_MODEL.md](https://github.com/artificialmotion/am-sdk/blob/main/docs/ACTUATOR_MODEL.md).

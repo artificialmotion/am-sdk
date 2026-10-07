@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-"""Open, thermal-aware actuator model for any actuator (AM units or catalogue units).
+"""Open, thermal-aware actuator model for any actuator (AM units or any datasheet).
 
 Spec (JSON) -> runtime model (torque limit vs speed and temperature, losses, 1- or 2-node thermal
 network, peak budget, derate, trip, duty cycle, events) -> MuJoCo bank or Isaac Lab actuator.

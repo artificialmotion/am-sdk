@@ -748,7 +748,7 @@ class SimJoint(JointBackend):
                 fw |= 1 << (c - 0x1000)
         sio = 0 if self.sto_active else (AM_SIO_STO1 | AM_SIO_STO2 | AM_SIO_GATE_SUPPLY_PRESENT)
         return AmFaultInfo(error_code=self.error_code, fault_word=fw, first_fault=self.first_fault,
-                           warning_word=self.warn, boot_block=0, safety_io=sio,
+                           warning_word=self.warn, start_inhibit=0, safety_io=sio,
                            latched=bool(self.faults), codes=list(self.faults))
 
     def fault_history(self) -> List[AmFaultRecord]:

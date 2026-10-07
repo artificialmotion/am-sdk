@@ -843,7 +843,7 @@ void am__sim_fault_info(const am_sim_joint *sj, am_fault_info *out)
     out->fault_word = fault_word(sj);
     out->first_fault = sj->first_fault;
     out->warning_word = sj->warn;
-    out->boot_block = 0;
+    out->start_inhibit = 0;
     out->safety_io = sj->sto_active ? 0 : (uint8_t)(AM_SIO_STO1 | AM_SIO_STO2 | AM_SIO_GATE_SUPPLY_PRESENT);
     out->latched = sj->n_faults > 0;
 }

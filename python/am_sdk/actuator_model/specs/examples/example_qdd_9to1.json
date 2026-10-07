@@ -1,21 +1,15 @@
 {
  "schema": "am-actuator-spec/1",
- "id": "CubeMars-AK60-39-V3",
- "vendor": "CubeMars",
- "model": "AK60-39 V3",
- "status": "catalogue face value as published; rating conditions unstated; not verified by Artificial Motion",
- "sources": [
-  {
-   "url": "https://www.cubemars.com/product/ak60-39-v3-0-kv80-robotic-actuator.html",
-   "accessed": "2026-10-04",
-   "note": "Seller page: rated at 70 rpm, 48 V. Seller rating conditions (mount, ambient, duration) not stated."
-  }
- ],
- "notes": "Seller page: rated at 70 rpm, 48 V. Seller rating conditions (mount, ambient, duration) not stated. Model values beyond the published face values are assumptions (see 'assumptions').",
+ "id": "example_qdd_9to1",
+ "vendor": "",
+ "model": "Illustrative quasi-direct-drive 9:1",
+ "status": "illustrative example with round numbers; not any real product; not verified",
+ "sources": [],
+ "notes": "Illustrative round numbers for a generic 9:1 quasi-direct-drive actuator. Not a real product. Model values beyond the listed round numbers are assumptions (see 'assumptions').",
  "assumptions": [
   {
    "field": "mechanical.reflected_inertia_kgm2",
-   "value": 0.028800000000000003,
+   "value": 0.024,
    "basis": "reflected inertia not stated; 4e-4 kg m^2 per N m of peak torque assumed (order of magnitude for geared quasi-direct-drive units)"
   },
   {
@@ -25,7 +19,7 @@
   },
   {
    "field": "friction.coulomb_nm",
-   "value": 1.44,
+   "value": 1.2,
    "basis": "friction / backdrive torque not stated; 2 % of peak torque assumed"
   },
   {
@@ -49,14 +43,9 @@
    "basis": "rating ambient not stated; 25 C assumed (common catalogue reference)"
   },
   {
-   "field": "ratings.no_load_speed_rad_s",
-   "value": 9.16297857297023,
-   "basis": "no-load speed not stated; 1.25 x rated speed assumed"
-  },
-  {
    "field": "torque_speed",
-   "value": "line",
-   "basis": "no curve published: straight voltage line through the rated point to zero torque at no-load speed; peak = min(peak, line)"
+   "value": "line below peak at stall",
+   "basis": "the voltage line through the rated point is below the peak torque at stall; peak is held flat and then joins the line"
   },
   {
    "field": "thermal.rated_winding_c",
@@ -80,7 +69,7 @@
   },
   {
    "field": "thermal.nodes.c_total_j_per_k",
-   "value": 450.0,
+   "value": 600.0,
    "basis": "lumped heat capacity = 600 J/(kg K) x actuator mass (aluminium/steel/copper/magnet mix); an order-of-magnitude assumption"
   },
   {
@@ -100,28 +89,28 @@
   }
  ],
  "mechanical": {
-  "ratio": null,
-  "mass_kg": 0.75,
-  "reflected_inertia_kgm2": 0.028800000000000003,
+  "ratio": 9,
+  "mass_kg": 1.0,
+  "reflected_inertia_kgm2": 0.024,
   "gear_efficiency": 0.9,
   "backdrive_nm": null
  },
  "ratings": {
-  "peak_nm": 72,
+  "peak_nm": 60,
   "peak_duration_s": 2.0,
   "peak_recovery_s_per_s": 0.1,
-  "continuous_nm": 24,
-  "continuous_speed_rad_s": 7.330382858376184,
+  "continuous_nm": 20,
+  "continuous_speed_rad_s": 10.471975511965976,
   "nominal_bus_v": 48,
   "no_load_speed_rad_s": {
-   "48": 9.16297857297023
+   "48": 15.707963267948966
   },
   "conditions": {
    "stated": false,
    "ambient_c": 25.0,
    "cooling": "unstated",
    "mount_k_per_w": null,
-   "text": "rating conditions not stated by the source"
+   "text": "illustrative; rating conditions not stated"
   }
  },
  "torque_speed": [
@@ -132,14 +121,10 @@
    "points": [
     [
      0.0,
-     72
+     60
     ],
     [
-     3.66519142918809,
-     72
-    ],
-    [
-     9.16297857297023,
+     15.707963267948966,
      0.0
     ]
    ]
@@ -151,21 +136,21 @@
    "points": [
     [
      0.0,
-     24
+     20
     ],
     [
-     7.330382858376184,
-     24
+     10.471975511965976,
+     20
     ],
     [
-     9.16297857297023,
+     15.707963267948966,
      0.0
     ]
    ]
   }
  ],
  "friction": {
-  "coulomb_nm": 1.44,
+  "coulomb_nm": 1.2,
   "viscous_nm_s_per_rad": 0.0,
   "stribeck": null
  },
@@ -187,7 +172,7 @@
    "tau_housing_s": 300.0,
    "tau_winding_s": 30.0,
    "winding_rise_fraction": 0.5,
-   "c_total_j_per_k": 450.0
+   "c_total_j_per_k": 600.0
   },
   "iron_loss": {
    "k1_w_per_rad_s": 0.0,

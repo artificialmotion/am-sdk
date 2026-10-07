@@ -32,13 +32,13 @@ except ImportError:  # pragma: no cover
 
 RPM = 2 * math.pi / 60
 AM_IDS = ["AM-" + u for u in U.UNIT_IDS]
-CAT_IDS = ["MyActuator-RMD-X8-P20-150-E", "MyActuator-RMD-X12-320", "CubeMars-AK60-39-V3", "RobStride-04", "Silica-Q-13"]
+EX_IDS = ["example_qdd_9to1", "example_planetary_36to1", "example_harmonic_100to1"]
 
 
 class Specs(unittest.TestCase):
     def test_all_shipped_specs_validate(self):
         reg = list_specs()
-        for i in AM_IDS + CAT_IDS:
+        for i in AM_IDS + EX_IDS:
             self.assertIn(i, reg)
             with open(reg[i], "r", encoding="utf-8") as f:
                 self.assertEqual(validate_spec(json.load(f)), [], i)
@@ -65,10 +65,9 @@ class Specs(unittest.TestCase):
             if not ud.thermal_tau_published:
                 self.assertTrue(sp.has_assumption("thermal.nodes.tau_s"))
 
-    def test_catalogue_specs_keep_face_values_and_flag_conditions(self):
-        face = {"MyActuator-RMD-X8-P20-150-E": (43, 120, 1.33, 127), "MyActuator-RMD-X12-320": (85, 320, 2.37, 100),
-                "CubeMars-AK60-39-V3": (24, 72, 0.75, 70), "RobStride-04": (40, 120, 1.42, 167),
-                "Silica-Q-13": (19, 40, 1.236, None)}
+    def test_example_specs_are_unnamed_illustrative_and_flag_conditions(self):
+        face = {"example_qdd_9to1": (20, 60, 1.0, 100), "example_planetary_36to1": (40, 120, 1.5, 30),
+                "example_harmonic_100to1": (80, 240, 2.5, 20)}
         for i, (rated, peak, mass, rpm) in face.items():
             sp = load_spec(i)
             self.assertEqual(sp.continuous_nm, rated)
@@ -77,11 +76,11 @@ class Specs(unittest.TestCase):
             if rpm is not None:
                 self.assertAlmostEqual(sp.continuous_speed, rpm * RPM, places=9)
             self.assertFalse(sp.conditions["stated"], i)
-            self.assertTrue(sp.raw["sources"][0]["url"].startswith("https://"))
+            self.assertEqual(sp.raw["vendor"], "", i)
+            self.assertIn("not any real product", sp.raw["status"], i)
             for f in ("mechanical.reflected_inertia_kgm2", "thermal.nodes.c_total_j_per_k", "ratings.peak_duration_s",
                       "ratings.conditions.ambient_c"):
                 self.assertTrue(sp.has_assumption(f), "%s %s" % (i, f))
-        self.assertTrue(load_spec("Silica-Q-13").has_assumption("torque_speed"))
 
     def test_validation_catches_errors(self):
         d = load_spec("AM-M").to_dict()
@@ -124,7 +123,7 @@ class Specs(unittest.TestCase):
 
 class Model(unittest.TestCase):
     def test_rating_reproduced_at_rated_conditions(self):
-        for i in AM_IDS + CAT_IDS:
+        for i in AM_IDS + EX_IDS:
             m = ActuatorModel(i)
             sp = m.spec
             self.assertAlmostEqual(m.continuous_torque(sp.continuous_speed), sp.continuous_nm,
@@ -268,7 +267,7 @@ class Model(unittest.TestCase):
 @unittest.skipIf(np is None, "numpy not installed")
 class Batch(unittest.TestCase):
     def _compare(self, backend):
-        ids = ["AM-M", "AM-H-T", "RobStride-04", "Silica-Q-13"]
+        ids = ["AM-M", "AM-H-T", "example_qdd_9to1", "example_harmonic_100to1"]
         N, dt = 3, 0.002
         bank = BatchActuatorModel(ids, num_envs=N, dt=dt, backend=backend,
                                   dtype=(torch.float64 if backend == "torch" else None))

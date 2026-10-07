@@ -19,4 +19,4 @@ from .backends import (Backend, JointBackend, SimBackend, SimJoint, SimOptions, 
                        Transport, TransportBackend, SimWireTransport)
 from .units import UNIT_IDS, load_unit
 
-__version__ = "0.2.0.dev0"
+__version__ = "0.2.0"

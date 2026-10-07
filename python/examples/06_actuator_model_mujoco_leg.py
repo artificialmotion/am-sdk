@@ -4,7 +4,7 @@ Each joint runs an ActuatorModel: speed- and temperature-dependent torque limit,
 
     python 06_actuator_model_mujoco_leg.py [hip spec] [knee spec] [seconds]
     python 06_actuator_model_mujoco_leg.py AM-H-T AM-M 60
-    python 06_actuator_model_mujoco_leg.py MyActuator-RMD-X12-320 RobStride-04 60
+    python 06_actuator_model_mujoco_leg.py example_harmonic_100to1 example_qdd_9to1 60
 
 Needs mujoco (pip install mujoco). SIMULATED.
 """
