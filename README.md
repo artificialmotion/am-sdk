@@ -12,6 +12,7 @@ Evaluation units ship Q1 2027.
 - **Python package** (`python/`). The same calls, the same simulator, plus EtherCAT and CAN-FD backends and a MuJoCo coupling.
 - **Simulator**. Every joint in the family: reflected inertia, backdrive friction, the published torque-speed curves, peak budget, thermal model, CiA 402 state machine, STO and faults. The C and Python simulators are one model, and the tests hold them to the same output.
 - **Spec** (`docs/`). The API, the PDO byte layouts and the full object dictionary.
+- **ROS 2** (`ros2/`). A `ros2_control` hardware plugin, URDF/xacro macros for every unit, a demo and a Python bridge node, on the simulator. See [docs/ROS2.md](docs/ROS2.md).
 
 ## Quickstart: C
 
@@ -98,8 +99,9 @@ Every joint has both. You pick which one holds control authority.
 ```
 c/          C library, simulator, tests, examples (CMake)
 python/     Python package am_sdk, tests, examples
-docs/       API.md, object_dictionary.csv
-tools/      unit data generator, CAN-FD bus budget
+docs/       API.md, object_dictionary.csv, ROS2.md
+ros2/       ROS 2 packages: am_ros2_control, am_description, am_ros2_demo, am_ros2_bridge
+tools/      unit data and URDF generators, CAN-FD bus budget
 ```
 
 Run everything:

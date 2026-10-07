@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>am_ros2_bridge</name>
+  <version>0.1.0</version>
+  <description>
+    Python-only ROS 2 node for Artificial Motion joints on the am-sdk Python simulator: publishes
+    JointState, takes position/velocity/effort/impedance commands. Fallback for stacks without
+    ros2_control. SIMULATED. Needs the am-sdk Python package (pip install the repo's python/ folder).
+  </description>
+  <maintainer email="ayo@artificialmotion.com">Artificial Motion</maintainer>
+  <license>Apache-2.0</license>
+  <url type="repository">https://github.com/artificialmotion/am-sdk</url>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>std_srvs</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!--
+  One Artificial Motion joint turning an arm about a vertical axis (no gravity load), driven through
+  ros2_control by am_ros2_control on the am-sdk simulator. SIMULATED.
+  xacro am_demo_one_joint.urdf.xacro unit:=M backend:=sim
+-->
+<robot name="am_demo_one_joint" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:arg name="unit" default="M"/>
+  <xacro:arg name="backend" default="sim"/>
+  <xacro:arg name="joint_name" default="joint1"/>
+  <xacro:arg name="arm_inertia" default="0.05"/>
+
+  <xacro:include filename="$(find am_description)/urdf/am_units.urdf.xacro"/>
+  <xacro:include filename="$(find am_description)/urdf/am_ros2_control.xacro"/>
+
+  <xacro:property name="unit" value="$(arg unit)"/>
+  <xacro:property name="arm_inertia" value="$(arg arm_inertia)"/>
+
+  <link name="world"/>
+  <link name="base_link">
+    <visual>
+      <geometry><cylinder radius="0.05" length="0.06"/></geometry>
+      <origin xyz="0 0 0.03"/>
+    </visual>
+  </link>
+  <joint name="world_to_base" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+  </joint>
+
+  <!-- Arm: 1 kg. Its inertia about the joint axis is passed to the simulator as sim_load_inertia. -->
+  <link name="arm_link">
+    <inertial>
+      <origin xyz="0.15 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="${arm_inertia}" iyz="0" izz="${arm_inertia}"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.15 0 0" rpy="0 ${pi/2} 0"/>
+      <geometry><cylinder radius="0.02" length="0.3"/></geometry>
+    </visual>
+  </link>
+
+  <xacro:am_joint unit="${unit}" name="$(arg joint_name)" parent="base_link" child="arm_link"
+                  lower="${-2.5}" upper="${2.5}">
+    <origin xyz="0 0 0.06" rpy="0 0 0"/>
+  </xacro:am_joint>
+
+  <xacro:am_ros2_control name="am_system" backend="$(arg backend)" cycle_us="1000">
+    <joints>
+      <xacro:am_ros2_control_joint name="$(arg joint_name)" unit="${unit}" sim_load_inertia="${arm_inertia}"/>
+    </joints>
+  </xacro:am_ros2_control>
+</robot>

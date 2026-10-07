@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>am_description</name>
+  <version>0.1.0</version>
+  <description>
+    URDF/xacro macros for Artificial Motion joints (S-S, S-D, M, H-F, H-T, H-X): joint limits from the
+    am-sdk unit data and the ros2_control block for am_ros2_control. Values are design targets.
+  </description>
+  <maintainer email="ayo@artificialmotion.com">Artificial Motion</maintainer>
+  <license>Apache-2.0</license>
+  <url type="repository">https://github.com/artificialmotion/am-sdk</url>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>xacro</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
