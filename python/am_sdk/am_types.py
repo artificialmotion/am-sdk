@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from enum import IntEnum
 from typing import Callable, List, Optional
 
-API_VERSION = (0, 1, 0)
+API_VERSION = (0, 2, 0)
 OD_MAJOR_SUPPORTED = 0
 
 

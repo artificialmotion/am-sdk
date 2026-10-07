@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 cmake_minimum_required(VERSION 3.15)
-project(am_sdk VERSION 0.1.0 LANGUAGES C)
+project(am_sdk VERSION 0.2.0 LANGUAGES C)
 
 option(AM_SDK_TESTS "Build the unit tests" ON)
 option(AM_SDK_EXAMPLES "Build the examples" ON)
@@ -24,6 +24,7 @@ endif()
 
 add_library(am_sdk
   src/am_codec.c
+  src/am_est.c
   src/am_session.c
   src/am_sim.c
   src/am_unit_data.c)
@@ -40,7 +41,7 @@ endif()
 set_target_properties(am_sdk PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION 0)
 
 install(TARGETS am_sdk EXPORT am_sdk_targets ARCHIVE DESTINATION lib LIBRARY DESTINATION lib RUNTIME DESTINATION bin)
-install(FILES include/am_api.h include/am_sim.h DESTINATION include)
+install(FILES include/am_api.h include/am_sim.h include/am_est.h DESTINATION include)
 install(EXPORT am_sdk_targets NAMESPACE am:: DESTINATION lib/cmake/am_sdk)
 
 if(AM_SDK_EXAMPLES)
@@ -53,7 +54,7 @@ endif()
 
 if(AM_SDK_TESTS)
   enable_testing()
-  foreach(t test_codec test_sim test_transport)
+  foreach(t test_codec test_sim test_transport test_est)
     add_executable(${t} tests/${t}.c)
     target_link_libraries(${t} PRIVATE am_sdk)
     target_compile_options(${t} PRIVATE ${AM_WARN})
@@ -63,6 +64,10 @@ if(AM_SDK_TESTS)
   add_executable(am_xcheck tests/am_xcheck.c)
   target_link_libraries(am_xcheck PRIVATE am_sdk)
   target_compile_options(am_xcheck PRIVATE ${AM_WARN})
+  # estimator cross-check runner (python/tests/test_cross_check_est.py)
+  add_executable(am_est_xcheck tests/am_est_xcheck.c)
+  target_link_libraries(am_est_xcheck PRIVATE am_sdk)
+  target_compile_options(am_est_xcheck PRIVATE ${AM_WARN})
   if(AM_SDK_EXAMPLES)
     add_test(NAME example_impedance_sine COMMAND impedance_sine)
     add_test(NAME example_leg_two_joints COMMAND leg_two_joints)

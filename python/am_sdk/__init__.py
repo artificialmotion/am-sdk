@@ -14,8 +14,8 @@ from .api import AmSession, AmJoint
 from .codec import (AmCodec, am_codec_init, am_codec_pack_rx1600, am_codec_pack_rx1601, am_codec_unpack_tx1a00,
                     am_codec_unpack_tx1a01, am_codec_pack_cfd_slot, am_codec_unpack_cfd_fb, am_codec_decode_state,
                     am_codec_next_controlword)
-from .backends import (Backend, JointBackend, SimBackend, SimJoint, SimOptions, SdoAbort, Transport, TransportBackend,
-                       SimWireTransport)
+from .backends import (Backend, JointBackend, SimBackend, SimJoint, SimOptions, SimTruth, TruthPlant, SdoAbort,
+                       Transport, TransportBackend, SimWireTransport)
 from .units import UNIT_IDS, load_unit
 
-__version__ = "0.1.0"
+__version__ = "0.2.0.dev0"

@@ -61,7 +61,7 @@ jobs:
           python -m pip install -e "python[dev]"
           python tools/gen_unit_data.py --check
           cd python
-          python -m pytest -v tests/test_cross_check_c.py
+          python -m pytest -v tests/test_cross_check_c.py tests/test_cross_check_est.py
 
   python:
     name: Python ${{ matrix.python }}
@@ -80,9 +80,9 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e "python[dev,can]"
           python -m pip install pysoem || echo "pysoem not available here; EtherCAT tests skip"
-      - name: Install MuJoCo
+      - name: Install MuJoCo and numpy (optional PINN residual)
         if: matrix.python == '3.12'
-        run: python -m pip install -e "python[mujoco]"
+        run: python -m pip install -e "python[mujoco,pinn]"
       - name: Test
         run: |
           cd python
@@ -93,3 +93,4 @@ jobs:
           python examples/01_impedance_sine.py
           python examples/02_leg_two_joints.py
           python examples/03_identity_transparency.py
+          python examples/05_torque_estimation_collision.py

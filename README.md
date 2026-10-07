@@ -77,6 +77,18 @@ for k in range(3000):
 
 On hardware: `interface="ecat:eth0"` with `bus=am.AmBus.ETHERCAT`, or `interface="can:socketcan:can0"` with `bus=am.AmBus.CANFD`. Nothing else changes.
 
+## Torque estimation and collision detection
+
+The joints have no output torque sensor. The SDK estimates joint torque from current, position and temperature with a calibrated model of the motor, friction and gear. It also detects unexpected contact with a momentum observer. Both are open, in C (`am_est.h`) and Python (`am_sdk.estimation`), with the same numbers in both.
+
+Every value is labelled as an estimate, with an uncertainty bound, a confidence value and a quality flag (stick, ambiguous, no temperature). You can add a UKF and a learned residual, and keep them only where they beat the baseline on your data. The collision detector is not a safety function.
+
+```sh
+python python/examples/05_torque_estimation_collision.py
+```
+
+All of this is simulated today. Accuracy targets are in [docs/ESTIMATION.md](docs/ESTIMATION.md), to be confirmed on hardware.
+
 ## Layers
 
 | Layer | Where | What it does |
@@ -99,7 +111,7 @@ Every joint has both. You pick which one holds control authority.
 ```
 c/          C library, simulator, tests, examples (CMake)
 python/     Python package am_sdk, tests, examples
-docs/       API.md, object_dictionary.csv, ROS2.md
+docs/       API.md, ESTIMATION.md, object_dictionary.csv, ROS2.md
 ros2/       ROS 2 packages: am_ros2_control, am_description, am_ros2_demo, am_ros2_bridge
 tools/      unit data and URDF generators, CAN-FD bus budget
 ```
@@ -121,6 +133,6 @@ Firmware update and service tools come with the evaluation units.
 
 ## Status
 
-Version 0.1.0. The API is stable in shape and can still change before 1.0, which freezes with the first evaluation units. Changes go in [CHANGELOG.md](CHANGELOG.md).
+Version 0.2.0 in development (0.1.0 released). The API is stable in shape and can still change before 1.0, which freezes with the first evaluation units. Changes go in [CHANGELOG.md](CHANGELOG.md).
 
 [artificialmotion.com](https://artificialmotion.com)
