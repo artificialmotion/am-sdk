@@ -1,4 +1,5 @@
-"""Types and constants mirroring c/include/am_api.h (API 0.1.0)."""
+# SPDX-License-Identifier: Apache-2.0
+"""Types and constants mirroring c/include/am_api.h (API 0.2.0)."""
 from __future__ import annotations
 
 import math
@@ -156,7 +157,7 @@ AM_SYNC_CAN_LOCKED = 1 << 2
 # safety I/O bits (0x2620:1)
 AM_SIO_STO1 = 1 << 0
 AM_SIO_STO2 = 1 << 1
-AM_SIO_VM_GD_PRESENT = 1 << 2
+AM_SIO_GATE_SUPPLY_PRESENT = 1 << 2
 AM_SIO_ENABLE_READBACK = 1 << 3
 AM_SIO_DISCREPANCY = 1 << 4
 
@@ -164,6 +165,12 @@ AM_SIO_DISCREPANCY = 1 << 4
 AM_WARN_THERMAL_DERATE = 1 << 0
 AM_WARN_PEAK_BUDGET_EMPTY = 1 << 1
 AM_WARN_SPEED_LIMIT = 1 << 2
+
+# statusword bits beyond CiA 402 (0x6041), as in am_api.h
+AM_SW_REMOTE = 1 << 9           # this channel holds control authority
+AM_SW_INTERNAL_LIMIT = 1 << 11
+AM_SW_REF_VALID = 1 << 14       # absolute output reference valid
+AM_SW_STO = 1 << 15             # STO active
 
 
 @dataclass
@@ -179,8 +186,8 @@ class AmIdentity:
     cal_record_crc32: int = 0
     ratio_num: int = 1
     ratio_den: int = 1
-    fw_cm7: int = 0
-    fw_cm4: int = 0
+    fw_main: int = 0
+    fw_motor: int = 0
     fw_boot: int = 0
     device_name: str = ""
     user_label: str = ""

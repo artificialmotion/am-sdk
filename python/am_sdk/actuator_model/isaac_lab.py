@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Isaac Lab actuator: thermal-aware torque limits for any spec, as an ActuatorBase subclass.
 
 UNTESTED ON ISAAC LAB. Written against the documented Isaac Lab 2.x API

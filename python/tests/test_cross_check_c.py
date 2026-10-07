@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The C and Python simulators must agree.
 
 Each scenario is a command script. The C library runs it through c/tests/am_xcheck (built by CMake);

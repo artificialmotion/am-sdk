@@ -107,7 +107,7 @@ index,subindex,name,type,access,pdo_mappable,units,range,notes
 0x2601,0,Fault history (count + 32 entries),RECORD,RO,no,,"sub 0 count; sub 1..32: code UINT16, state UINT8, pad, time UINT64 ns, vbus INT32 mV, iq INT32 mA, winding INT16 0.1 degC, power stage INT16 0.1 degC (24 B)",newest first
 0x2602,1,Warning word,UINT32,RO,no,bitfield,,
 0x2603,1,Boot-block reasons,UINT32,RO,no,bitfield,,
-0x2620,1,Safety I/O status,UINT8,RO,yes,bitfield,"b0 STO1, b1 STO2, b2 VM_GD, b3 ENABLE readback, b4 discrepancy",in TxPDO 0x1A00
+0x2620,1,Safety I/O status,UINT8,RO,yes,bitfield,"b0 STO1, b1 STO2, b2 gate-driver supply present, b3 enable readback, b4 discrepancy",in TxPDO 0x1A00
 0x2620,2,Discrepancy timer,UINT16,RO,no,ms,,
 0x2620,3,STO event counter,UINT32,RO,no,,,
 0x2621,1,STO discrepancy time,UINT16,RO_F,no,ms,"5..100, default 20",safety path: customer read-only

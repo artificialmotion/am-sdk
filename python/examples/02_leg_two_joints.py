@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Two-joint leg-like example: hip and knee of a planar two-link leg, squat motion.
 
 Hip is an H-F, knee is an M. Gravity acts on the links through the sim backend's

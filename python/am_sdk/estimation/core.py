@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Baseline current-model torque estimator.
 
 SIMULATED, PRE-HARDWARE. Every output is an estimate, labelled as such, with an uncertainty bound

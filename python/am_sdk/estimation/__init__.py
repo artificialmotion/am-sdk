@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Torque estimation and collision detection without an output torque sensor.
 
 SIMULATED, PRE-HARDWARE. Every torque this module returns is an estimate, labelled "estimated", with

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Bus path tests: L1 codec, the wire-level simulator, EtherCAT over a fake pysoem, CAN-FD over python-can's
 virtual bus. The same controller code runs on every backend and must give the same motion."""
 import math

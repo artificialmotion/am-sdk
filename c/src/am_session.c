@@ -390,8 +390,8 @@ static am_status read_identity_transport(am_joint *j)
     }
     TRY(rd_u(j, 0x6091, 1, 4, &id->ratio_num));
     TRY(rd_u(j, 0x6091, 2, 4, &id->ratio_den));
-    TRY(rd_u(j, 0x2100, 1, 4, &id->fw_cm7));
-    TRY(rd_u(j, 0x2100, 2, 4, &id->fw_cm4));
+    TRY(rd_u(j, 0x2100, 1, 4, &id->fw_main));
+    TRY(rd_u(j, 0x2100, 2, 4, &id->fw_motor));
     TRY(rd_u(j, 0x2100, 3, 4, &id->fw_boot));
     TRY(j_rd(j, 0x1008, 0, b, sizeof id->device_name - 1, &n));
     memcpy(id->device_name, b, n);

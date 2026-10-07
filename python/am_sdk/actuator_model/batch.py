@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Vectorised actuator model for many environments x joints (RL training). Works on numpy arrays or
 torch tensors (CPU or GPU) with the same code; the scalar ActuatorModel is the reference and the tests
 hold the two together.

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Optional physics-informed neural residual (needs numpy: pip install "am-sdk[pinn]").
 
 SIMULATED, PRE-HARDWARE. Not part of the stdlib core. A small MLP on the physics-structured features

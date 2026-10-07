@@ -7,7 +7,7 @@
 #   standalone (no ROS):          cmake -S ros2/am_ros2_control -B build -DAM_ROS2_STANDALONE=ON
 #                                 -> ROS-free core, core tests, plugin tests on mock ROS headers
 cmake_minimum_required(VERSION 3.16)
-project(am_ros2_control VERSION 0.1.0 LANGUAGES C CXX)
+project(am_ros2_control VERSION 0.2.0 LANGUAGES C CXX)
 
 option(AM_ROS2_STANDALONE "Build the ROS-free core and the mock-header tests without ament" OFF)
 set(AM_SDK_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../c" CACHE PATH "am-sdk C library (the repo's c/ folder)")

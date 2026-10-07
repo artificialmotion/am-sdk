@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>am_ros2_control</name>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <description>
     ros2_control SystemInterface plugin for Artificial Motion joints, built on the am-sdk C library.
     Pre-hardware release: runs against the am-sdk simulator (backend sim:&lt;unit&gt;).

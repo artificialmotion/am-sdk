@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Lets the examples run from a source checkout without installing the package."""
 import os
 import sys

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Impedance control of one M joint following a sine.
 
 Run: python examples/01_impedance_sine.py

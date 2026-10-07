@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Generate the actuator-model spec files shipped in python/am_sdk/actuator_model/specs/.
 
     python tools/gen_actuator_specs.py

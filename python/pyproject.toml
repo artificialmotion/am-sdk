@@ -17,7 +17,15 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
     "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Software Development :: Libraries",
     "Development Status :: 3 - Alpha",
 ]
 dependencies = []
@@ -33,6 +41,9 @@ dev = ["pytest>=7"]
 [project.urls]
 Homepage = "https://artificialmotion.com"
 Source = "https://github.com/artificialmotion/am-sdk"
+Documentation = "https://github.com/artificialmotion/am-sdk/blob/main/docs/API.md"
+Changelog = "https://github.com/artificialmotion/am-sdk/blob/main/CHANGELOG.md"
+Issues = "https://github.com/artificialmotion/am-sdk/issues"
 
 [tool.setuptools.packages.find]
 include = ["am_sdk*"]

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Momentum-observer collision detector (non-safety).
 
 SIMULATED, PRE-HARDWARE. This is a host-side detector for reacting to unexpected contact. It is not

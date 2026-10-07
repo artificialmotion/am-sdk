@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Isaac Lab: an ActuatorBase-compatible actuator with thermal-aware limits for any spec.
 
 UNTESTED ON ISAAC LAB: written against the documented Isaac Lab 2.x actuator API. The numeric core

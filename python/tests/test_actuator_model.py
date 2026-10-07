@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Tests for am_sdk.actuator_model (spec, runtime model, batch, MuJoCo bank, Isaac Lab glue on a stub)."""
 import dataclasses
 import json

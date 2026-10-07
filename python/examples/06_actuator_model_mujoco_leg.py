@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """A simple leg in MuJoCo (vertical rail, hip + knee, foot on the floor) doing squats with a 12 kg body.
 Each joint runs an ActuatorModel: speed- and temperature-dependent torque limit, heating, peak budget.
 

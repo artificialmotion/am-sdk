@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """EtherCAT transport on pysoem (SOEM). Install with: pip install "am-sdk[ecat]".
 
     cfg = am.AmSessionConfig(bus=am.AmBus.ETHERCAT, interface="ecat:eth1")          # Linux

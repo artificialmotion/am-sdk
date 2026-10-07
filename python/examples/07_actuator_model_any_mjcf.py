@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Apply actuator models to ANY MJCF: give the model file and a joint -> spec mapping.
 
     python 07_actuator_model_any_mjcf.py robot.xml mapping.json [seconds] [--keep-plant]

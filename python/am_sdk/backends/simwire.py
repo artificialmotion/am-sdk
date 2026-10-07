@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Wire-level simulator: the sim joints behind real PDO and object-dictionary bytes.
 
 SimWireTransport is a Transport, so a session on it runs the full bus path (codec, process images,

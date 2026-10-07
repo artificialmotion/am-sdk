@@ -4,6 +4,15 @@ All notable changes to am-sdk. The project follows semantic versioning; 0.x rele
 
 ## 0.2.0-dev (unreleased)
 
+### API readiness for the public repository
+- Renamed for public use (breaking, allowed in 0.x): `am_identity.fw_cm7` / `fw_cm4` are now `fw_main` / `fw_motor` (0x2100:1 main core, 0x2100:2 motor-control core); `AM_SIO_VM_GD_PRESENT` is now `AM_SIO_GATE_SUPPLY_PRESENT` (0x2620:1 bit 2). Python `AmIdentity` and `am_sdk.AM_SIO_*` follow. Python gains the `AM_SW_*` statusword constants that C already had.
+- `docs/API.md`: version 0.2.0; full status-code table; family and provisional fault-code tables; what the 1.0 compatibility promise covers and what it does not; Python versioning; deprecation in practice; current-mode errors (`AM_ERR_NOT_SUPPORTED` vs `AM_ERR_STATE`) as implemented; ESI publication with the evaluation units.
+- Header and docstrings: every public Python API function has a docstring with units, errors and [RT]/[NRT]; quick-stop wording matches 0x605A/0x6087; trace functions say 0.x.
+- SPDX licence identifiers in every hand-written Python file; `python/LICENSE` and `python/NOTICE` so the Python distribution carries the licence; package metadata (classifiers, project URLs); absolute links in the Python README.
+- README: third-party licences of the optional extras, trademark note for the catalogue specs, and a statement that every unit value is a simulated typical design value.
+- ROS 2 package versions follow the SDK version (0.2.0).
+- `tests/test_release_metadata.py`: checks that every version string agrees, that the C and Python status codes, bit constants and fault names agree, and that the Python licence files match the top-level ones.
+
 Torque estimation and collision detection without an output torque sensor. Simulated, pre-hardware: no accuracy is claimed; targets are in `docs/ESTIMATION.md`, to be confirmed on hardware.
 
 ### Showcase
@@ -47,7 +56,7 @@ Torque estimation and collision detection without an output torque sensor. Simul
 
 ## 0.1.0
 
-First public release.
+First release.
 
 ### C library (`c/`)
 - `am_api.h`: L1 codec (`am_codec_*`) and L2 session API (`am_*`), C99, compiles warning-free as C and C++.

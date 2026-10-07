@@ -279,3 +279,4 @@ Files are in `python/am_sdk/actuator_model/specs/`. `tools/gen_actuator_specs.py
 - These files are examples of how to describe a catalogue unit. They are not an assessment of those
   products, and Artificial Motion has not verified them.
 - Specifications can change. Check the vendor's current data.
+- Product names are trademarks of their owners. The vendors have not reviewed or endorsed these files.
