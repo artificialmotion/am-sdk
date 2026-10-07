@@ -38,7 +38,7 @@ static rig make_direct(const char *unit, double load)
     am_sim_options o;
     memset(&r, 0, sizeof r);
     memset(&cfg, 0, sizeof cfg);
-    snprintf(iface, sizeof iface, "sim:%s", unit);
+    if (snprintf(iface, sizeof iface, "sim:%s", unit) < 0) iface[0] = '\0';
     cfg.interface = iface;
     cfg.telemetry_extended = true;
     am_init(&cfg, &r.s);

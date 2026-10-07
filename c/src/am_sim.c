@@ -792,7 +792,7 @@ void am__sim_identity(const am_sim_joint *sj, am_identity *out)
     tmp[k] = '\0';
     {
         char uid[48]; /* "SIM-" + 31-char unit + "-" + up to 5 digits + NUL fits */
-        snprintf(uid, sizeof uid, "SIM-%s-%02u", tmp, (unsigned)sj->address);
+        if (snprintf(uid, sizeof uid, "SIM-%s-%02u", tmp, (unsigned)sj->address) < 0) uid[0] = '\0';
         k = strlen(uid);
         memcpy(out->uid, uid, k < 12 ? k : 12);
     }
@@ -802,13 +802,13 @@ void am__sim_identity(const am_sim_joint *sj, am_identity *out)
     out->cal_record_version = 0;
     {
         char key[32];
-        snprintf(key, sizeof key, "SIM-CAL-%s", ud->unit);
+        if (snprintf(key, sizeof key, "SIM-CAL-%s", ud->unit) < 0) key[0] = '\0';
         out->cal_record_crc32 = am__crc32(key, strlen(key));
     }
     out->ratio_num = ud->ratio_num;
     out->ratio_den = ud->ratio_den;
     out->fw_cm7 = out->fw_cm4 = out->fw_boot = AM_VERSION_PACK(0, 0, 0);
-    snprintf(out->device_name, sizeof out->device_name, "AM %s (sim)", ud->unit);
+    if (snprintf(out->device_name, sizeof out->device_name, "AM %s (sim)", ud->unit) < 0) out->device_name[0] = '\0';
     am__copy_str(out->user_label, sizeof out->user_label, sj->label);
 }
 
@@ -914,7 +914,7 @@ static void pyfloat(char *buf, size_t cap, double v)
 {
     int p;
     for (p = 1; p <= 17; p++) {
-        snprintf(buf, cap, "%.*g", p, v);
+        if (snprintf(buf, cap, "%.*g", p, v) < 0) buf[0] = '\0';
         if (strtod(buf, NULL) == v) break;
     }
     if (!strpbrk(buf, ".eEn")) {

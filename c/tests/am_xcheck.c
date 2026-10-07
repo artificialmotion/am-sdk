@@ -124,7 +124,7 @@ int main(void)
                 cfg.transport_user = TP_USER;
                 cfg.interface = "sim-wire";
             } else {
-                snprintf(a1, sizeof a1, "sim:%s", units);
+                if (snprintf(a1, sizeof a1, "sim:%s", units) < 0) a1[0] = '\0';
                 cfg.interface = a1;
             }
             if (st == AM_OK) st = am_init(&cfg, &S);

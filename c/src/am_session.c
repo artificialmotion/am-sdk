@@ -1385,7 +1385,10 @@ am_status am_sim_transport_open(const char *units, am_bus bus, uint32_t cycle_us
     if (!units || !ops || !user) return AM_ERR_PARAM;
     if (bus == AM_BUS_NONE) bus = AM_BUS_ETHERCAT;
     if (cycle_us == 0) cycle_us = 1000;
-    snprintf(spec, sizeof spec, "sim:%s", units);
+    {
+        int w = snprintf(spec, sizeof spec, "sim:%s", units);
+        if (w < 0 || (size_t)w >= sizeof spec) return AM_ERR_PARAM;
+    }
     n = am__sim_parse_units(spec, u, AM_MAX_SIM_UNITS);
     if (n == 0) return AM_ERR_PARAM;
     tp = (sim_tp *)calloc(1, sizeof *tp);

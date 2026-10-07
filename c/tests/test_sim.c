@@ -18,7 +18,7 @@ static rig make(const char *unit, am_mode mode, bool enable, uint32_t cycle_us, 
     am_sim_options def;
     memset(&r, 0, sizeof r);
     memset(&cfg, 0, sizeof cfg);
-    snprintf(iface, sizeof iface, "sim:%s", unit);
+    if (snprintf(iface, sizeof iface, "sim:%s", unit) < 0) iface[0] = '\0';
     cfg.interface = iface;
     cfg.cycle_us = cycle_us;
     cfg.telemetry_extended = true;
