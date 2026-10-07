@@ -6,6 +6,14 @@ Write your controller today against the simulator. Moving to hardware changes on
 
 Evaluation units ship Q1 2027.
 
+All clips below are simulated (the SDK simulator, MuJoCo), not hardware.
+
+![Simulated collision detection: estimated vs true torque and the contact flag](docs/media/collision_detection.gif)
+![Simulated actuator model: a knee holds a load, winding temperature rises, the torque limit derates](docs/media/actuator_thermal_hold.gif)
+![Simulated joint following a joint_trajectory_controller-style trajectory through the SDK simulator](docs/media/ros2_trajectory.gif)
+
+Try it without installing anything: [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/artificialmotion/am-sdk/blob/main/notebooks/check_your_actuator.ipynb) "Check your actuator in 2 minutes". (The badge works once the repository is public.)
+
 ## What you get
 
 - **C library** (`c/`). C99, no dependencies, builds anywhere CMake runs. A pure codec for people who run their own EtherCAT master, and a session API on top of it.

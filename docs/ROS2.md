@@ -4,6 +4,10 @@ Drop AM joints into a `ros2_control` stack today, against the simulator. When ev
 
 Everything on this page is **simulated**. The joints are the am-sdk simulator: reflected inertia, backdrive friction, the published torque-speed curves, peak budget, thermal model, CiA 402 state machine, STO and faults. Values are design targets.
 
+![Simulated joint following a joint_trajectory_controller-style trajectory through the SDK simulator](media/ros2_trajectory.gif)
+
+*Simulated: SDK simulator, same plugin core as the ROS 2 driver. This is a plot, not an rviz or ROS recording. It uses the demo's waypoints and the impedance gains of the demo (K 150, D 6) in impedance mode; the `joint_trajectory_controller` demo itself drives the joint in CSP. Clips are rendered by `tools/showcase/` (needs matplotlib and imageio-ffmpeg).*
+
 ROS 2 Humble and Jazzy. Status: the plugin core is built and unit-tested on every push without ROS. The ROS packages build and test in the `ros2` CI workflow (ros:humble and ros:jazzy containers); see [Status](#status).
 
 ## Packages (`ros2/`)
