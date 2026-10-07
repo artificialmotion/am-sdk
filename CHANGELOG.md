@@ -2,9 +2,28 @@
 
 All notable changes to am-sdk. The project follows semantic versioning; 0.x releases carry no compatibility promise.
 
-## Unreleased
+## 0.2.0-dev (unreleased)
 
-### Added
+Torque estimation and collision detection without an output torque sensor. Simulated, pre-hardware: no accuracy is claimed; targets are in `docs/ESTIMATION.md`, to be confirmed on hardware.
+
+### C library
+- `am_est.h` / `src/am_est.c`: baseline current-model estimator (temperature-corrected Kt with saturation, Stribeck + viscous friction or a friction map, forward/reverse gear efficiency or a load x temperature grid, output bearing), quality flags, uncertainty bound and confidence, optional bounded dither, momentum-observer collision detector with threshold, stick scaling and hysteresis. Fixed-size structs, no allocation.
+- `am_est_calibration`: calibration record am_est_cal_v1.
+- Tests: `test_est`; `am_est_xcheck` runner for the C/Python estimator cross-check. `test_cpp` includes `am_est.h`.
+- API version 0.2.0 (`am_api_version()`).
+
+### Python package
+- `am_sdk.estimation`: the same estimator and detector, `EstimatorCalibration` with a JSON schema, `UkfTorqueEstimator`, learned-residual hooks (`LinearFeatureResidual`, `adoption_check`), all standard library only.
+- `am_sdk.estimation.pinn.PinnResidual`: optional physics-informed MLP residual (extra `[pinn]`, numpy).
+- Simulator: optional `SimOptions.truth_plant` (`TruthPlant`) and per-cycle ground truth `SimJoint.truth` (`SimTruth`). The default plant is unchanged.
+- `am_sdk.estimation.simharness`: runs the estimators against the simulator and logs truth, estimates and collision events.
+- Example `05_torque_estimation_collision.py`; tests `test_estimation.py`, `test_cross_check_est.py`.
+
+### Docs and CI
+- `docs/ESTIMATION.md`: method, assumptions, limitations, targets.
+- CI runs the estimator cross-check and example 05; the Python 3.12 job installs `[pinn]`.
+
+### Actuator model
 - `am_sdk.actuator_model`: an open, thermal-aware actuator model for any actuator.
   - Spec schema `am-actuator-spec/1`, with a JSON Schema file and a stdlib validator.
   - `spec_from_datasheet()` builds a spec from minimal data, with flagged default assumptions.

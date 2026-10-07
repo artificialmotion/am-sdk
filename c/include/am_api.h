@@ -1,5 +1,5 @@
 /*
- * am_api.h - Artificial Motion joint SDK, C API 0.1.0
+ * am_api.h - Artificial Motion joint SDK, C API 0.2.0
  * SPDX-License-Identifier: Apache-2.0
  *
  * Pre-hardware release: the API runs against the built-in simulator and against your own
@@ -43,7 +43,7 @@ extern "C" {
 
 /** SDK API semantic version. 0.y.z = pre-release, no compatibility promise. */
 #define AM_API_VERSION_MAJOR 0
-#define AM_API_VERSION_MINOR 1
+#define AM_API_VERSION_MINOR 2
 #define AM_API_VERSION_PATCH 0
 
 /** Object-dictionary major version this SDK build understands (0x2000:6). */

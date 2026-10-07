@@ -8,6 +8,7 @@ pip install -e ".[can]"            # CAN-FD through python-can
 pip install -e ".[ecat]"           # EtherCAT through pysoem
 pip install -e ".[mujoco]"         # MuJoCo coupling
 pip install -e ".[batch]"          # numpy, for the batched actuator model
+pip install -e ".[pinn]"           # numpy, for the optional PINN residual
 ```
 
 ```python
@@ -42,6 +43,9 @@ Interfaces:
 Your own master: implement `am_sdk.Transport` (process-data exchange plus object read and write) and pass
 `AmSessionConfig(backend=am_sdk.TransportBackend(your_transport))`. `am_sdk.SimWireTransport` is the
 simulator behind that same interface, byte for byte.
+
+Torque estimation and collision detection (simulated, pre-hardware): `am_sdk.estimation`, see
+`docs/ESTIMATION.md` and `examples/05_torque_estimation_collision.py`.
 
 Examples are in `examples/`, tests in `tests/` (`python -m pytest`). The tests include a cross-check
 against the C library when it is built (see the top-level README).

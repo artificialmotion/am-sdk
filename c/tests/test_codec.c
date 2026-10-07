@@ -193,7 +193,7 @@ static void test_strings(void)
     CHECK(strcmp(am_fault_name(0x100B), "HOST_STALE") == 0);
     CHECK(strcmp(am_fault_name(0x7777), "UNKNOWN") == 0);
     CHECK(strstr(am_status_str(AM_ERR_STO), "STO") != NULL);
-    CHECK(am_api_version() == AM_VERSION_PACK(0, 1, 0));
+    CHECK(am_api_version() == AM_VERSION_PACK(0, 2, 0));
 }
 
 int main(void)
