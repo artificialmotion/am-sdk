@@ -1,5 +1,5 @@
 /*
- * am_sim.h - Artificial Motion joint SDK, simulator controls (C API 0.1.0)
+ * am_sim.h - Artificial Motion joint SDK, simulator controls (C API 0.2.0)
  * SPDX-License-Identifier: Apache-2.0
  *
  * The built-in simulator runs when am_session_config.interface is "sim" or "sim:<units>",

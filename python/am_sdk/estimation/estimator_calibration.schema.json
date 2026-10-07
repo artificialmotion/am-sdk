@@ -1,0 +1,57 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://github.com/artificialmotion/am-sdk/estimator_calibration.schema.json",
+ "title": "AM estimator calibration record (am_est_cal_v1)",
+ "description": "Physical model inverted by the am-sdk torque estimator. SI units, output-referred unless the name says otherwise. Records published before the evaluation units are design targets or simulated values.",
+ "type": "object",
+ "required": ["schema", "unit", "gear_ratio", "kt_Nm_per_A", "reflected_inertia_kgm2", "rated_torque_Nm", "stribeck_vel_rad_s"],
+ "additionalProperties": false,
+ "properties": {
+  "schema": {"const": "am_est_cal_v1"},
+  "unit": {"type": "string", "minLength": 1, "description": "S-S, S-D, M, H-F, H-T or H-X"},
+  "data_basis": {"enum": ["design_target", "simulated", "measured_type", "measured_unit"], "default": "design_target"},
+  "serial": {"type": ["integer", "null"]},
+  "cal_epoch": {"type": "integer", "minimum": 0, "description": "matches 0x2230:4 for a host model trained on this record"},
+  "date": {"type": "string"},
+  "note": {"type": "string"},
+  "gear_ratio": {"type": "number", "exclusiveMinimum": 0},
+  "kt_Nm_per_A": {"type": "number", "exclusiveMinimum": 0, "description": "motor torque constant at kt_ref_temp_C (0x2200:2)"},
+  "kt_ref_temp_C": {"type": "number", "default": 60, "description": "0x2200:3"},
+  "kt_temp_coeff_per_K": {"type": "number", "default": -0.00094, "description": "0x2200:4"},
+  "kt_sat_frac": {"type": "number", "minimum": 0, "exclusiveMaximum": 0.5, "default": 0},
+  "kt_sat_current_A": {"type": "number", "minimum": 0, "default": 0, "description": "0 disables the saturation term"},
+  "reflected_inertia_kgm2": {"type": "number", "exclusiveMinimum": 0},
+  "rated_torque_Nm": {"type": "number", "exclusiveMinimum": 0},
+  "coulomb_Nm": {"type": "number", "minimum": 0},
+  "breakaway_Nm": {"type": "number", "minimum": 0, "description": "static friction level, also the stick band base"},
+  "stribeck_vel_rad_s": {"type": "number", "exclusiveMinimum": 0},
+  "viscous_Nm_s_per_rad": {"type": "number", "minimum": 0},
+  "friction_ref_temp_C": {"type": "number", "default": 40},
+  "coulomb_temp_coeff_per_K": {"type": "number", "default": 0.004},
+  "viscous_temp_exp_per_K": {"type": "number", "default": 0.0225},
+  "bearing_Nm": {"type": "number", "minimum": 0},
+  "friction_map": {
+   "type": "array", "maxItems": 16, "default": [],
+   "description": "moving friction map [[speed rad/s, friction Nm], ...], speed increasing; replaces the parametric curve when present",
+   "items": {"type": "array", "prefixItems": [{"type": "number", "minimum": 0}, {"type": "number", "minimum": 0}], "minItems": 2, "maxItems": 2}
+  },
+  "eta_forward": {"type": "number", "minimum": 0.3, "maximum": 1, "default": 1},
+  "eta_reverse": {"type": "number", "minimum": 0.3, "maximum": 1, "default": 1},
+  "efficiency_map": {
+   "type": ["object", "null"],
+   "additionalProperties": false,
+   "required": ["temps_C", "loads_Nm", "eta_forward", "eta_reverse"],
+   "properties": {
+    "temps_C": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"type": "number"}},
+    "loads_Nm": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"type": "number", "minimum": 0}},
+    "eta_forward": {"type": "array", "maxItems": 4, "items": {"type": "array", "maxItems": 4, "items": {"type": "number", "minimum": 0.3, "maximum": 1}}},
+    "eta_reverse": {"type": "array", "maxItems": 4, "items": {"type": "array", "maxItems": 4, "items": {"type": "number", "minimum": 0.3, "maximum": 1}}}
+   }
+  },
+  "unc_kt_rel": {"type": "number", "minimum": 0},
+  "unc_temp_C": {"type": "number", "minimum": 0},
+  "unc_friction_rel": {"type": "number", "minimum": 0},
+  "unc_eta_abs": {"type": "number", "minimum": 0},
+  "unc_inertia_rel": {"type": "number", "minimum": 0}
+ }
+}
