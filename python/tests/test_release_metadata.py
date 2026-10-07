@@ -45,6 +45,21 @@ class TestReleaseMetadata(unittest.TestCase):
         for pkg in sorted((ROOT / "ros2").glob("*/package.xml")):
             self.assertIn("<version>%s</version>" % dotted, _read(pkg), str(pkg))
 
+    def test_c_and_python_constants_agree(self):
+        header = ROOT / "c" / "include" / "am_api.h"
+        if not header.exists():
+            self.skipTest("not a repository checkout")
+        h = _read(header)
+        for m in re.finditer(r"(AM_ERR_[A-Z_]+|AM_OK)\s*=\s*(-?\d+)", h):
+            self.assertEqual(int(am_types.AmStatus[m.group(1)]), int(m.group(2)), m.group(1))
+        bits = re.findall(r"#define (AM_(?:CAP|SYNC|SIO|WARN|SW)_[A-Z0-9_]+)\s+\(1u << (\d+)\)", h)
+        self.assertTrue(bits)
+        for name, bit in bits:
+            self.assertEqual(getattr(am_types, name, None), 1 << int(bit), name)
+        src = _read(ROOT / "c" / "src" / "am_session.c")
+        c_faults = {int(c, 16): n for c, n in re.findall(r'\{(0x[0-9A-Fa-f]{4}), "([A-Z0-9_]+)"\}', src)}
+        self.assertEqual(c_faults, am_types.FAULT_NAMES)
+
 
 if __name__ == "__main__":
     unittest.main()

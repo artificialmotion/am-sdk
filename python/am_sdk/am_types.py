@@ -166,6 +166,12 @@ AM_WARN_THERMAL_DERATE = 1 << 0
 AM_WARN_PEAK_BUDGET_EMPTY = 1 << 1
 AM_WARN_SPEED_LIMIT = 1 << 2
 
+# statusword bits beyond CiA 402 (0x6041), as in am_api.h
+AM_SW_REMOTE = 1 << 9           # this channel holds control authority
+AM_SW_INTERNAL_LIMIT = 1 << 11
+AM_SW_REF_VALID = 1 << 14       # absolute output reference valid
+AM_SW_STO = 1 << 15             # STO active
+
 
 @dataclass
 class AmIdentity:

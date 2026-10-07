@@ -370,7 +370,26 @@ Fault history record (0x2601:1..32, newest first, 24 B): code UINT16, drive stat
 | 0x1010 | PT1000 | winding temperature sensor fault (units with the sensor) |
 | 0x1011 | INPUT_CURRENT | input (DC) current above the limiter's trip level (units with the limiter) |
 
-More codes (over-temperature, encoder cross-check, reference lost, comms lost, configuration) are added before OD 1.0. Codes are never renumbered or reused (4.7).
+Provisional codes. `am_fault_name()` already names these; no firmware raises them yet, and their reactions are fixed before OD 1.0:
+
+| Code | Name | Meaning |
+|---|---|---|
+| 0x2000 | MOTOR_OVERTEMP_WINDING | winding over-temperature |
+| 0x2001 | MAGNET_OVERTEMP_CEILING | magnet temperature above its ceiling |
+| 0x2002 | POWERSTAGE_OVERTEMP | power-stage over-temperature |
+| 0x2003 | TEMP_MODEL_INVALID | temperature model invalid |
+| 0x2100 | KT_RECORD_INVALID | torque-constant calibration record invalid |
+| 0x2200 | CONFIG_CRC_FAIL | stored configuration failed its CRC |
+| 0x2201 | IMAGE_INCOMPATIBLE | firmware image incompatible with the unit |
+| 0x2300 | ENC_CROSSCHECK_MISMATCH | motor and output encoders disagree |
+| 0x2301 | OUTPUT_ENCODER_LOST | output encoder lost |
+| 0x2302 | REFERENCE_LOST | absolute output reference lost |
+| 0x3000 | COMMS_LOST_BUS | control bus lost |
+| 0x3001 | CONTROL_AUTHORITY_CONFLICT | control authority conflict |
+| 0x3002 | CANFD_CONFIG_INVALID | CAN-FD configuration invalid |
+| 0x4000 | SERVICE_WRITE_DENIED_ARMED | a service write was refused while the drive was armed |
+
+Codes are never renumbered or reused (4.7).
 
 ### 4.5 Status codes
 
