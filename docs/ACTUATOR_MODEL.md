@@ -1,7 +1,7 @@
 # Actuator model
 
 `am_sdk.actuator_model` is an open, thermal-aware actuator model for MuJoCo, Isaac Lab or your own
-simulator. It works with any actuator: an Artificial Motion unit, a catalogue unit, or your own
+simulator. It works with any actuator: an Artificial Motion unit, any datasheet unit, or your own
 prototype. You describe the actuator in a JSON spec. The model then gives you, every step:
 
 ![Simulated actuator model: a knee holds a load, winding temperature rises, the torque limit derates](media/actuator_thermal_hold.gif)
@@ -26,7 +26,7 @@ for the MuJoCo bank, and Isaac Lab only for the Isaac Lab actuator.
 ```python
 from am_sdk.actuator_model import ActuatorModel, load_spec, list_specs
 
-print(list(list_specs()))                 # shipped specs: AM-S-S ... AM-H-X, catalogue examples
+print(list(list_specs()))                 # shipped specs: AM-S-S ... AM-H-X, generic examples
 act = ActuatorModel(load_spec("AM-M"), dt=0.001, ambient_c=25.0, bus_v=48.0)
 for k in range(n):
     tau = act.step(tau_cmd, omega)        # applied output torque after every limit; advances dt
@@ -38,7 +38,7 @@ MuJoCo, on any MJCF with a joint-to-spec mapping:
 
 ```python
 from am_sdk.actuator_model.mujoco_bridge import MujocoActuatorBank
-bank = MujocoActuatorBank(model, data, {"hip": "AM-H-T", "knee": "RobStride-04"})
+bank = MujocoActuatorBank(model, data, {"hip": "AM-H-T", "knee": "example_qdd_9to1"})
 while running:
     bank.step({"hip": tau_hip, "knee": tau_knee})   # clip, write ctrl or qfrc_applied, mj_step, heat
 ```
@@ -62,7 +62,7 @@ and checked by `validate_spec()`, which uses only the standard library. All valu
 | `assumptions[]` | `field`, `value`, `basis`: every value that does not come from the source |
 
 `ratings.conditions.stated` is false when the source does not say under what conditions it rated the
-actuator (mount, ambient, duration). Most catalogue pages do not say. In that case the model's
+actuator (mount, ambient, duration). Most datasheets do not say. In that case the model's
 reference conditions are assumptions, and those assumptions are listed.
 
 `thermal.nodes` can be written in either of two forms:
@@ -163,7 +163,7 @@ to the scalar model.
 
    | Value | Default | Basis |
    |---|---|---|
-   | rating ambient | 25 C | common catalogue reference |
+   | rating ambient | 25 C | common datasheet reference |
    | winding at the continuous rating | 105 C | the rating is taken as the steady state at the derate threshold |
    | derate / trip / hysteresis | 105 C / 130 C / 5 K | class F/H wire with margin |
    | heat capacity | 600 J/(kg K) x mass | aluminium, steel, copper and magnet mix; order of magnitude |
@@ -235,7 +235,7 @@ names against your version.
 - **Rating calibration.** This calibration only guarantees that the continuous rating is reproduced
   under its own conditions. Away from that point the result depends on the assumed split between copper
   and mechanical loss, on the time constants and on the copper tempco. When the conditions are
-  `unstated`, the reference conditions themselves are assumed. Two catalogue units can therefore not be
+  `unstated`, the reference conditions themselves are assumed. Two datasheet units can therefore not be
   compared fairly through this model on rating alone.
 - **Mount and ambient changes.** `cooling_scale` and `ambient_c` are linear approximations. Convection,
   radiation and mount contact are not linear, and a different mount changes the network, not only one
@@ -262,21 +262,17 @@ Files are in `python/am_sdk/actuator_model/specs/`. `tools/gen_actuator_specs.py
     published ratings, and are flagged.
   - The heat capacity, 600 J/(kg K) x mass, is flagged. It scales watts only.
 
-**Catalogue examples.**
+**Generic examples.**
 
-| id | Source |
+| id | Illustrative values |
 |---|---|
-| MyActuator-RMD-X8-P20-150-E | https://myactuator.us/products/rmd-x-series/rmd-x8-p20-150-e-03 (accessed 2026-10-04) |
-| MyActuator-RMD-X12-320 | https://aifitlab.com/products/myactuator-rmd-x12-320-motor (reseller, accessed 2026-10-04) |
-| CubeMars-AK60-39-V3 | https://www.cubemars.com/product/ak60-39-v3-0-kv80-robotic-actuator.html (accessed 2026-10-04) |
-| RobStride-04 | https://www.seeedstudio.com/Robostride-04-Actuator-p-6775.html (reseller, accessed 2026-10-04) |
-| Silica-Q-13 | https://www.silicamachines.com/buy (seller "design targets", accessed 2026-10-07) |
+| example_qdd_9to1 | 9:1, 20 N m rated, 60 N m peak, 1.0 kg, 100 rpm rated |
+| example_planetary_36to1 | 36:1, 40 N m rated, 120 N m peak, 1.5 kg, 30 rpm rated |
+| example_harmonic_100to1 | 100:1, 80 N m rated, 240 N m peak, 2.5 kg, 20 rpm rated |
 
-- These use only the face values exactly as published: rated torque, peak torque, rated speed, no-load
-  speed and ratio where given, mass and bus voltage.
-- `conditions.stated` is false for all of them, because their sources do not state rating conditions.
-- Every other value comes from the documented defaults and is listed in `assumptions`.
-- These files are examples of how to describe a catalogue unit. They are not an assessment of those
-  products, and Artificial Motion has not verified them.
-- Specifications can change. Check the vendor's current data.
-- Product names are trademarks of their owners. The vendors have not reviewed or endorsed these files.
+- These are illustrative. The numbers are round, they do not describe any real product, and no vendor is named.
+- They show how to write a datasheet-style spec with `spec_from_datasheet()`.
+- `conditions.stated` is false for all of them.
+- Every value beyond the listed round numbers comes from the documented defaults and is listed in `assumptions`.
+- Do not use them to rate or compare real actuators. Enter your own datasheet values instead
+  (`examples/08_actuator_model_fit_your_own.py`).

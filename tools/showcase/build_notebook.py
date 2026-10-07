@@ -18,8 +18,8 @@ the winding temperature and the derate and trip events. Optionally it puts the a
 
 **Everything here is a simulation.** The thermal model is first-order and lumped, calibrated to reproduce the rating
 under its stated conditions. When a datasheet does not state its conditions (most do not), the model assumes them and
-says so. Nothing below is a measurement, a guarantee or a ranking of products. Vendor numbers are shown as the seller
-published them; for the catalogue example the rating conditions are unstated. The model is open:
+says so. Nothing below is a measurement, a guarantee or a ranking of products. The default numbers are an illustrative
+example, not any real product, and their rating conditions are unstated. The model is open:
 [docs/ACTUATOR_MODEL.md](https://github.com/artificialmotion/am-sdk/blob/main/docs/ACTUATOR_MODEL.md).
 """)
 
@@ -43,19 +43,20 @@ print("am_sdk from:", os.path.dirname(am_sdk.__file__))
 md("""
 ## 1. Your actuator
 
-Edit the numbers. The defaults are a catalogue example: a listing that gives 40 N m rated, 120 N m peak, 1.42 kg and
-a 9:1 ratio. This is the **seller's rating, conditions unstated** (ambient, cooling, mounting and temperature rise are
-not given), so the model assumes them. It is here as an example of a typical datasheet, not as a statement about that
-product. For comparison the notebook also loads the AM-M spec shipped with the SDK (a design target, simulated, not
-built, conditions stated).
+Edit the numbers. The defaults are an **illustrative example**: 20 N m rated, 60 N m peak, 1.0 kg and a 9:1 ratio.
+They are round numbers, not any real product. The rating conditions are unstated (ambient, cooling, mounting and
+temperature rise are not given), so the model assumes them, and the thermal parameters are assumed too. Replace them
+with your own datasheet values. For comparison the notebook also loads the AM-M spec shipped with the SDK: a design
+target, simulated, not built, with stated conditions. Read the comparison as "AM-M design target vs an illustrative
+example", not as a result about any product.
 """)
 
 code("""
 #@title Datasheet values { run: "auto" }
-name = "Catalogue example (seller rating, conditions unstated)" #@param {type:"string"}
-rated_nm = 40.0     #@param {type:"number"}   # "rated" or "continuous" torque, N m
-peak_nm = 120.0     #@param {type:"number"}   # peak torque, N m
-mass_kg = 1.42      #@param {type:"number"}
+name = "Illustrative example (round numbers, conditions unstated)" #@param {type:"string"}
+rated_nm = 20.0     #@param {type:"number"}   # "rated" or "continuous" torque, N m
+peak_nm = 60.0     #@param {type:"number"}   # peak torque, N m
+mass_kg = 1.0       #@param {type:"number"}
 ratio = 9.0         #@param {type:"number"}   # gear ratio (motor turns per output turn)
 bus_v = 48.0        #@param {type:"number"}
 ambient_c = 40.0    #@param {type:"number"}   # the ambient YOU want to test at (inside a robot torso, say)

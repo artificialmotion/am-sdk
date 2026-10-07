@@ -5,3 +5,8 @@ This product includes software developed by Artificial Motion
 (https://artificialmotion.com).
 
 Licensed under the Apache License, Version 2.0. See LICENSE.
+
+The licence covers everything in this repository: source code, the per-unit data
+files (python/am_sdk/data), the actuator model specs and JSON schemas
+(python/am_sdk/actuator_model), the object dictionary (docs/object_dictionary.csv)
+and the documentation. The joint firmware is not part of this repository.

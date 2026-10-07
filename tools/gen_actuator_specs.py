@@ -8,9 +8,9 @@ the motor design constants in am_sdk.units, and the declared rating mount from t
 fit data. Thermal values the data does not give are the SDK simulator's model values and are listed
 as assumptions in each spec.
 
-Catalogue units: face values exactly as published by the seller or reseller (source URL and access
-date in each file). Rating conditions are not stated by those sources; every value the model needs
-beyond them comes from spec_from_datasheet() defaults and is listed in "assumptions".
+Examples: three generic, unnamed, illustrative specs built from round numbers with spec_from_datasheet().
+They are not any real product. Every value the model needs beyond the round numbers comes from the
+documented defaults and is listed in "assumptions".
 """
 import json
 import os
@@ -96,41 +96,28 @@ def am_spec(unit: str) -> dict:
     return d
 
 
-# Face values exactly as published (seller or reseller tables), accessed 2026-10-04 / 2026-10-07.
-CATALOGUE = [
-    dict(id="MyActuator-RMD-X8-P20-150-E", vendor="MyActuator", model="RMD-X8-P20-150-E", rated_nm=43, peak_nm=120,
-         rated_speed_rpm=127, mass_kg=1.33, bus_v=48,
-         url="https://myactuator.us/products/rmd-x-series/rmd-x8-p20-150-e-03", accessed="2026-10-04",
-         note="Seller table: rated at 127 rpm, 48 V. Seller rating conditions (mount, ambient, duration) not stated."),
-    dict(id="MyActuator-RMD-X12-320", vendor="MyActuator", model="RMD-X12-320", rated_nm=85, peak_nm=320,
-         rated_speed_rpm=100, no_load_rpm=125, mass_kg=2.37, bus_v=48, ratio=20,
-         url="https://aifitlab.com/products/myactuator-rmd-x12-320-motor", accessed="2026-10-04",
-         note="Reseller technical table: 85 Nm rated at 100 rpm, 20:1, 30 A rms rated phase current. "
-              "Rating conditions not stated."),
-    dict(id="CubeMars-AK60-39-V3", vendor="CubeMars", model="AK60-39 V3", rated_nm=24, peak_nm=72, rated_speed_rpm=70,
-         mass_kg=0.75, bus_v=48, url="https://www.cubemars.com/product/ak60-39-v3-0-kv80-robotic-actuator.html",
-         accessed="2026-10-04",
-         note="Seller page: rated at 70 rpm, 48 V. Seller rating conditions (mount, ambient, duration) not stated."),
-    dict(id="RobStride-04", vendor="RobStride", model="RobStride 04", rated_nm=40, peak_nm=120, rated_speed_rpm=167,
-         no_load_rpm=200, mass_kg=1.42, bus_v=48, ratio=9,
-         url="https://www.seeedstudio.com/Robostride-04-Actuator-p-6775.html", accessed="2026-10-04",
-         note="Reseller listing: 40 Nm rated, 120 Nm peak, 9:1, 1.42 kg. Rating conditions not stated."),
-    dict(id="Silica-Q-13", vendor="Silica", model="Q-13", rated_nm=19, peak_nm=40, mass_kg=1.236, bus_v=48,
-         url="https://www.silicamachines.com/buy", accessed="2026-10-07",
-         note="Seller specification dialog, \"design targets\"; continuous torque 19 N m \"mounted\". Rating "
-              "conditions (mount, ambient, speed) not stated; no speed published."),
+# Generic illustrative examples. Round numbers, NOT any real product. They show how a datasheet-style spec is
+# written with spec_from_datasheet(); every value beyond the ones below is a documented default (see 'assumptions').
+EXAMPLES = [
+    dict(id="example_qdd_9to1", model="Illustrative quasi-direct-drive 9:1", rated_nm=20, peak_nm=60,
+         rated_speed_rpm=100, no_load_rpm=150, mass_kg=1.0, bus_v=48, ratio=9,
+         note="Illustrative round numbers for a generic 9:1 quasi-direct-drive actuator. Not a real product."),
+    dict(id="example_planetary_36to1", model="Illustrative planetary 36:1", rated_nm=40, peak_nm=120,
+         rated_speed_rpm=30, no_load_rpm=45, mass_kg=1.5, bus_v=48, ratio=36,
+         note="Illustrative round numbers for a generic 36:1 planetary-geared actuator. Not a real product."),
+    dict(id="example_harmonic_100to1", model="Illustrative strain-wave 100:1", rated_nm=80, peak_nm=240,
+         rated_speed_rpm=20, no_load_rpm=30, mass_kg=2.5, bus_v=48, ratio=100,
+         note="Illustrative round numbers for a generic 100:1 strain-wave actuator. Not a real product."),
 ]
 
 
-def catalogue_spec(row: dict) -> dict:
+def example_spec(row: dict) -> dict:
     r = dict(row)
-    src = [{"url": r.pop("url"), "accessed": r.pop("accessed"), "note": r["note"]}]
     note = r.pop("note")
-    d = spec_from_datasheet(status="catalogue face value as published; rating conditions unstated; not verified by "
-                                   "Artificial Motion", sources=src,
-                            notes=note + " Model values beyond the published face values are assumptions (see "
-                                         "'assumptions').",
-                            conditions_text="rating conditions not stated by the source", as_dict=True, **r)
+    d = spec_from_datasheet(status="illustrative example with round numbers; not any real product; not verified",
+                            sources=[], vendor="", notes=note + " Model values beyond the listed round numbers are "
+                            "assumptions (see 'assumptions').",
+                            conditions_text="illustrative; rating conditions not stated", as_dict=True, **r)
     ActuatorSpec(d)
     return d
 
@@ -138,14 +125,14 @@ def catalogue_spec(row: dict) -> dict:
 def main():
     out = []
     os.makedirs(os.path.join(SPEC_DIR, "am"), exist_ok=True)
-    os.makedirs(os.path.join(SPEC_DIR, "catalogue"), exist_ok=True)
+    os.makedirs(os.path.join(SPEC_DIR, "examples"), exist_ok=True)
     for u in U.UNIT_IDS:
         d = am_spec(u)
         p = os.path.join(SPEC_DIR, "am", "%s.json" % d["id"])
         out.append((d, p))
-    for row in CATALOGUE:
-        d = catalogue_spec(row)
-        p = os.path.join(SPEC_DIR, "catalogue", "%s.json" % d["id"])
+    for row in EXAMPLES:
+        d = example_spec(row)
+        p = os.path.join(SPEC_DIR, "examples", "%s.json" % d["id"])
         out.append((d, p))
     for d, p in out:
         with open(p, "w", encoding="utf-8", newline="\n") as f:

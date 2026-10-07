@@ -296,7 +296,7 @@ class AmFaultInfo:
     fault_word: int = 0
     first_fault: int = 0
     warning_word: int = 0
-    boot_block: int = 0
+    start_inhibit: int = 0
     safety_io: int = 0
     latched: bool = False
     codes: List[int] = field(default_factory=list)

@@ -3,9 +3,10 @@
 Thanks for looking at am-sdk.
 
 - **Issues are welcome now.** Bugs, unclear docs, API friction, missing features: open an issue.
-- **Pull requests from outside Artificial Motion open after 1.0.** Until then the API moves with the hardware, and we keep the tree in step with it ourselves. If you have a fix, open an issue with the patch or a description and we fold it in.
+- **Outside pull requests are closed until 1.0.** Until then the API moves with the hardware, and we keep the tree in step with it ourselves. Pull requests from people outside Artificial Motion are closed without review. Issues are welcome: if you have a fix, open an issue with the patch or a description and we fold it in.
+- **Security problems:** see [SECURITY.md](SECURITY.md), do not open an issue.
 
-Before you send anything, run the tests:
+Before you open an issue with a patch, run the tests:
 
 ```sh
 cmake -S c -B c/build -DAM_SDK_WERROR=ON && cmake --build c/build && ctest --test-dir c/build
@@ -17,4 +18,4 @@ Rules for code in this repository:
 - The C and Python simulators stay one model. A change to one goes into the other, and the cross-check test proves it.
 - Unit data lives in `python/am_sdk/data`. After a change, run `python tools/gen_unit_data.py`.
 
-By contributing you agree that your contribution is licensed under Apache-2.0.
+Contributions we take in are licensed under Apache-2.0 (inbound = outbound). There is no CLA.

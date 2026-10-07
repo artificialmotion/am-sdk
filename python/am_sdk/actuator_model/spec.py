@@ -30,7 +30,7 @@ SPEC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "specs")
 # Default assumptions used by spec_from_datasheet() and by load-time normalisation.
 # Each one is written into spec["assumptions"] when it is used.
 DEFAULTS = {
-    "ambient_c": (25.0, "rating ambient not stated; 25 C assumed (common catalogue reference)"),
+    "ambient_c": (25.0, "rating ambient not stated; 25 C assumed (common datasheet reference)"),
     "rated_winding_c": (105.0, "winding temperature at the continuous rating not stated; the continuous rating is taken as "
                                "the steady state that brings the winding to the derate threshold (105 C)"),
     "derate_c": (105.0, "derate threshold not stated; 105 C assumed (class F/H wire with margin)"),
@@ -316,7 +316,7 @@ class ActuatorSpec:
 # --------------------------------------------------------------------------------------------- registry
 
 def list_specs() -> Dict[str, str]:
-    """{id: path} of the specs shipped with the package (AM units and catalogue examples)."""
+    """{id: path} of the specs shipped with the package (AM units and generic illustrative examples)."""
     out = {}
     for sub in sorted(os.listdir(SPEC_DIR)):
         p = os.path.join(SPEC_DIR, sub)
@@ -330,7 +330,7 @@ def list_specs() -> Dict[str, str]:
 
 
 def load_spec(id_or_path) -> ActuatorSpec:
-    """Load a shipped spec by id ("AM-M", "MyActuator RMD-X8-P20-150-E", ...), a JSON path, or a dict."""
+    """Load a shipped spec by id ("AM-M", "example_qdd_9to1", ...), a JSON path, or a dict."""
     if isinstance(id_or_path, ActuatorSpec):
         return id_or_path
     if isinstance(id_or_path, dict):

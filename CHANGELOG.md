@@ -2,14 +2,23 @@
 
 All notable changes to am-sdk. The project follows semantic versioning; 0.x releases carry no compatibility promise.
 
-## 0.2.0-dev (unreleased)
+## 0.2.0 (release candidate; tagged at the public release)
+
+### Public release preparation
+- The three-clause licence statement: Apache-2.0 covers code, unit data, specs and the object dictionary (NOTICE, README).
+- The named competitor catalogue specs and their generator entries are removed. Three unnamed, illustrative example specs replace them (`example_qdd_9to1`, `example_planetary_36to1`, `example_harmonic_100to1`, round numbers, not any real product). The notebook default is an illustrative example.
+- Public names for four diagnostic objects: 0x2600:10 "Extended active fault set", 0x2603:1 "Start-inhibit reasons", 0x2700:2 "Supervisor request epoch / rearm epoch", 0x2700:3 "Supervisor condition bitmap". Values and indices are unchanged. `am_fault_info.boot_block` is now `start_inhibit` (C and Python).
+- 1.0 compatibility scope in `docs/API.md` 4.7 is accepted.
+- Version strings are 0.2.0 (Python `0.2.0`, no `.dev0`).
+- `SECURITY.md`, `RELEASE.md`; `CONTRIBUTING.md` states that outside pull requests are closed until 1.0.
+
 
 ### API readiness for the public repository
 - Renamed for public use (breaking, allowed in 0.x): `am_identity.fw_cm7` / `fw_cm4` are now `fw_main` / `fw_motor` (0x2100:1 main core, 0x2100:2 motor-control core); `AM_SIO_VM_GD_PRESENT` is now `AM_SIO_GATE_SUPPLY_PRESENT` (0x2620:1 bit 2). Python `AmIdentity` and `am_sdk.AM_SIO_*` follow. Python gains the `AM_SW_*` statusword constants that C already had.
 - `docs/API.md`: version 0.2.0; full status-code table; family and provisional fault-code tables; what the 1.0 compatibility promise covers and what it does not; Python versioning; deprecation in practice; current-mode errors (`AM_ERR_NOT_SUPPORTED` vs `AM_ERR_STATE`) as implemented; ESI publication with the evaluation units.
 - Header and docstrings: every public Python API function has a docstring with units, errors and [RT]/[NRT]; quick-stop wording matches 0x605A/0x6087; trace functions say 0.x.
 - SPDX licence identifiers in every hand-written Python file; `python/LICENSE` and `python/NOTICE` so the Python distribution carries the licence; package metadata (classifiers, project URLs); absolute links in the Python README.
-- README: third-party licences of the optional extras, trademark note for the catalogue specs, and a statement that every unit value is a simulated typical design value.
+- README: third-party licences of the optional extras, and a statement that every unit value is a simulated typical design value.
 - ROS 2 package versions follow the SDK version (0.2.0).
 - `tests/test_release_metadata.py`: checks that every version string agrees, that the C and Python status codes, bit constants and fault names agree, and that the Python licence files match the top-level ones.
 
@@ -43,7 +52,7 @@ Torque estimation and collision detection without an output torque sensor. Simul
   - `BatchActuatorModel`: numpy or torch.
   - MuJoCo bank and MJCF snippets.
   - Isaac Lab `IdealPDActuator` subclass (untested on Isaac Lab).
-- Specs for the six AM units and five catalogue examples at published face values. `tools/gen_actuator_specs.py` regenerates them.
+- Specs for the six AM units and five catalogue examples at published face values (removed again in 0.2.0, see above). `tools/gen_actuator_specs.py` regenerates them.
 - `docs/ACTUATOR_MODEL.md`, examples `05` to `09`, `tests/test_actuator_model.py`.
 - Optional extra `batch` (numpy).
 

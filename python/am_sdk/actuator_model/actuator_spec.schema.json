@@ -10,7 +10,7 @@
     "id": {"type": "string", "minLength": 1},
     "vendor": {"type": "string"},
     "model": {"type": "string"},
-    "status": {"type": "string", "description": "e.g. design target, catalogue face value, measured"},
+    "status": {"type": "string", "description": "e.g. design target, datasheet face value, measured"},
     "data_revision": {"type": "string"},
     "sources": {"type": "array", "items": {"type": "object", "properties": {
       "url": {"type": "string"}, "accessed": {"type": "string"}, "note": {"type": "string"}}}},

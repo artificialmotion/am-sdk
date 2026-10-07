@@ -321,7 +321,7 @@ typedef struct am_fault_info {
     uint32_t fault_word;        /**< 0x2600:1, bit n = family code 0x1000 + n         */
     uint32_t first_fault;       /**< 0x2600:2                                        */
     uint32_t warning_word;      /**< 0x2602:1                                        */
-    uint32_t boot_block;        /**< 0x2603:1                                        */
+    uint32_t start_inhibit;        /**< 0x2603:1                                        */
     uint8_t  safety_io;         /**< 0x2620:1                                        */
     bool     latched;           /**< true: needs am_clear_faults()                   */
 } am_fault_info;
