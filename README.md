@@ -89,6 +89,24 @@ python python/examples/05_torque_estimation_collision.py
 
 All of this is simulated today. Accuracy targets are in [docs/ESTIMATION.md](docs/ESTIMATION.md), to be confirmed on hardware.
 
+## Actuator model (any actuator, MuJoCo and Isaac Lab)
+
+`am_sdk.actuator_model` is an open, thermal-aware actuator model that works with any actuator: an AM unit, a catalogue unit or your own. It needs only the standard library.
+
+- **Spec.** A JSON file that any datasheet fits: ratio, torque-speed curves per bus voltage, the rating and its conditions (or `unstated`), a 1-node or 2-node thermal network, friction, inertia, gear efficiency, and optional Kt, resistance and current limit. Every value that does not come from the source is listed as an assumption.
+- **Runtime.** A torque limit that depends on speed, temperature and the peak budget. I²R and speed-dependent losses, winding and housing temperatures, derate, trip, duty-cycle statistics and events. About 13 µs per step in CPython.
+- **MuJoCo.** `MujocoActuatorBank` works on any MJCF from a joint-to-spec mapping. MJCF snippets cover armature, friction and motors.
+- **Isaac Lab.** An `IdealPDActuator` subclass, written against the documented API. It is untested on Isaac Lab; its torch core is tested.
+- **Shipped specs.** The six AM units, plus five catalogue units at their published face values, with source URLs and `conditions unstated` flags.
+
+```python
+from am_sdk.actuator_model import ActuatorModel, load_spec
+act = ActuatorModel(load_spec("AM-M"), dt=0.001)
+tau = act.step(tau_cmd, omega)            # limited torque; act.state.winding_c, act.events
+```
+
+Everything is a simulation model: lumped thermal physics, calibrated to reproduce the datasheet rating under its stated conditions. See [docs/ACTUATOR_MODEL.md](docs/ACTUATOR_MODEL.md) for the method, the assumptions, how to fit your own actuator and the limits of the model. Examples: `python/examples/05_*.py` to `09_*.py`.
+
 ## Layers
 
 | Layer | Where | What it does |
@@ -111,9 +129,9 @@ Every joint has both. You pick which one holds control authority.
 ```
 c/          C library, simulator, tests, examples (CMake)
 python/     Python package am_sdk, tests, examples
-docs/       API.md, ESTIMATION.md, object_dictionary.csv, ROS2.md
+docs/       API.md, ESTIMATION.md, object_dictionary.csv, ACTUATOR_MODEL.md, ROS2.md
 ros2/       ROS 2 packages: am_ros2_control, am_description, am_ros2_demo, am_ros2_bridge
-tools/      unit data and URDF generators, CAN-FD bus budget
+tools/      unit data, URDF and actuator spec generators, CAN-FD bus budget
 ```
 
 Run everything:

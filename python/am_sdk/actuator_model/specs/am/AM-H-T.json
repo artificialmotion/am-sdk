@@ -1,0 +1,461 @@
+{
+ "schema": "am-actuator-spec/1",
+ "id": "AM-H-T",
+ "vendor": "Artificial Motion",
+ "model": "H-T",
+ "status": "design target; SIMULATED, not built. Product preview: specifications are design targets for evaluation units shipping in Q1 2027.",
+ "data_revision": "Data revision 2026-10-05",
+ "sources": [
+  {
+   "url": "https://artificialmotion.com",
+   "accessed": "2026-10-07",
+   "note": "per-unit download H-T_params.json, copied in am_sdk/data/H-T/"
+  }
+ ],
+ "notes": "Continuous rating is the typical unit; end-of-life continuous 74.04 N m. Published continuous clamp 105 N m. Peak: 2 s event from a warm start.",
+ "assumptions": [
+  {
+   "field": "ratings.peak_recovery_s_per_s",
+   "value": 0.1,
+   "basis": "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating"
+  },
+  {
+   "field": "friction.coulomb_nm",
+   "value": 1.58,
+   "basis": "published unpowered backdrive torque used as Coulomb friction"
+  },
+  {
+   "field": "friction.viscous_nm_s_per_rad",
+   "value": 0.0,
+   "basis": "viscous damping not specified in the published data; 0"
+  },
+  {
+   "field": "thermal.nodes.tau_s",
+   "value": 210.0,
+   "basis": "no published time constant for this unit; conservative family value (shortest published family value), as in the SDK simulator"
+  },
+  {
+   "field": "thermal.nodes.c_j_per_k",
+   "value": 1179.48,
+   "basis": "lumped heat capacity = 600 J/(kg K) x actuator mass (aluminium/steel/copper/magnet mix); an order-of-magnitude assumption; scales watts only"
+  },
+  {
+   "field": "thermal.rated_winding_c",
+   "value": 105.0,
+   "basis": "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating"
+  },
+  {
+   "field": "thermal.derate_c",
+   "value": 105.0,
+   "basis": "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating"
+  },
+  {
+   "field": "thermal.trip_c",
+   "value": 130.0,
+   "basis": "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating"
+  },
+  {
+   "field": "thermal.trip_hysteresis_k",
+   "value": 5.0,
+   "basis": "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating"
+  }
+ ],
+ "mechanical": {
+  "ratio": 20.25,
+  "mass_kg": 1.9658,
+  "reflected_inertia_kgm2": 0.0707,
+  "gear_efficiency": 0.9265,
+  "backdrive_nm": 1.58
+ },
+ "ratings": {
+  "peak_nm": 210,
+  "peak_duration_s": 2.0,
+  "peak_recovery_s_per_s": 0.1,
+  "continuous_nm": 96.17,
+  "continuous_speed_rad_s": 6.283185307179586,
+  "nominal_bus_v": 48,
+  "no_load_speed_rad_s": {
+   "48": 12.576842589871138,
+   "36": 9.393362034233482
+  },
+  "conditions": {
+   "stated": true,
+   "ambient_c": 25.0,
+   "cooling": "bolted_structure",
+   "mount_k_per_w": 0.2083,
+   "text": "25 C ambient, still air, bolted to the robot structure (declared mount 0.2083 K/W), 48 V"
+  }
+ },
+ "torque_speed": [
+  {
+   "bus_v": 48.0,
+   "kind": "peak",
+   "speed_unit": "rpm",
+   "points": [
+    [
+     0,
+     210
+    ],
+    [
+     10,
+     210
+    ],
+    [
+     15,
+     210
+    ],
+    [
+     20,
+     210
+    ],
+    [
+     25,
+     210
+    ],
+    [
+     30,
+     210
+    ],
+    [
+     35.2778,
+     210
+    ],
+    [
+     40,
+     206.6
+    ],
+    [
+     45,
+     202.2
+    ],
+    [
+     50,
+     198.7667
+    ],
+    [
+     60,
+     191.9
+    ],
+    [
+     70,
+     187.1
+    ],
+    [
+     80,
+     182.3
+    ],
+    [
+     86.1652,
+     179.3407
+    ],
+    [
+     90,
+     164.5
+    ],
+    [
+     100,
+     125.3
+    ],
+    [
+     110,
+     83.9
+    ],
+    [
+     115,
+     60.7
+    ],
+    [
+     120,
+     33.4
+    ],
+    [
+     120.1,
+     0
+    ]
+   ]
+  },
+  {
+   "bus_v": 48.0,
+   "kind": "continuous",
+   "speed_unit": "rpm",
+   "points": [
+    [
+     0,
+     102.7
+    ],
+    [
+     0.4768,
+     102.7
+    ],
+    [
+     10,
+     102.7
+    ],
+    [
+     15,
+     103.15
+    ],
+    [
+     20,
+     103.6
+    ],
+    [
+     22.2192,
+     103.7553
+    ],
+    [
+     25,
+     103.95
+    ],
+    [
+     26.2366,
+     104.0366
+    ],
+    [
+     30,
+     103.134
+    ],
+    [
+     35.2778,
+     101.8261
+    ],
+    [
+     40,
+     100.6559
+    ],
+    [
+     45,
+     100.5554
+    ],
+    [
+     50,
+     100.4549
+    ],
+    [
+     60,
+     96.17
+    ],
+    [
+     70,
+     87.9167
+    ],
+    [
+     80,
+     80.4772
+    ],
+    [
+     86.1652,
+     76.4286
+    ],
+    [
+     90,
+     73.9103
+    ],
+    [
+     100,
+     68.08
+    ],
+    [
+     110,
+     61.9225
+    ],
+    [
+     115,
+     59.1704
+    ],
+    [
+     115.3489,
+     58.795
+    ],
+    [
+     120,
+     33.4
+    ],
+    [
+     120.1,
+     0
+    ]
+   ]
+  },
+  {
+   "bus_v": 36.0,
+   "kind": "peak",
+   "speed_unit": "rpm",
+   "points": [
+    [
+     0,
+     210
+    ],
+    [
+     10,
+     210
+    ],
+    [
+     15,
+     210
+    ],
+    [
+     20,
+     210
+    ],
+    [
+     25,
+     210
+    ],
+    [
+     30,
+     210
+    ],
+    [
+     35.2778,
+     210
+    ],
+    [
+     40,
+     206.6
+    ],
+    [
+     45,
+     202.2
+    ],
+    [
+     50,
+     198.7667
+    ],
+    [
+     55.8711,
+     194.7352
+    ],
+    [
+     60,
+     184
+    ],
+    [
+     70,
+     135.4
+    ],
+    [
+     80,
+     85.1
+    ],
+    [
+     89.7,
+     27.1
+    ]
+   ]
+  },
+  {
+   "bus_v": 36.0,
+   "kind": "continuous",
+   "speed_unit": "rpm",
+   "points": [
+    [
+     0,
+     102.7
+    ],
+    [
+     0.5854,
+     102.7
+    ],
+    [
+     10,
+     102.7
+    ],
+    [
+     15,
+     103.15
+    ],
+    [
+     20,
+     103.6
+    ],
+    [
+     22.1983,
+     103.7539
+    ],
+    [
+     25,
+     103.95
+    ],
+    [
+     26.1909,
+     104.0334
+    ],
+    [
+     30,
+     103.1112
+    ],
+    [
+     35.2778,
+     101.7972
+    ],
+    [
+     40,
+     100.6216
+    ],
+    [
+     45,
+     100.5078
+    ],
+    [
+     50,
+     100.3939
+    ],
+    [
+     55.8711,
+     97.8911
+    ],
+    [
+     60,
+     96.131
+    ],
+    [
+     70,
+     87.877
+    ],
+    [
+     80,
+     80.4369
+    ],
+    [
+     89.2181,
+     29.981463917525744
+    ],
+    [
+     89.7,
+     27.1
+    ]
+   ]
+  }
+ ],
+ "friction": {
+  "coulomb_nm": 1.58,
+  "viscous_nm_s_per_rad": 0.0,
+  "stribeck": null
+ },
+ "electrical": {
+  "kt_nm_per_a": 0.146695,
+  "kt_basis": "AM motor design data, H-T (Kt at 60 C; nominal gear efficiency)",
+  "phase_resistance_ohm": null,
+  "current_limit_a": null
+ },
+ "thermal": {
+  "model": "1node",
+  "loss_calibration": "rating",
+  "rated_winding_c": 105.0,
+  "derate_c": 105.0,
+  "trip_c": 130.0,
+  "trip_hysteresis_k": 5.0,
+  "derate_law": "sqrt",
+  "copper_tempco_per_k": 0.00393,
+  "nodes": {
+   "tau_s": 210.0,
+   "c_j_per_k": 1179.48
+  },
+  "iron_loss": {
+   "k1_w_per_rad_s": 0.0,
+   "k2_w_s2_per_rad2": 0.0
+  },
+  "mechanical_losses_heat_actuator": true
+ }
+}

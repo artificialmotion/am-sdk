@@ -1,0 +1,193 @@
+{
+ "schema": "am-actuator-spec/1",
+ "id": "MyActuator-RMD-X12-320",
+ "vendor": "MyActuator",
+ "model": "RMD-X12-320",
+ "status": "catalogue face value as published; rating conditions unstated; not verified by Artificial Motion",
+ "sources": [
+  {
+   "url": "https://aifitlab.com/products/myactuator-rmd-x12-320-motor",
+   "accessed": "2026-10-04",
+   "note": "Reseller technical table: 85 Nm rated at 100 rpm, 20:1, 30 A rms rated phase current. Rating conditions not stated."
+  }
+ ],
+ "notes": "Reseller technical table: 85 Nm rated at 100 rpm, 20:1, 30 A rms rated phase current. Rating conditions not stated. Model values beyond the published face values are assumptions (see 'assumptions').",
+ "assumptions": [
+  {
+   "field": "mechanical.reflected_inertia_kgm2",
+   "value": 0.128,
+   "basis": "reflected inertia not stated; 4e-4 kg m^2 per N m of peak torque assumed (order of magnitude for geared quasi-direct-drive units)"
+  },
+  {
+   "field": "mechanical.gear_efficiency",
+   "value": 0.9,
+   "basis": "gear efficiency not stated; 0.90 assumed (single-stage planetary order of magnitude)"
+  },
+  {
+   "field": "friction.coulomb_nm",
+   "value": 6.4,
+   "basis": "friction / backdrive torque not stated; 2 % of peak torque assumed"
+  },
+  {
+   "field": "friction.viscous_nm_s_per_rad",
+   "value": 0.0,
+   "basis": "viscous friction not stated; 0 assumed"
+  },
+  {
+   "field": "ratings.peak_duration_s",
+   "value": 2.0,
+   "basis": "peak duration not stated; 2 s assumed"
+  },
+  {
+   "field": "ratings.peak_recovery_s_per_s",
+   "value": 0.1,
+   "basis": "peak recovery not stated; 0.1 s of peak per s below continuous assumed"
+  },
+  {
+   "field": "ratings.conditions.ambient_c",
+   "value": 25.0,
+   "basis": "rating ambient not stated; 25 C assumed (common catalogue reference)"
+  },
+  {
+   "field": "torque_speed",
+   "value": "line",
+   "basis": "no curve published: straight voltage line through the rated point to zero torque at no-load speed; peak = min(peak, line)"
+  },
+  {
+   "field": "thermal.rated_winding_c",
+   "value": 105.0,
+   "basis": "winding temperature at the continuous rating not stated; the continuous rating is taken as the steady state that brings the winding to the derate threshold (105 C)"
+  },
+  {
+   "field": "thermal.derate_c",
+   "value": 105.0,
+   "basis": "derate threshold not stated; 105 C assumed (class F/H wire with margin)"
+  },
+  {
+   "field": "thermal.trip_c",
+   "value": 130.0,
+   "basis": "trip temperature not stated; 130 C assumed"
+  },
+  {
+   "field": "thermal.trip_hysteresis_k",
+   "value": 5.0,
+   "basis": "trip reset hysteresis not stated; 5 K assumed"
+  },
+  {
+   "field": "thermal.nodes.c_total_j_per_k",
+   "value": 1422.0,
+   "basis": "lumped heat capacity = 600 J/(kg K) x actuator mass (aluminium/steel/copper/magnet mix); an order-of-magnitude assumption"
+  },
+  {
+   "field": "thermal.nodes.tau_housing_s",
+   "value": 300.0,
+   "basis": "thermal time constant not stated; 300 s assumed for the housing (dominant) mode"
+  },
+  {
+   "field": "thermal.nodes.tau_winding_s",
+   "value": 30.0,
+   "basis": "winding-to-housing time constant not stated; 30 s assumed"
+  },
+  {
+   "field": "thermal.nodes.winding_rise_fraction",
+   "value": 0.5,
+   "basis": "share of the rated temperature rise across winding-to-housing not stated; 0.5 assumed"
+  }
+ ],
+ "mechanical": {
+  "ratio": 20,
+  "mass_kg": 2.37,
+  "reflected_inertia_kgm2": 0.128,
+  "gear_efficiency": 0.9,
+  "backdrive_nm": null
+ },
+ "ratings": {
+  "peak_nm": 320,
+  "peak_duration_s": 2.0,
+  "peak_recovery_s_per_s": 0.1,
+  "continuous_nm": 85,
+  "continuous_speed_rad_s": 10.471975511965976,
+  "nominal_bus_v": 48,
+  "no_load_speed_rad_s": {
+   "48": 13.08996938995747
+  },
+  "conditions": {
+   "stated": false,
+   "ambient_c": 25.0,
+   "cooling": "unstated",
+   "mount_k_per_w": null,
+   "text": "rating conditions not stated by the source"
+  }
+ },
+ "torque_speed": [
+  {
+   "bus_v": 48,
+   "kind": "peak",
+   "speed_unit": "rad/s",
+   "points": [
+    [
+     0.0,
+     320
+    ],
+    [
+     3.233992437518902,
+     320
+    ],
+    [
+     13.08996938995747,
+     0.0
+    ]
+   ]
+  },
+  {
+   "bus_v": 48,
+   "kind": "continuous",
+   "speed_unit": "rad/s",
+   "points": [
+    [
+     0.0,
+     85
+    ],
+    [
+     10.471975511965976,
+     85
+    ],
+    [
+     13.08996938995747,
+     0.0
+    ]
+   ]
+  }
+ ],
+ "friction": {
+  "coulomb_nm": 6.4,
+  "viscous_nm_s_per_rad": 0.0,
+  "stribeck": null
+ },
+ "electrical": {
+  "kt_nm_per_a": null,
+  "phase_resistance_ohm": null,
+  "current_limit_a": null
+ },
+ "thermal": {
+  "model": "2node",
+  "derate_law": "sqrt",
+  "rated_winding_c": 105.0,
+  "derate_c": 105.0,
+  "trip_c": 130.0,
+  "trip_hysteresis_k": 5.0,
+  "copper_tempco_per_k": 0.00393,
+  "loss_calibration": "rating",
+  "nodes": {
+   "tau_housing_s": 300.0,
+   "tau_winding_s": 30.0,
+   "winding_rise_fraction": 0.5,
+   "c_total_j_per_k": 1422.0
+  },
+  "iron_loss": {
+   "k1_w_per_rad_s": 0.0,
+   "k2_w_s2_per_rad2": 0.0
+  },
+  "mechanical_losses_heat_actuator": true
+ }
+}
