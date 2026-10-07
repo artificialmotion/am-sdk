@@ -4,6 +4,10 @@
 simulator. It works with any actuator: an Artificial Motion unit, a catalogue unit, or your own
 prototype. You describe the actuator in a JSON spec. The model then gives you, every step:
 
+![Simulated actuator model: a knee holds a load, winding temperature rises, the torque limit derates](media/actuator_thermal_hold.gif)
+
+*Simulated: an AM-M knee (design-target spec) holds 8.2 kg at the foot of a MuJoCo leg in a 58 C ambient (assumed), x60 time-lapse. First-order thermal model. Clips are rendered by `tools/showcase/` (needs matplotlib and imageio-ffmpeg).*
+
 - the torque limit at the current speed and temperature, in both directions
 - copper and speed-dependent losses
 - winding and housing temperatures from a 1-node or 2-node thermal network

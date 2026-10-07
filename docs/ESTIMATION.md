@@ -4,6 +4,10 @@
 
 **The collision detector is not a safety function.** It does not replace STO or a certified safety controller.
 
+![Simulated collision detection: estimated vs true torque and the contact flag](media/collision_detection.gif)
+
+*Simulated: an S-S elbow driven into a stiff wall, slow motion. Clips are rendered by `tools/showcase/` (needs matplotlib and imageio-ffmpeg).*
+
 The joints have no output torque sensor. The SDK estimates joint torque from what the drive already measures (phase current, output position, temperature) and a calibrated model of the motor, friction and gear. It also gives you a collision residual that does not need an acceleration signal. Both are open source, in C and Python, with the same numbers in both.
 
 ## What is in the SDK
