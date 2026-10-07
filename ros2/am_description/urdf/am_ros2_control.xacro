@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!--
+  ros2_control system block for Artificial Motion joints (plugin am_ros2_control/AmSystemInterface).
+
+  Usage:
+    <xacro:include filename="$(find am_description)/urdf/am_units.urdf.xacro"/>
+    <xacro:include filename="$(find am_description)/urdf/am_ros2_control.xacro"/>
+    <xacro:am_ros2_control name="am_system" backend="sim">
+      <joints>
+        <xacro:am_ros2_control_joint name="hip_pitch" unit="H-X"/>
+        <xacro:am_ros2_control_joint name="knee" unit="M"/>
+      </joints>
+    </xacro:am_ros2_control>
+  The joint macros go inside one <joints> element (the block parameter **joints inserts its children).
+
+  backend:  "sim" (simulator built from the joints' units, SIMULATED), "sim:M,H-X" (explicit list,
+            addresses 0..n-1), or the placeholders "ethercat:<nic>" / "canfd:<if>", which fail at load
+            with "available with evaluation units" until the hardware transport ships.
+  cycle_us: one write() runs one am-sdk cycle; keep it at 1e6 / controller_manager update_rate.
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="am_ros2_control" params="name backend:=sim cycle_us:=1000 enable_timeout_ms:=1000 **joints">
+    <ros2_control name="${name}" type="system">
+      <hardware>
+        <plugin>am_ros2_control/AmSystemInterface</plugin>
+        <param name="backend">${backend}</param>
+        <param name="cycle_us">${cycle_us}</param>
+        <param name="enable_timeout_ms">${enable_timeout_ms}</param>
+      </hardware>
+      <xacro:insert_block name="joints"/>
+    </ros2_control>
+  </xacro:macro>
+</robot>

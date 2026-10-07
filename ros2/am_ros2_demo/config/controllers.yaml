@@ -1,0 +1,52 @@
+# SPDX-License-Identifier: Apache-2.0
+# One AM joint ("joint1") on am_ros2_control, simulator backend. SIMULATED.
+# update_rate must match the hardware parameter cycle_us (1000 Hz <-> 1000 us).
+controller_manager:
+  ros__parameters:
+    update_rate: 1000
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    # position commands on /forward_position_controller/commands -> drive in CSP
+    forward_position_controller:
+      type: forward_command_controller/ForwardCommandController
+
+    # trajectories on /joint_trajectory_controller/follow_joint_trajectory -> drive in CSP
+    joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    # [position, stiffness, damping] on /impedance_controller/commands -> AM impedance mode
+    impedance_controller:
+      type: forward_command_controller/MultiInterfaceForwardCommandController
+
+forward_position_controller:
+  ros__parameters:
+    joints:
+      - joint1
+    interface_name: position
+
+joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - joint1
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_partial_joints_goal: false
+    constraints:
+      stopped_velocity_tolerance: 0.05
+      goal_time: 0.5
+      joint1:
+        trajectory: 0.2
+        goal: 0.02
+
+impedance_controller:
+  ros__parameters:
+    joint: joint1
+    interface_names:
+      - position
+      - stiffness
+      - damping

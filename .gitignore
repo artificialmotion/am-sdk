@@ -11,6 +11,10 @@ build*/
 *.exe
 *.pdb
 
+# colcon (ROS 2)
+install/
+log/
+
 # Python
 __pycache__/
 *.py[cod]

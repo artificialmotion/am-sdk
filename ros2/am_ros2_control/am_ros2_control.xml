@@ -1,0 +1,11 @@
+<library path="am_ros2_control">
+  <class name="am_ros2_control/AmSystemInterface"
+         type="am_ros2_control::AmSystemInterface"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      ros2_control SystemInterface for Artificial Motion joints on the am-sdk.
+      Backend sim:&lt;unit&gt; runs the am-sdk simulator (SIMULATED). EtherCAT and CAN-FD
+      transports come with evaluation units.
+    </description>
+  </class>
+</library>
