@@ -318,6 +318,7 @@ Every drive on a bus receives the group command frame at the same instant and ti
 | Bus | `am_get_control_bus`, `am_set_control_bus` |
 | Diagnostics | `am_trace_arm`, `am_trace_read` (not available in 0.1.0) |
 | L1 codec | `am_codec_init`, `am_codec_pack_rx1600/1601`, `am_codec_unpack_tx1a00/1a01`, `am_codec_pack_cfd_slot`, `am_codec_unpack_cfd_fb`, `am_codec_compact_mode`, `am_codec_decode_state`, `am_codec_next_controlword` |
+| Estimation (`am_est.h`) [RT] | `am_est_calibration_default`, `am_est_calibration_check`, `am_est_config_default`, `am_est_init`, `am_est_reset`, `am_est_update`, `am_est_input_from_telemetry`, `am_est_current_model`, `am_est_kt_at`, `am_est_friction_at`, `am_est_efficiency_at`, `am_est_stick_band`, `am_est_dither_amplitude_max`, `am_est_dither_torque`, `am_collision_config_default`, `am_collision_init`, `am_collision_reset`, `am_collision_update`, `am_collision_calibrate_threshold`. Estimates only, simulated; see [ESTIMATION.md](ESTIMATION.md) |
 | Simulator (`am_sim.h`) | `am_sim_of`, `am_sim_configure`, `am_sim_set_external_torque`, `am_sim_set_sto`, `am_sim_inject_fault`, `am_sim_clear_fault_cause`, `am_sim_set_ambient`, `am_sim_set_bus_voltage`, `am_sim_set_load_inertia`, `am_sim_power_cycle`, `am_sim_get_plant`, `am_sim_set_plant`, `am_sim_set_external_plant`, `am_sim_transport_open/joint/close` |
 
 SDK units are SI floats (positions as double). Conversion to OD integers happens only in the codec.
@@ -388,6 +389,8 @@ Per joint, in virtual time, one drive cycle per `am_cycle()`:
 - sensing: 19-bit motor encoder, 14-bit output encoder, current in 1 mA steps; the drive acts on the feedback of the previous cycle, as with a bus master.
 
 The C and Python simulators are the same model. `python/tests/test_cross_check_c.py` runs the same command scripts through both and requires the same telemetry.
+
+For torque-estimator work the Python simulator takes an optional `SimOptions.truth_plant` (`TruthPlant`: gear efficiency forward and reverse, Stribeck and viscous friction, Kt drift and saturation, ripple, current-sensor errors) and reports per-cycle ground truth in `SimJoint.truth`. It is off by default; the cross-check covers the default plant. See [ESTIMATION.md](ESTIMATION.md).
 
 The simulator does not model gearbox compliance, backlash, cogging, encoder noise, bus latency or jitter. Use it to write and test controllers, not for safety design.
 
