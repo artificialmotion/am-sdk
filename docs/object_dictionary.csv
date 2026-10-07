@@ -1,0 +1,256 @@
+index,subindex,name,type,access,pdo_mappable,units,range,notes
+0x1000,0,Device type,UINT32,RO,no,,0x00020192 (CiA 402 servo),standard
+0x1001,0,Error register,UINT8,RO,CAN-FD only,bitfield,,standard; carried in EMCY
+0x1008,0,Manufacturer device name,VISIBLE_STRING,RO,no,,e.g. AM-M,per SKU
+0x1009,0,Manufacturer hardware version,VISIBLE_STRING,RO,no,,,
+0x100A,0,Manufacturer software version,VISIBLE_STRING,RO,no,,,mirrors 0x2100
+0x1010,1,Store parameters (all),UINT32,RW_U,no,,write 0x65766173 ('save'),customer parameters; factory data untouched
+0x1011,1,Restore default parameters (all),UINT32,RW_U,no,,write 0x64616F6C ('load'),customer parameters
+0x1014,0,COB-ID EMCY,UINT32,RW_U,no,,0x80 + node id,CAN-FD only
+0x1016,1,Consumer heartbeat time (host),UINT32,RW_U,no,ms,node<<16 | ms; 0 = off,CAN-FD only; host heartbeat loss -> COMMS_LOST_BUS
+0x1017,0,Producer heartbeat time,UINT16,RW_U,no,ms,0..65535; default 100,CAN-FD only
+0x1018,1,Identity: vendor ID,UINT32,RO,no,,,
+0x1018,2,Identity: product code,UINT32,RO,no,,"S-D 1, S-S 2, M 3, H-F 4, H-T 5, H-X 6",
+0x1018,3,Identity: revision,UINT32,RO,no,,hw rev x 0x10000 + OD major,
+0x1018,4,Identity: serial number,UINT32,RO,no,,,
+0x10F3,0,Diagnosis history,RECORD,RO,no,,ETG.1020,EtherCAT; AM fault codes 0x1000+ mirrored as diagnosis messages
+0x1400,0,RPDO1 communication parameter,RECORD,RW_U,no,,COB-ID 0x200 + node; type 254,CAN-FD only; per-joint command (CiA profile)
+0x1402,0,RPDO3 communication parameter (AM group command),RECORD,RW_U,no,,COB-ID from 0x2902:2; type 254,CAN-FD compact profile
+0x1600,0,RxPDO 0x1600 mapping: CiA 402 generic (20 B),ARRAY,RO,n/a,,fixed content v1,"0x6040, 0x6060, pad, 0x607A, 0x60FF, 0x6071, 0x60B2, 0x60B1"
+0x1601,0,RxPDO 0x1601 mapping: AM high-res / impedance / current (28 B),ARRAY,RO,n/a,,fixed content v1,"0x6040, 0x6060, pad, 0x607A, 0x60FF, 0x2A10:1, 0x2A00:1, 0x2A00:2, 0x2A11:1"
+0x1602,0,RxPDO mapping: AM group command frame (64 B),ARRAY,RO,n/a,,0x2A22,CAN-FD compact profile only
+0x1800,0,TPDO1 communication parameter,RECORD,RW_U,no,,COB-ID 0x180 + node; type 1 (SYNC) or 254 (on group frame),CAN-FD only
+0x1801,0,TPDO2 communication parameter,RECORD,RW_U,no,,COB-ID 0x280 + node,CAN-FD only
+0x1A00,0,TxPDO 0x1A00 mapping: CiA 402 status (24 B),ARRAY,RO,n/a,,fixed content v1,"0x6041, 0x6061, pad, 0x6064, 0x606C, 0x6077, 0x603F, 0x2600:1, 0x2620:1, 0x2500:1, 0x2401:1"
+0x1A01,0,TxPDO 0x1A01 mapping: estimator telemetry (60 B),ARRAY,RO,n/a,,fixed content v1,0x2800..0x2805; EtherCAT 1 kHz; on CAN-FD see docs/API.md 3.5
+0x1A02,0,TxPDO mapping: AM compact feedback (16 B),ARRAY,RO,n/a,,0x2A23,CAN-FD compact profile
+0x1A03,0,TxPDO mapping: AM estimator-lite feedback (32 B),ARRAY,RO,n/a,,0x2A24,"CAN-FD compact profile, extended"
+0x1C12,0,SM2 PDO assignment,ARRAY,RW_U,no,,{0x1600} or {0x1601},EtherCAT
+0x1C13,0,SM3 PDO assignment,ARRAY,RW_U,no,,"{0x1A00} or {0x1A00, 0x1A01}",EtherCAT
+0x1C32,0,SM2 synchronisation parameters,RECORD,RW_U,no,,DC SYNC0; cycle 250..2000 us,EtherCAT
+0x1C33,0,SM3 synchronisation parameters,RECORD,RW_U,no,,,EtherCAT
+0x2000,1,Family ID,UINT32,RO,no,,,
+0x2000,2,SKU code,UINT16,RO,no,,= 0x1018:2,mirrors the product code
+0x2000,3,Variant / construction revision,UINT16,RO,no,,,
+0x2000,4,Hardware revision / board format,UINT32,RO,no,,,
+0x2000,5,Unit UID (96-bit),OCTET_STRING(12),RO,no,,,
+0x2000,6,OD version,UINT32,RO,no,,major<<24 | minor<<16 | patch,additive = minor; remove/retype/renumber = major; indices never reused
+0x2000,7,Config schema version,UINT16,RO,no,,,
+0x2000,8,Capability bitmap,UINT32,RO,no,bitfield,"b0 output abs enc, b1 winding sensor, b2 EtherCAT, b3 CAN-FD control, b4 STO, b5 brake (0 in v1), b6 current mode, b7 trace, b8 bus FW update",
+0x2000,9,Calibration record version + CRC32,OCTET_STRING(8),RO,no,,version (UINT32) + CRC32 (UINT32),
+0x2000,10,Output-shaft ratio (nominal),REAL64,RO,no,,per SKU; read it from the unit,exact value in 0x6091
+0x2100,1,"Firmware version, main core",UINT32,RO,no,,,main core
+0x2100,2,"Firmware version, motor-control core",UINT32,RO,no,,,motor-control core
+0x2100,3,Bootloader version,UINT32,RO,no,,,
+0x2200,1,Calibration record header,RECORD,RO,no,,"schema, length, epoch, date, CRC32, signature ref",factory
+0x2200,2,kt per unit at reference magnet temperature,REAL32,RO_F,no,Nm/A (motor),,customer read-only
+0x2200,3,kt reference temperature,REAL32,RO_F,no,degC,,
+0x2200,4,kt temperature coefficient,REAL32,RO_F,no,1/K,,
+0x2200,5,Phase resistance at 20 degC,REAL32,RO_F,no,ohm,,
+0x2200,6,"Inductance Ld, Lq",REAL32[2],RO_F,no,H,,
+0x2200,8,EOL current calibration valid flag,BOOL,RO_F,no,,,
+0x2200,10,"Motor sensor direction, pole pairs",OCTET_STRING(2),RO_F,no,,,
+0x2200,11,Motor-to-output offset,INT32,RO_F,no,urad,,
+0x2200,12,Output encoder direction / resolution id,UINT16,RO_F,no,,,
+0x2200,13,Transmission ratio (verified),REAL64,RO_F,no,,,
+0x2210,1,Output encoder zero offset,INT32,RO_F,no,urad,,
+0x2210,2,Output encoder direction,INT8,RO_F,no,,1 / -1,
+0x2210,3,"Output encoder harmonic correction k=1..4 (amp, phase)",REAL32[8],RO_F,no,"urad, rad",,
+0x2210,4,Magnet field strength at EOL,REAL32,RO_F,no,mT,35..70,
+0x2210,5,Output sensor serial,UINT32,RO_F,no,,,
+0x2220,1,"Exact ratio (num, den)",UINT32[2],RO_F,no,,,transmission model
+0x2220,2,Backlash (BOL measured),UINT32,RO_F,no,urad,,
+0x2220,3,"Torsional stiffness, 3 points (tau, twist)",INT32[6],RO_F,no,"mNm, urad",,
+0x2220,4,"Friction: Coulomb, viscous, Stribeck, Stribeck velocity, temp coeff",REAL32[5],RO_F,no,"mNm, mNm/(rad/s), mNm, rad/s, 1/K",,baseline model for host estimators
+0x2230,1,Host estimator model id,UINT32,RW_U,no,,,customer-writable
+0x2230,2,Host estimator model version,UINT32,RW_U,no,,,
+0x2230,3,Host estimator model hash,OCTET_STRING(32),RW_U,no,,SHA-256,
+0x2230,4,Training calibration epoch,UINT32,RW_U,no,,must match cal_epoch unless unit-independent,
+0x2300,1,Phase current ceiling,REAL32,RO_F,no,A,per SKU; read it from the unit,AM ceiling; customer read-only
+0x2300,2,Input (DC) current limit,REAL32,RO_F,no,A,per SKU; read it from the unit,"AM limiter, not bypassable"
+0x2300,4,Output speed limit,REAL32,RW_U,no,rad/s,<= AM ceiling,"customer, lower-only"
+0x2300,5,Service lowering of torque/current,REAL32,RW_U,no,fraction,0..1,
+0x2300,20,Comms-loss T_loss before disarm,UINT32,RW_U,no,ms,10..1000,customer-modifiable
+0x2301,1,Winding derate onset / trip,REAL32[2],RO_F,no,degC,,AM ceiling
+0x2301,2,Housing derate onset / trip,REAL32[2],RO_F,no,degC,,
+0x2301,3,Power-stage derate onset / trip,REAL32[2],RO_F,no,degC,,
+0x2302,1,Magnet-temperature current ceiling curve,REAL32[16],RO_F,no,"degC, A",,
+0x2302,2,Magnet temperature gate,REAL32,RO_F,no,degC,,
+0x2400,2,Sensor availability bitmap,UINT16,RO,no,,,
+0x2400,3,Ambient reference,REAL32,RW_U,no,degC,-20..60,customer-modifiable (model input only)
+0x2401,1,Winding temperature,INT16,RO,yes,0.1 degC,,in TxPDO 0x1A00
+0x2401,2,Magnet temperature (estimate),INT16,RO,yes,0.1 degC,,
+0x2401,3,Power stage / FET temperature,INT16,RO,yes,0.1 degC,,
+0x2401,4,Board / logic temperature,INT16,RO,yes,0.1 degC,,
+0x2401,5,Housing temperature (estimate),INT16,RO,yes,0.1 degC,,
+0x2401,6,MCU temperature,INT16,RO,yes,0.1 degC,,
+0x2401,7,Active current ceiling after derate,REAL32,RO,no,A,,
+0x2401,8,PT1000 raw ratio 1 / 2,REAL32[2],RO,no,,,
+0x2500,1,Reference state,UINT8,RO,yes,enum,"0 INVALID, 1 CANDIDATE, 2 VALID",in TxPDO 0x1A00
+0x2500,2,Establish-reference command,UINT8,WO_CMD,no,,strictly newer epoch,host-supplied fallback path
+0x2500,3,"Reference epoch, track id",UINT32[2],RO,no,,,
+0x2500,4,Motor turns since reference,INT32,RO,no,,,
+0x2501,1,Motor mechanical angle,UINT32,RO,no,count (2^19 per turn),,
+0x2501,2,Output absolute angle,UINT32,RO,no,count,,
+0x2501,3,Output absolute encoder status,UINT16,RO,no,bitfield,,
+0x2502,1,Revolution-resolution residual,INT32,RO,no,urad,,
+0x2503,1,Cross-check accept threshold,UINT32,RO_F,no,udeg,per SKU,lowering allowed
+0x2503,2,Consistency sample count to VALID,UINT16,RO_F,no,,8,
+0x2503,3,Operating mismatch threshold,UINT32,RO_F,no,udeg,,
+0x2504,1,Homing method fallback,INT8,RO,no,,0 (no homing in v1),
+0x2600,1,Active fault word,UINT32,RO,yes,bitfield,bitfield,bit n = family code 0x1000 + n
+0x2600,2,First fault,UINT32,RO,no,,,
+0x2600,3,Fault epoch / clear epoch,UINT32[2],RO,no,,,
+0x2600,4,Fault clear request,UINT8,WO_CMD,no,,,same as controlword bit 7 edge
+0x2600,5,Fault sub-cause,UINT16,RO,no,,,
+0x2600,10,Proposed-code active set,UINT32[4],RO,no,bitfield,,
+0x2601,0,Fault history (count + 32 entries),RECORD,RO,no,,"sub 0 count; sub 1..32: code UINT16, state UINT8, pad, time UINT64 ns, vbus INT32 mV, iq INT32 mA, winding INT16 0.1 degC, power stage INT16 0.1 degC (24 B)",newest first
+0x2602,1,Warning word,UINT32,RO,no,bitfield,,
+0x2603,1,Boot-block reasons,UINT32,RO,no,bitfield,,
+0x2620,1,Safety I/O status,UINT8,RO,yes,bitfield,"b0 STO1, b1 STO2, b2 VM_GD, b3 ENABLE readback, b4 discrepancy",in TxPDO 0x1A00
+0x2620,2,Discrepancy timer,UINT16,RO,no,ms,,
+0x2620,3,STO event counter,UINT32,RO,no,,,
+0x2621,1,STO discrepancy time,UINT16,RO_F,no,ms,"5..100, default 20",safety path: customer read-only
+0x2621,2,STO test-pulse filter,UINT16,RO_F,no,ms,default 1,
+0x2700,1,Supervisor state,UINT8,RO,no,enum,0 RESET .. 6 FAULT_LATCHED,diagnostic
+0x2700,2,Last accepted request / rearm epoch,UINT32[2],RO,no,,,
+0x2700,3,Evidence bitmap,UINT32,RO,no,bitfield,,
+0x2800,1,Sample time (window centroid),UINT64,RO,yes,ns (DC system time; CAN: drive time base),,
+0x2800,2,Sample counter,UINT16,RO,yes,,,
+0x2800,3,Sync status,UINT16,RO,yes,bitfield,"b0 DC locked, b1 timestamp valid, b2 CAN sync locked, b4..7 missed/held",
+0x2800,4,Sample mode,UINT8,RW_U,no,enum,"0 boxcar 1 ms mean, 1 latest sample",customer-modifiable
+0x2801,1,Motor position (multi-turn track),INT32,RO,yes,count (2^19 per turn),wraps at 4096 turns,
+0x2801,2,Motor velocity,INT32,RO,yes,mrad/s (motor),,
+0x2802,1,Output angle (calibrated),UINT16,RO,yes,2^16 per turn,,
+0x2802,2,Output encoder status | reference state,UINT16,RO,yes,2 x enum,"low byte status, high byte reference state",UINT8 x2 packed
+0x2802,3,Twist residual,INT32,RO,yes,urad (output),,
+0x2803,1,id measured,INT16,RO,yes,10 mA,,
+0x2803,2,iq measured,INT16,RO,yes,10 mA,,
+0x2803,3,id reference,INT16,RO,yes,10 mA,,
+0x2803,4,iq reference,INT16,RO,yes,10 mA,,
+0x2803,5,vd applied,INT16,RO,yes,10 mV,,
+0x2803,6,vq applied,INT16,RO,yes,10 mV,,
+0x2804,1,Bus voltage,UINT16,RO,yes,mV,,
+0x2804,2,Bus current estimate,INT16,RO,yes,10 mA,,"power balance, no DC shunt"
+0x2804,3,Winding temperature,INT16,RO,yes,0.1 degC,,
+0x2804,4,Magnet temperature (model),INT16,RO,yes,0.1 degC,,
+0x2804,5,Power stage temperature,INT16,RO,yes,0.1 degC,,
+0x2804,6,Board / logic temperature,INT16,RO,yes,0.1 degC,,
+0x2805,1,Torque estimate (open-loop),INT32,RO,yes,mNm (output),,kt(T)*iq*r*eta
+0x2805,2,Warning word (telemetry),UINT16,RO,yes,bitfield,,
+0x2806,1,"Processing descriptor: window, filter id, latency",UINT32[3],RO,no,"us, enum, us",,lets the host know the processing behind each sample
+0x2810,1,Trace control,UINT8,RW_U,no,enum,"0 idle, 1 arm, 2 force, 3 stop",20 kHz trace buffer
+0x2810,2,Trace trigger signal,UINT16,RW_U,no,enum,,
+0x2810,3,Trace trigger level,REAL32,RW_U,no,signal units,,
+0x2810,4,Trace length,UINT16,RW_U,no,samples,<= 4096,
+0x2810,5,Trace pre-trigger,UINT16,RW_U,no,samples,,
+0x2810,6,Trace state,UINT8,RO,no,enum,,
+0x2810,7,Trace data,DOMAIN,RO,no,,SDO complete access / FoE,
+0x2811,1,iq measured (high resolution),INT32,RO,yes,mA,,feedback of mode -2
+0x2811,2,id measured (high resolution),INT32,RO,yes,mA,,
+0x2900,1,CAN-FD node id,UINT8,RW_U,no,,1..63 (64..127 reserved for group COB-IDs),
+0x2900,2,CAN-FD populated / enabled,UINT8,RO,no,,1 on every unit,
+0x2900,3,"EtherCAT station alias, DC config",RECORD,RW_U,no,,,
+0x2900,4,EtherCAT port link state IN/OUT,UINT8[2],RO,no,,,
+0x2900,5,CAN-FD nominal bit rate,UINT32,RW_U,no,bit/s,500000 or 1000000; default 1000000,effective after reset
+0x2900,6,CAN-FD data bit rate,UINT32,RW_U,no,bit/s,2000000 or 5000000; default 5000000,
+0x2900,7,CAN-FD termination request,UINT8,RW_U,no,,"0 off, 1 on","needs a switchable termination; not fitted in v1, terminate the bus in the harness"
+0x2900,8,CAN-FD sample points / TDC offset,UINT16[3],RW_U,no,"permille, ns","nominal 800, data 750, TDC auto",
+0x2901,1,Control authority (configured),UINT8,RW_U,no,enum,"0 none, 1 EtherCAT (default), 2 CAN-FD",effective after reset; refused above Switch on disabled
+0x2901,2,Bus watchdog timeouts,UINT32[2],RW_U,no,ms,EtherCAT 10..100 (default 100); CAN-FD 2..100 (default 3),
+0x2901,3,Control authority (effective),UINT8,RO,yes,enum,,
+0x2901,4,Fallback policy,UINT8,RO,no,,0 = none (fixed in v1),
+0x2902,1,CAN-FD cyclic profile,UINT8,RW_U,no,enum,"0 CiA PDOs, 1 AM compact, 2 AM compact + estimator-lite",
+0x2902,2,Group command COB-ID,UINT32,RW_U,no,,default 0x1C0 + group (0..3),actuators use node ids 1..63
+0x2902,3,Group slot index,UINT8,RW_U,no,,0..3,
+0x2902,4,Feedback trigger,UINT8,RW_U,no,enum,"0 SYNC, 1 group command frame (default)",
+0x2A00,1,Impedance stiffness K,UINT32,RW,yes,mNm/rad,"0..min(0x2A00:4, 0x2A50:1)",
+0x2A00,2,Impedance damping D,UINT32,RW,yes,mNm*s/rad,"0..min(0x2A00:5, 0x2A50:2)",
+0x2A00,3,Impedance torque saturation,UINT32,RW,no,mNm,<= 0x6072 equivalent,
+0x2A00,4,Customer K cap,UINT32,RW_U,no,mNm/rad,<= 0x2A50:1,customer-modifiable
+0x2A00,5,Customer D cap,UINT32,RW_U,no,mNm*s/rad,<= 0x2A50:2,customer-modifiable
+0x2A10,1,Target torque / feed-forward (high resolution),INT32,RW,yes,mNm (output),clamped by the ceiling chain,
+0x2A11,1,iq reference (mode -2),INT32,RW,yes,mA,clamped by the phase-current ceiling and the input limiter,ignored in other modes
+0x2A11,2,id reference (mode -2),INT32,RW,no,mA,SDO only; identification tests,
+0x2A11,3,Current mode enable,UINT8,RW_U,no,,"0 disabled (default), 1 enabled",mode -2 refused unless 1
+0x2A20,1,Compact K LSB,UINT16,RW_U,no,mNm/rad,default 20 (full scale 1310 Nm/rad),CAN-FD compact profile
+0x2A20,2,Compact D LSB,UINT16,RW_U,no,mNm*s/rad,default 1 (full scale 65.5 Nm*s/rad),
+0x2A22,0,Group command frame,OCTET_STRING(64),RW,yes,,4 slots x 16 B (docs/API.md 3.4),CAN-FD only
+0x2A23,0,Compact feedback,OCTET_STRING(16),RO,yes,,docs/API.md 3.4,CAN-FD only
+0x2A24,0,Estimator-lite feedback,OCTET_STRING(32),RO,yes,,docs/API.md 3.4,CAN-FD only
+0x2A30,1,Position loop gain,REAL32,RW_U,no,1/s,within 0x2A50:3,customer-modifiable (CSP)
+0x2A30,2,Velocity loop P,REAL32,RW_U,no,Nm*s/rad,<= 0x2A50:4,CSP/CSV
+0x2A30,3,Velocity loop I,REAL32,RW_U,no,Nm/rad,<= 0x2A50:5,CSP/CSV
+0x2A40,1,Velocity feedback low-pass,REAL32,RW_U,no,Hz,>= 0x2A50:6,
+0x2A40,2,Torque command low-pass,REAL32,RW_U,no,Hz,0 off or >= 0x2A50:6,
+0x2A40,3,Notch centre,REAL32,RW_U,no,Hz,"0 off, 20..2000",
+0x2A40,4,Notch quality,REAL32,RW_U,no,,0.5..10,
+0x2A50,1,Envelope: max K,UINT32,RO,no,mNm/rad,per SKU; read it from the unit,factory; AM safe envelope
+0x2A50,2,Envelope: max D,UINT32,RO,no,mNm*s/rad,per SKU; read it from the unit,factory
+0x2A50,3,Envelope: position gain range,REAL32[2],RO,no,1/s,,factory
+0x2A50,4,Envelope: velocity P max,REAL32,RO,no,Nm*s/rad,,factory
+0x2A50,5,Envelope: velocity I max,REAL32,RO,no,Nm/rad,,factory
+0x2A50,6,Envelope: minimum filter cut-off,REAL32,RO,no,Hz,,factory
+0x2B00,1,Active config CRC32,UINT32,RO,no,,,
+0x2B00,2,Record directory,RECORD,RO,no,,,
+0x2B00,4,Commit / rollback,UINT8,WO_CMD,no,,,
+0x2C00,1,Brake (reserved),UINT8,RO,no,,0 = not fitted,subindices reserved
+0x2D00,1,Transparency record version,UINT16,RO,no,,,
+0x2D00,2,"Peak torque, 2 s",UINT32,RO,no,mNm,per SKU; read it from the unit,
+0x2D00,3,Rated speed,UINT32,RO,no,mrad/s,per SKU; read it from the unit,
+0x2D00,4,No-load speed at 48 V,UINT32,RO,no,mrad/s,per SKU; read it from the unit,"ideal intercept, excludes firmware speed limits"
+0x2D00,5,Reflected inertia at output,REAL32,RO,no,kg*m^2,per SKU; read it from the unit,
+0x2D00,6,Backdrive torque,UINT32,RO,no,mNm,per SKU; read it from the unit,0xFFFFFFFF = not available
+0x2D00,7,Rotor kinetic energy at no-load speed,REAL32,RO,no,J,per SKU; read it from the unit,
+0x2D00,8,Torsional stiffness (linearised),REAL32,RO,no,Nm/rad,per SKU; read it from the unit,NaN = not available
+0x2D00,9,Backlash,UINT32,RO,no,urad,per SKU; read it from the unit,0xFFFFFFFF = not available
+0x2D00,10,STO reaction time (spec),UINT32,RO,no,us,per SKU; read it from the unit,specified value
+0x2D00,11,Collision-detection latency (non-safety),UINT32,RO,no,us,per SKU; read it from the unit,0xFFFFFFFF = not available
+0x2D00,12,Data basis,UINT8,RO,no,enum,"0 n/a, 1 design target, 2 measured on the type, 3 measured on this unit",1 until units are measured
+0x2E00,1,User label,VISIBLE_STRING(32),RW_U,no,,,customer user object; persisted by 0x1010
+0x2E00,2,User tag,UINT32,RW_U,no,,,
+0x2E00,3,User data,OCTET_STRING(64),RW_U,no,,,opaque to firmware
+0x603F,0,Error code,UINT16,RO,yes,,"CiA 402 codes, AM codes 0x1000 and up",in TxPDO 0x1A00
+0x6040,0,Controlword,UINT16,RW,yes,,bit 7 fault reset,"CiA 402 state machine, docs/API.md 2.9"
+0x6041,0,Statusword,UINT16,RO,yes,,"bit 11 internal limit, bit 14 reference valid (AM), bit 15 STO active (AM)",
+0x605A,0,Quick stop option code,INT16,RW_U,no,,"2 = ramp, then Switch on disabled",torque ramp via 0x6087; not safety-rated
+0x605B,0,Shutdown option code,INT16,RW_U,no,,0,
+0x605C,0,Disable operation option code,INT16,RW_U,no,,0,
+0x605E,0,Fault reaction option code,INT16,RO,no,,"0 (torque off, coast)",fixed
+0x6060,0,Modes of operation,INT8,RW,yes,,"8 CSP, 9 CSV, 10 CST, -1 impedance, -2 current",
+0x6061,0,Modes of operation display,INT8,RO,yes,,as 0x6060,
+0x6062,0,Position demand value,INT32,RO,yes,urad (output),,
+0x6064,0,Position actual value,INT32,RO,yes,urad (output),single-turn output range in v1,absolute; valid only with statusword bit 14
+0x6065,0,Following error window,UINT32,RW_U,no,urad,,
+0x606B,0,Velocity demand value,INT32,RO,yes,mrad/s (output),,
+0x606C,0,Velocity actual value,INT32,RO,yes,mrad/s (output),,
+0x6071,0,Target torque,INT16,RW,yes,permille of 0x6076,-32768..32767,
+0x6072,0,Max torque,UINT16,RW_U,no,permille of 0x6076,<= AM ceiling,lower-only
+0x6073,0,Max current,UINT16,RW_U,no,permille of 0x6075,<= AM ceiling,lower-only
+0x6074,0,Torque demand,INT16,RO,yes,permille of 0x6076,,
+0x6075,0,Motor rated current,UINT32,RO,no,mA,per SKU,base of 0x6073 / 0x6078
+0x6076,0,Motor rated torque,UINT32,RO,no,mNm (output),per SKU; read it from the unit,headline continuous torque
+0x6077,0,Torque actual value,INT16,RO,yes,permille of 0x6076,,open-loop estimate; high resolution in 0x2805:1
+0x6078,0,Current actual value,INT16,RO,yes,permille of 0x6075,,high resolution in 0x2811:1
+0x6079,0,DC link circuit voltage,UINT32,RO,yes,mV,,
+0x607A,0,Target position,INT32,RW,yes,urad (output),,
+0x607D,1,Software position limit min,INT32,RW_U,no,urad,within the single-turn output range,customer-modifiable
+0x607D,2,Software position limit max,INT32,RW_U,no,urad,,customer-modifiable
+0x6087,0,Torque slope (quick-stop ramp),UINT32,RW_U,no,permille of 0x6076 per s,,used by quick stop 0x605A
+0x608F,1,Position encoder resolution: increments,UINT32,RO,no,,,factor group: 1 inc = 1 urad output
+0x608F,2,Position encoder resolution: motor revolutions,UINT32,RO,no,,,
+0x6091,1,Gear ratio: motor revolutions,UINT32,RO,no,,per SKU; read it from the unit,exact numerator
+0x6091,2,Gear ratio: shaft revolutions,UINT32,RO,no,,per SKU; read it from the unit,exact denominator
+0x6092,1,Feed constant: feed,UINT32,RO,no,,,
+0x6092,2,Feed constant: shaft revolutions,UINT32,RO,no,,,
+0x60A8,0,SI unit position,UINT32,RO,no,,"radian, prefix micro",
+0x60A9,0,SI unit velocity,UINT32,RO,no,,"radian per second, prefix milli",
+0x60B1,0,Velocity offset,INT32,RW,yes,mrad/s,,CSP feed-forward
+0x60B2,0,Torque offset,INT16,RW,yes,permille of 0x6076,,
+0x60C2,1,Interpolation time period value,UINT8,RW_U,no,,1 (with index -3 = 1 ms),cycle declaration for CSP/CSV/CST
+0x60C2,2,Interpolation time index,INT8,RW_U,no,,-3,
+0x60E0,0,Positive torque limit value,UINT16,RW,no,permille of 0x6076,<= 0x6072,lower-only
+0x60E1,0,Negative torque limit value,UINT16,RW,no,permille of 0x6076,<= 0x6072,lower-only
+0x60F4,0,Following error actual value,INT32,RO,yes,urad,,
+0x60FF,0,Target velocity,INT32,RW,yes,mrad/s (output),,
+0x6502,0,Supported drive modes,UINT32,RO,no,bitfield,"CSP | CSV | CST + manufacturer bits (impedance, current)",no homing in v1

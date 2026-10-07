@@ -1,0 +1,28 @@
+# build output
+c/build*/
+build*/
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+*.exe
+*.pdb
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+.pytest_cache/
+.venv/
+venv/
+
+# editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

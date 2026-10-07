@@ -1,0 +1,95 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  c:
+    name: C (${{ matrix.os }}, ${{ matrix.cc }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            cc: gcc
+            cxx: g++
+            werror: "ON"
+          - os: ubuntu-latest
+            cc: clang
+            cxx: clang++
+            werror: "ON"
+          - os: windows-latest
+            cc: msvc
+            werror: "ON"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Strict compile (C99 and C++)
+        if: runner.os == 'Linux'
+        run: |
+          for f in c/src/*.c c/tests/*.c c/examples/*.c; do
+            ${{ matrix.cc }} -std=c99 -Wall -Wextra -pedantic -Werror -Ic/include -c "$f" -o /dev/null
+          done
+          for f in c/src/*.c; do
+            ${{ matrix.cxx }} -x c++ -std=c++11 -Wall -Wextra -pedantic -Werror -Ic/include -c "$f" -o /dev/null
+          done
+
+      - name: Configure (Linux)
+        if: runner.os == 'Linux'
+        run: cmake -S c -B c/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -DAM_SDK_WERROR=${{ matrix.werror }}
+
+      - name: Configure (Windows)
+        if: runner.os == 'Windows'
+        run: cmake -S c -B c/build -DAM_SDK_WERROR=${{ matrix.werror }}
+
+      - name: Build
+        run: cmake --build c/build --config Release
+
+      - name: Test
+        run: ctest --test-dir c/build -C Release --output-on-failure
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: C/Python cross-check
+        run: |
+          python -m pip install -e "python[dev]"
+          python tools/gen_unit_data.py --check
+          cd python
+          python -m pytest -v tests/test_cross_check_c.py
+
+  python:
+    name: Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e "python[dev,can]"
+          python -m pip install pysoem || echo "pysoem not available here; EtherCAT tests skip"
+      - name: Install MuJoCo
+        if: matrix.python == '3.12'
+        run: python -m pip install -e "python[mujoco]"
+      - name: Test
+        run: |
+          cd python
+          python -m pytest -v
+      - name: Examples
+        run: |
+          cd python
+          python examples/01_impedance_sine.py
+          python examples/02_leg_two_joints.py
+          python examples/03_identity_transparency.py

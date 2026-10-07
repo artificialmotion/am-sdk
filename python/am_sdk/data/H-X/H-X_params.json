@@ -1,0 +1,391 @@
+{
+  "actuator": "H-X",
+  "status": "Product preview: specifications are design targets for evaluation units shipping in Q2 2027.",
+  "revision": "Data revision 2026-10-05",
+  "parameters": {
+    "output_inertia_armature": {
+      "value": 0.1389,
+      "unit": "kg m^2",
+      "note": "reflected inertia at output shaft"
+    },
+    "gear_ratio": {
+      "value": 21.6,
+      "unit": ":1"
+    },
+    "mass": {
+      "value": 2.4158,
+      "unit": "kg",
+      "note": "typical mass, excluding mating cables and plugs"
+    },
+    "peak_torque_2s": {
+      "value": 262,
+      "unit": "Nm",
+      "note": "2 s event from warm start"
+    },
+    "rated_torque_continuous_typical": {
+      "value": 125.43,
+      "unit": "Nm",
+      "note": "25 C ambient, still air, bolted to the robot structure"
+    },
+    "rated_speed": {
+      "value": 60,
+      "unit": "rpm"
+    },
+    "rated_torque_continuous_end_of_life": {
+      "value": 92.54,
+      "unit": "Nm"
+    },
+    "continuous_clamp": {
+      "value": 140,
+      "unit": "Nm",
+      "note": "continuous gear rating limit"
+    },
+    "no_load_speed_48V": {
+      "value": 12.482594810263445,
+      "unit": "rad/s",
+      "note": "119.2 rpm"
+    },
+    "no_load_speed_36V": {
+      "value": 9.330530181161684,
+      "unit": "rad/s",
+      "note": "89.1 rpm"
+    },
+    "thermal_time_constant": {
+      "value": null,
+      "unit": "s",
+      "note": "not specified; the Python helper uses the conservative family value of 210 s"
+    },
+    "friction_backdrive": {
+      "value": 1.72,
+      "unit": "Nm",
+      "note": "backdrive torque, unpowered"
+    },
+    "viscous_damping": {
+      "value": null,
+      "unit": "Nm s/rad",
+      "note": "not specified"
+    }
+  },
+  "curves": {
+    "peak_48V": {
+      "unit": {
+        "speed": "rpm",
+        "torque": "Nm"
+      },
+      "interpolation_allowed": true,
+      "points": [
+        [
+          0,
+          262
+        ],
+        [
+          10,
+          262
+        ],
+        [
+          15,
+          262
+        ],
+        [
+          20,
+          262
+        ],
+        [
+          24.5217,
+          262
+        ],
+        [
+          25,
+          260.9
+        ],
+        [
+          30,
+          252.4
+        ],
+        [
+          40,
+          239.7
+        ],
+        [
+          45,
+          234.8
+        ],
+        [
+          50,
+          230.9667
+        ],
+        [
+          60,
+          223.3
+        ],
+        [
+          70,
+          217.9
+        ],
+        [
+          80,
+          212.5
+        ],
+        [
+          90,
+          207.1
+        ],
+        [
+          100,
+          201.7
+        ],
+        [
+          101.1059,
+          201.1028
+        ],
+        [
+          110,
+          139.2
+        ],
+        [
+          119.2,
+          60
+        ]
+      ]
+    },
+    "continuous_48V": {
+      "unit": {
+        "speed": "rpm",
+        "torque": "Nm"
+      },
+      "interpolation_allowed": true,
+      "points": [
+        [
+          0,
+          131.7
+        ],
+        [
+          10,
+          131.7
+        ],
+        [
+          15,
+          132.2
+        ],
+        [
+          20,
+          132.7
+        ],
+        [
+          24.5217,
+          133.107
+        ],
+        [
+          25,
+          133.15
+        ],
+        [
+          30,
+          133.6
+        ],
+        [
+          40,
+          134.4
+        ],
+        [
+          45,
+          134.75
+        ],
+        [
+          50,
+          135.1
+        ],
+        [
+          50.4334,
+          135.126
+        ],
+        [
+          53.5123,
+          135.3107
+        ],
+        [
+          60,
+          125.43
+        ],
+        [
+          70,
+          111.88
+        ],
+        [
+          80,
+          100.08
+        ],
+        [
+          90,
+          89.88
+        ],
+        [
+          100,
+          81.05
+        ],
+        [
+          101.1059,
+          80.1996
+        ],
+        [
+          110,
+          73.36
+        ],
+        [
+          118.2942,
+          67.7975
+        ],
+        [
+          119.2,
+          60
+        ]
+      ]
+    },
+    "peak_36V": {
+      "unit": {
+        "speed": "rpm",
+        "torque": "Nm"
+      },
+      "interpolation_allowed": true,
+      "points": [
+        [
+          0,
+          262
+        ],
+        [
+          10,
+          262
+        ],
+        [
+          15,
+          262
+        ],
+        [
+          20,
+          262
+        ],
+        [
+          24.5217,
+          262
+        ],
+        [
+          25,
+          260.9
+        ],
+        [
+          30,
+          252.4
+        ],
+        [
+          40,
+          239.7
+        ],
+        [
+          45,
+          234.8
+        ],
+        [
+          50,
+          230.9667
+        ],
+        [
+          60,
+          223.3
+        ],
+        [
+          69.5238,
+          218.1571
+        ],
+        [
+          70,
+          217
+        ],
+        [
+          80,
+          144.6
+        ],
+        [
+          89.1,
+          0
+        ]
+      ]
+    },
+    "continuous_36V": {
+      "unit": {
+        "speed": "rpm",
+        "torque": "Nm"
+      },
+      "interpolation_allowed": true,
+      "points": [
+        [
+          0,
+          131.7
+        ],
+        [
+          10,
+          131.7
+        ],
+        [
+          15,
+          132.2
+        ],
+        [
+          20,
+          132.7
+        ],
+        [
+          24.5217,
+          133.107
+        ],
+        [
+          25,
+          133.15
+        ],
+        [
+          30,
+          133.6
+        ],
+        [
+          40,
+          134.4
+        ],
+        [
+          45,
+          134.75
+        ],
+        [
+          47.1089,
+          134.8976
+        ],
+        [
+          49.2903,
+          135.0503
+        ],
+        [
+          50,
+          133.44
+        ],
+        [
+          60,
+          115.08
+        ],
+        [
+          69.5238,
+          101.1657
+        ],
+        [
+          70,
+          100.47
+        ],
+        [
+          80,
+          88.79
+        ],
+        [
+          89.1,
+          0
+        ]
+      ]
+    }
+  }
+}

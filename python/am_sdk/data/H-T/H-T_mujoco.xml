@@ -1,0 +1,30 @@
+<!-- Artificial Motion H-T actuator, typical values. Data revision 2026-10-05. Product preview: specifications are design targets for evaluation units shipping in Q2 2027. -->
+<!-- Usage: <include file="H-T_mujoco.xml"/> at top level of your <mujoco> model (before <worldbody>), then
+       <joint class="am_H-T" .../>    on the joint driven by the actuator (OUTPUT side of the gearbox)
+       <motor class="am_H-T" joint="YOUR_JOINT"/>              plain torque actuator, clipped to +/- peak
+       <general class="am_H-T_dcdrop" joint="YOUR_JOINT"/>     optional: ctrl in [-1,1] = voltage fraction, linear torque drop
+     Actuator mass 1.9658 kg is NOT included here: add it to the link inertial. Gear ratio 20.25:1 is already
+     applied (all values are at the output shaft; keep gear="1"). -->
+<!-- Limits: continuous 96.17 Nm at 60 rpm (25 C, still air, bolted to the robot structure) is a THERMAL limit; MuJoCo cannot enforce it,
+     so use am_h_t_model.py (ThermalState) or your own RMS check. Peak 210 Nm is a 2 s event from a warm start, not a continuous limit.
+     MuJoCo has no native speed-dependent torque limit: forcerange below is the flat stall peak, which OVERSTATES torque at speed.
+     Either use the dcdrop actuator or clip with torque_limit() from am_h_t_model.py in your control loop. -->
+<!-- Joint: armature = 0.0707 kg m^2 (reflected inertia at output).
+     frictionloss = 1.58 Nm = backdrive torque (treated as Coulomb-like friction). Viscous damping: not specified (0). -->
+<!-- dcdrop approximation: force = peak*ctrl - (peak/w0)*qvel, w0 = no-load speed (48 V 12.5768 rad/s, 36 V 9.39336 rad/s).
+     This is the standard DC-motor line from stall peak to no-load. Versus the published 48 V peak curve its worst deviation is
+     -57% of peak at 86 rpm (positive = line above published curve). The published curve is authoritative. -->
+<mujocoinclude>
+  <default>
+    <default class="am_H-T">
+      <joint armature="0.0707" damping="0" frictionloss="1.58"/>
+      <motor gear="1" ctrllimited="true" ctrlrange="-210 210" forcelimited="true" forcerange="-210 210"/>
+    </default>
+    <default class="am_H-T_dcdrop">
+      <general gaintype="fixed" biastype="affine" gainprm="210" biasprm="0 0 -16.6974" ctrllimited="true" ctrlrange="-1 1" forcelimited="true" forcerange="-210 210"/>
+    </default>
+    <default class="am_H-T_dcdrop_36v">
+      <general gaintype="fixed" biastype="affine" gainprm="210" biasprm="0 0 -22.3562" ctrllimited="true" ctrlrange="-1 1" forcelimited="true" forcerange="-210 210"/>
+    </default>
+  </default>
+</mujocoinclude>
