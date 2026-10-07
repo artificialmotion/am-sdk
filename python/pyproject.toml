@@ -26,6 +26,7 @@ dependencies = []
 can = ["python-can>=4.3"]
 ecat = ["pysoem>=1.1"]
 mujoco = ["mujoco>=3.0"]
+batch = ["numpy>=1.22"]
 pinn = ["numpy>=1.22"]
 dev = ["pytest>=7"]
 
@@ -37,7 +38,7 @@ Source = "https://github.com/artificialmotion/am-sdk"
 include = ["am_sdk*"]
 
 [tool.setuptools.package-data]
-am_sdk = ["data/*/*", "estimation/*.json"]
+am_sdk = ["data/*/*", "estimation/*.json", "actuator_model/*.json", "actuator_model/specs/*/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

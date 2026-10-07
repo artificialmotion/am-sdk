@@ -7,6 +7,7 @@ pip install -e ".[dev]"            # from this folder
 pip install -e ".[can]"            # CAN-FD through python-can
 pip install -e ".[ecat]"           # EtherCAT through pysoem
 pip install -e ".[mujoco]"         # MuJoCo coupling
+pip install -e ".[batch]"          # numpy, for the batched actuator model
 pip install -e ".[pinn]"           # numpy, for the optional PINN residual
 ```
 
@@ -53,3 +54,6 @@ Python runs the cycle with the host clock. Use it for development, commissioning
 Run 1 kHz control on hardware from C.
 
 Apache-2.0. See the top-level README for the full picture.
+
+Actuator model for any actuator (MuJoCo, Isaac Lab, your own simulator): `am_sdk.actuator_model`,
+documented in `../docs/ACTUATOR_MODEL.md`.
