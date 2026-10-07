@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import copy
 import math
+import random
 import struct
 import zlib
 from dataclasses import dataclass
@@ -55,6 +56,47 @@ HOLD_ZERO = object()
 
 
 @dataclass
+class TruthPlant:
+    """Opt-in richer plant for torque-estimator studies (Python simulator only; default None keeps
+    the published model that the C simulator matches). With it the joint has a rigid gear with
+    forward/reverse efficiency, Stribeck + viscous friction with temperature terms, output bearing
+    friction, Kt drift with magnet temperature and saturation, torque and friction ripple, and
+    current-sensor gain/offset/noise. Every value is an assumption for simulation, not a unit rating.
+    The backdrive friction and friction_scale of SimOptions are not used when this is set."""
+    kt_scale: float = 1.0                   # true Kt / unit-data Kt at kt_ref_C
+    kt_ref_C: float = 60.0
+    kt_temp_coeff_per_K: float = -0.00094
+    kt_sat_frac: float = 0.0
+    kt_sat_current_A: float = 0.0           # 0 = no saturation
+    coulomb_Nm: float = 0.0                 # output-referred, rotor side of the gear
+    breakaway_Nm: float = 0.0
+    stribeck_vel_rad_s: float = 0.05
+    viscous_Nm_s_per_rad: float = 0.0
+    friction_ref_temp_C: float = 40.0
+    coulomb_temp_coeff_per_K: float = 0.004
+    viscous_temp_exp_per_K: float = 0.0225
+    eta_forward: float = 1.0
+    eta_reverse: float = 1.0
+    bearing_Nm: float = 0.0                 # output side of the gear
+    friction_ripple: float = 0.0            # fraction, once per motor revolution
+    torque_ripple: float = 0.0              # fraction, six per motor revolution
+    i_gain_err: float = 0.0                 # current sensor
+    i_offset_A: float = 0.0
+    i_noise_A: float = 0.0
+    temp_sensor_bias_C: float = 0.0         # added to the reported winding and magnet temperatures
+    seed: int = 1
+
+
+@dataclass
+class SimTruth:
+    """Ground truth of the last cycle (means over the plant sub-steps). Simulator only."""
+    tau_out_Nm: float = 0.0       # torque delivered at the output flange to the load
+    tau_ext_Nm: float = 0.0       # external torque on the output (your external_torque function)
+    tau_motor_Nm: float = 0.0     # motor torque before losses (truth plant) or drive torque (default plant)
+    qdd_rad_s2: float = 0.0       # mean output acceleration over the cycle
+
+
+@dataclass
 class SimOptions:
     """Per-joint sim settings."""
     ambient_C: float = 25.0
@@ -67,6 +109,7 @@ class SimOptions:
     external_plant: bool = False      # state comes from outside (MuJoCo coupling)
     friction_scale: float = 1.0
     authority_bus: Optional[AmBus] = None   # which bus the unit obeys; default = the session bus
+    truth_plant: Optional[TruthPlant] = None   # Python only: richer plant for estimator studies
 
 
 def _clamp(x, lo, hi):
@@ -96,6 +139,9 @@ class SimJoint(JointBackend):
         self.first_fault = 0
         self.error_code = 0
         self.current_mode_enabled = False   # 0x2A11:3
+        self.truth = SimTruth()
+        tp = self.opts.truth_plant
+        self._truth_rng = random.Random(tp.seed if tp is not None else 1)
         self._defaults()
         self.power_cycle()
 
@@ -445,12 +491,19 @@ class SimJoint(JointBackend):
         return float(f(t, self.q, self.qd)) if callable(f) else float(f)
 
     def _integrate(self, tau_motor: float):
+        if self.opts.truth_plant is not None:
+            self._integrate_truth(tau_motor)
+            return
         J = self.inertia
         F = self.ud.backdrive_nm * self.opts.friction_scale
         h = self.dt / self.n_sub
+        qd0 = self.qd
+        acc_ext = 0.0
         for k in range(self.n_sub):
             t = (self.t_ns * 1e-9) + k * h
-            tau_t = tau_motor + self._external_torque(t)
+            ext = self._external_torque(t)
+            acc_ext += ext
+            tau_t = tau_motor + ext
             v = self.qd
             if v == 0.0 and abs(tau_t) <= F:
                 continue
@@ -460,6 +513,73 @@ class SimJoint(JointBackend):
                 v_new = 0.0
             self.qd = v_new
             self.q += v_new * h
+        ext_m = acc_ext / self.n_sub
+        a = (self.qd - qd0) / self.dt
+        self.truth = SimTruth(tau_out_Nm=self.opts.load_inertia_kgm2 * a - ext_m, tau_ext_Nm=ext_m,
+                              tau_motor_Nm=tau_motor, qdd_rad_s2=a)
+
+    def _integrate_truth(self, tau_cmd: float):
+        """Rigid-gear plant of TruthPlant. Rotor side: J_arm w' = tau_m - f(w) - g * tau_t; output side:
+        J_load w' = tau_t + tau_ext - f_bearing; g = 1/eta_f when the gear drives the load, eta_r when
+        back-driven. Stick at w = 0 while tau_m stays inside the static band."""
+        tp, ud = self.opts.truth_plant, self.ud
+        N = ud.ratio
+        iq = tau_cmd / (ud.kt_motor_nm_per_a * N * ud.gear_eta)
+        Ja, JL = ud.armature_kgm2, self.opts.load_inertia_kgm2
+        T = self.t_magnet
+        kt = ud.kt_motor_nm_per_a * tp.kt_scale * (1.0 + tp.kt_temp_coeff_per_K * (T - tp.kt_ref_C))
+        if tp.kt_sat_current_A > 0.0:
+            kt *= 1.0 - tp.kt_sat_frac * (iq / tp.kt_sat_current_A) ** 2
+        dT = tp.friction_ref_temp_C - T
+        ct = 1.0 + tp.coulomb_temp_coeff_per_K * dT
+        tc, ts = tp.coulomb_Nm * ct, tp.breakaway_Nm * ct
+        b = tp.viscous_Nm_s_per_rad * math.exp(tp.viscous_temp_exp_per_K * dT)
+        ef, er = tp.eta_forward, tp.eta_reverse
+        h = self.dt / self.n_sub
+        qd0 = self.qd
+        acc_out = acc_ext = acc_m = 0.0
+        for k in range(self.n_sub):
+            t = (self.t_ns * 1e-9) + k * h
+            ext = self._external_torque(t)
+            th_m = N * self.q
+            tau_m = N * kt * iq * (1.0 + tp.torque_ripple * math.sin(6.0 * th_m))
+            fr = 1.0 + tp.friction_ripple * math.sin(th_m)
+            v = self.qd
+            acc_ext += ext
+            acc_m += tau_m
+            if v == 0.0:
+                t0 = -ext
+                lo, hi = sorted((er * t0, t0 / ef))
+                band = ts * fr
+                if lo - band <= tau_m <= hi + band:
+                    acc_out += t0
+                    continue
+                s = 1.0 if tau_m > hi + band else -1.0
+            else:
+                s = 1.0 if v > 0.0 else -1.0
+            x = v / tp.stribeck_vel_rad_s
+            f = ((tc + (ts - tc) * math.exp(-x * x)) * s + b * v) * fr
+            fb = tp.bearing_Nm * s
+            g = 1.0 / ef
+            a = (tau_m - f - g * (fb - ext)) / (Ja + g * JL)
+            tau_t = JL * a - ext + fb
+            if tau_t * s < 0.0:
+                g = er
+                a = (tau_m - f - g * (fb - ext)) / (Ja + g * JL)
+                tau_t = JL * a - ext + fb
+                if tau_t * s > 0.0:
+                    g = 0.5 * (1.0 / ef + er)
+                    a = (tau_m - f - g * (fb - ext)) / (Ja + g * JL)
+                    tau_t = JL * a - ext + fb
+            v_new = v + h * a
+            if v != 0.0 and v * v_new < 0.0:
+                v_new = 0.0
+            self.qd = v_new
+            self.q += v_new * h
+            acc_out += tau_t - fb
+        n = self.n_sub
+        self.truth = SimTruth(tau_out_Nm=acc_out / n, tau_ext_Nm=acc_ext / n, tau_motor_Nm=acc_m / n,
+                              qdd_rad_s2=(self.qd - qd0) / self.dt)
 
     # ------------------------------------------------------------------ one cycle
     def exchange(self, controlword: int, mode: AmMode, cmd: AmCommand, cmd_fresh: bool) -> AmTelemetry:
@@ -539,6 +659,12 @@ class SimJoint(JointBackend):
         # bus voltage
         kt = self.ud.kt_motor_nm_per_a * self.ud.ratio * self.ud.gear_eta
         self.iq_meas = round(tau / kt, 3)
+        tp = self.opts.truth_plant
+        if tp is not None:
+            i = tau / kt * (1.0 + tp.i_gain_err) + tp.i_offset_A
+            if tp.i_noise_A > 0.0:
+                i += self._truth_rng.gauss(0.0, tp.i_noise_A)
+            self.iq_meas = round(i, 3)
         ibus = abs(tau * self.qd_f) / max(self.vbus_in, 1.0)
         self.vbus = self.vbus_in - U.BUS_SOURCE_R_OHM * ibus
         self.ibus = ibus
@@ -569,7 +695,8 @@ class SimJoint(JointBackend):
             id_A=0.0, iq_A=iq, id_ref_A=0.0, iq_ref_A=self.tau_applied / (kt * ud.ratio * ud.gear_eta),
             vd_V=0.0, vq_V=kt * wm + 0.05 * iq, vbus_V=self.vbus, ibus_est_A=getattr(self, "ibus", 0.0),
             tau_est_Nm=iq * kt * ud.ratio * ud.gear_eta,
-            t_winding_C=self.t_winding, t_magnet_C=self.t_magnet, t_power_stage_C=self.t_ps,
+            t_winding_C=self.t_winding + self._temp_bias, t_magnet_C=self.t_magnet + self._temp_bias,
+            t_power_stage_C=self.t_ps,
             t_board_C=self.ambient + 8.0 * self.thermal.x,
             fault_word=fw, error_code=self.error_code, warning_word=self.warn, safety_io=sio,
             ref_state=self.ref_state, sto_active=self.sto_active, internal_limit=self.limit_active,
@@ -579,6 +706,11 @@ class SimJoint(JointBackend):
             t.t_magnet_C = t.t_power_stage_C = t.t_board_C = 0.0
             t.q_motor_counts, t.qd_motor_rad_s = 0, 0.0
         return t
+
+    @property
+    def _temp_bias(self) -> float:
+        tp = self.opts.truth_plant
+        return tp.temp_sensor_bias_C if tp is not None else 0.0
 
     # ------------------------------------------------------------------ JointBackend
     def identity(self) -> AmIdentity:
