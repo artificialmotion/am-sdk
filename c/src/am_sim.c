@@ -791,7 +791,7 @@ void am__sim_identity(const am_sim_joint *sj, am_identity *out)
         if (ud->unit[i] != '-') tmp[k++] = ud->unit[i];
     tmp[k] = '\0';
     {
-        char uid[40];
+        char uid[48]; /* "SIM-" + 31-char unit + "-" + up to 5 digits + NUL fits */
         snprintf(uid, sizeof uid, "SIM-%s-%02u", tmp, (unsigned)sj->address);
         k = strlen(uid);
         memcpy(out->uid, uid, k < 12 ? k : 12);

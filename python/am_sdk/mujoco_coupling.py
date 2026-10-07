@@ -45,7 +45,7 @@ class MujocoCoupling:
             jid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, name)
             if jid < 0:
                 raise AmError(AmStatus.AM_ERR_PARAM, "no joint %r in the MuJoCo model" % name)
-            if model.jnt_type[jid] not in (mujoco.mjtJoint.mjJNT_HINGE, mujoco.mjtJoint.mjJNT_SLIDE):
+            if int(model.jnt_type[jid]) not in (int(mujoco.mjtJoint.mjJNT_HINGE), int(mujoco.mjtJoint.mjJNT_SLIDE)):
                 raise AmError(AmStatus.AM_ERR_PARAM, "joint %r must be a hinge or slide joint" % name)
             sj = aj.jb
             if not hasattr(sj, "set_external_state"):
