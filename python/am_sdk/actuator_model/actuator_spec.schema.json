@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/artificialmotion/am-sdk/python/am_sdk/actuator_model/actuator_spec.schema.json",
+  "title": "am-actuator-spec/1",
+  "description": "Actuator spec for am_sdk.actuator_model. All torques, speeds and inertias at the OUTPUT shaft. validate_spec() in spec.py is the reference check (stdlib); this schema documents the same rules.",
+  "type": "object",
+  "required": ["schema", "id", "mechanical", "ratings", "torque_speed", "thermal"],
+  "properties": {
+    "schema": {"const": "am-actuator-spec/1"},
+    "id": {"type": "string", "minLength": 1},
+    "vendor": {"type": "string"},
+    "model": {"type": "string"},
+    "status": {"type": "string", "description": "e.g. design target, catalogue face value, measured"},
+    "data_revision": {"type": "string"},
+    "sources": {"type": "array", "items": {"type": "object", "properties": {
+      "url": {"type": "string"}, "accessed": {"type": "string"}, "note": {"type": "string"}}}},
+    "notes": {"type": "string"},
+    "mechanical": {"type": "object", "required": ["mass_kg", "reflected_inertia_kgm2"], "properties": {
+      "ratio": {"type": ["number", "null"], "exclusiveMinimum": 0},
+      "mass_kg": {"type": "number", "exclusiveMinimum": 0},
+      "reflected_inertia_kgm2": {"type": "number", "exclusiveMinimum": 0},
+      "gear_efficiency": {"type": ["number", "null"], "exclusiveMinimum": 0, "maximum": 1},
+      "backdrive_nm": {"type": ["number", "null"], "minimum": 0}}},
+    "ratings": {"type": "object", "required": ["peak_nm", "continuous_nm", "nominal_bus_v", "conditions"], "properties": {
+      "peak_nm": {"type": "number", "exclusiveMinimum": 0},
+      "peak_duration_s": {"type": ["number", "null"], "exclusiveMinimum": 0, "description": "null = no peak budget (thermal limit only)"},
+      "peak_recovery_s_per_s": {"type": ["number", "null"], "exclusiveMinimum": 0},
+      "continuous_nm": {"type": "number", "exclusiveMinimum": 0},
+      "continuous_speed_rad_s": {"type": ["number", "null"], "minimum": 0},
+      "nominal_bus_v": {"type": "number", "exclusiveMinimum": 0},
+      "no_load_speed_rad_s": {"type": "object", "additionalProperties": {"type": "number"}, "description": "{bus voltage: rad/s}"},
+      "conditions": {"type": "object", "required": ["stated"], "properties": {
+        "stated": {"type": "boolean", "description": "false when the source does not state rating conditions"},
+        "ambient_c": {"type": ["number", "null"]},
+        "cooling": {"enum": ["bolted_structure", "plate", "still_air", "forced_air", "liquid", "unstated", null]},
+        "mount_k_per_w": {"type": ["number", "null"]},
+        "text": {"type": "string"}}}}},
+    "torque_speed": {"type": "array", "items": {"type": "object", "required": ["bus_v", "kind", "points"], "properties": {
+      "bus_v": {"type": "number", "exclusiveMinimum": 0},
+      "kind": {"enum": ["peak", "continuous"]},
+      "speed_unit": {"enum": ["rpm", "rad/s"], "default": "rad/s"},
+      "points": {"type": "array", "minItems": 2, "items": {"type": "array", "minItems": 2, "maxItems": 2,
+        "items": {"type": "number"}}, "description": "[speed, torque N m], speeds non-decreasing, torque >= 0"}}}},
+    "friction": {"type": "object", "properties": {
+      "coulomb_nm": {"type": ["number", "null"], "minimum": 0},
+      "viscous_nm_s_per_rad": {"type": ["number", "null"], "minimum": 0},
+      "stribeck": {"type": ["object", "null"], "properties": {
+        "static_nm": {"type": "number"}, "velocity_rad_s": {"type": "number", "exclusiveMinimum": 0}}}}},
+    "electrical": {"type": ["object", "null"], "properties": {
+      "kt_nm_per_a": {"type": ["number", "null"], "description": "motor-side, peak-referred (N m per A amplitude)"},
+      "kt_basis": {"type": "string"},
+      "phase_resistance_ohm": {"type": ["number", "null"], "description": "line-to-neutral; copper loss = 1.5 R I^2"},
+      "phase_resistance_ref_c": {"type": ["number", "null"]},
+      "current_limit_a": {"type": ["number", "null"]}}},
+    "thermal": {"type": "object", "required": ["model", "derate_c", "trip_c", "nodes"], "properties": {
+      "model": {"enum": ["1node", "2node"]},
+      "loss_calibration": {"enum": ["rating", "electrical"], "default": "rating"},
+      "rated_winding_c": {"type": "number", "description": "winding temperature at the continuous rating, rated conditions (rating calibration)"},
+      "derate_c": {"type": "number"},
+      "trip_c": {"type": "number"},
+      "trip_hysteresis_k": {"type": "number"},
+      "derate_law": {"enum": ["sqrt", "linear"], "default": "sqrt"},
+      "copper_tempco_per_k": {"type": "number", "default": 0.00393},
+      "nodes": {"type": "object", "description": "1node: {tau_s or r_k_per_w, c_j_per_k}. 2node: {c_winding_j_per_k, r_winding_housing_k_per_w, c_housing_j_per_k, r_housing_ambient_k_per_w} or {tau_housing_s, tau_winding_s, winding_rise_fraction, c_total_j_per_k}"},
+      "iron_loss": {"type": "object", "properties": {"k1_w_per_rad_s": {"type": "number"}, "k2_w_s2_per_rad2": {"type": "number"}}},
+      "mechanical_losses_heat_actuator": {"type": "boolean", "default": true}}},
+    "assumptions": {"type": "array", "items": {"type": "object", "required": ["field", "basis"], "properties": {
+      "field": {"type": "string"}, "value": {}, "basis": {"type": "string"}}}}
+  }
+}

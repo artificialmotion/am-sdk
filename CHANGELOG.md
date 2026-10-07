@@ -2,6 +2,20 @@
 
 All notable changes to am-sdk. The project follows semantic versioning; 0.x releases carry no compatibility promise.
 
+## Unreleased
+
+### Added
+- `am_sdk.actuator_model`: an open, thermal-aware actuator model for any actuator.
+  - Spec schema `am-actuator-spec/1`, with a JSON Schema file and a stdlib validator.
+  - `spec_from_datasheet()` builds a spec from minimal data, with flagged default assumptions.
+  - `ActuatorModel`: torque limit vs speed, temperature and peak budget; copper and speed-dependent losses; 1-node or 2-node thermal network; derate, trip, duty cycle and events.
+  - `BatchActuatorModel`: numpy or torch.
+  - MuJoCo bank and MJCF snippets.
+  - Isaac Lab `IdealPDActuator` subclass (untested on Isaac Lab).
+- Specs for the six AM units and five catalogue examples at published face values. `tools/gen_actuator_specs.py` regenerates them.
+- `docs/ACTUATOR_MODEL.md`, examples `05` to `09`, `tests/test_actuator_model.py`.
+- Optional extra `batch` (numpy).
+
 ## 0.1.0
 
 First public release.
