@@ -1,6 +1,6 @@
 """Artificial Motion H-F actuator model (dependency-free).
 Data revision 2026-10-05
-Product preview: specifications are design targets for evaluation units shipping in Q2 2027.
+Product preview: specifications are design targets for evaluation units shipping in Q1 2027.
 
 torque_limit(speed_rad_s, bus='48', kind='peak')
     Interpolates the published torque-speed curve at the OUTPUT shaft. Returns Nm, or None where the

@@ -1,4 +1,4 @@
-<!-- Artificial Motion H-X actuator, typical values. Data revision 2026-10-05. Product preview: specifications are design targets for evaluation units shipping in Q2 2027. -->
+<!-- Artificial Motion H-X actuator, typical values. Data revision 2026-10-05. Product preview: specifications are design targets for evaluation units shipping in Q1 2027. -->
 <!-- Usage: <include file="H-X_mujoco.xml"/> at top level of your <mujoco> model (before <worldbody>), then
        <joint class="am_H-X" .../>    on the joint driven by the actuator (OUTPUT side of the gearbox)
        <motor class="am_H-X" joint="YOUR_JOINT"/>              plain torque actuator, clipped to +/- peak

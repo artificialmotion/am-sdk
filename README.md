@@ -4,7 +4,7 @@ The host API for Artificial Motion joints. Same calls in C and Python.
 
 Write your controller today against the simulator. Moving to hardware changes one line: the interface.
 
-Evaluation units ship Q2 2027.
+Evaluation units ship Q1 2027.
 
 ## What you get
 
