@@ -26,7 +26,7 @@ from am_sdk.actuator_model.spec import (DEFAULTS, RPM, SCHEMA_ID, SPEC_DIR, Actu
 # Declared rating mount (K/W), published with the rated point on artificialmotion.com (fit data, "rated.mount").
 AM_MOUNT_K_PER_W = {"S-S": 0.732422, "S-D": 0.732422, "M": 0.3, "H-F": 0.2083, "H-T": 0.2083, "H-X": 0.1722}
 
-SIM_NOTE = "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating"
+SIM_NOTE = ("AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating. The one-node model is normalised so that 105 C is the winding temperature at the published continuous rating; the drive's own sensor thresholds (datasheet Protection Limits, e.g. derating onset 130 C and trip 150 C on M and H) use a different, physical scale")
 
 
 def am_spec(unit: str) -> dict:
