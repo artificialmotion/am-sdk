@@ -132,9 +132,9 @@ static void test_lifecycle_and_modes()
   CHECK(c.configure(&err));
   CHECK(c.lifecycle() == am_ros2_control::Lifecycle::kInactive);
   CHECK(c.drive_state(0) != AM_DS_OPERATION_ENABLED);
-  // Limits come from the SDK unit data: M peak 80 N*m, no-load 12.63 rad/s at 48 V.
-  CHECK_NEAR(c.limits(0).effort_max, 80.0, 1e-3);
-  CHECK_NEAR(c.limits(0).velocity_max, 12.6292, 1e-3);
+  // Limits come from the SDK unit data: M peak 76.5 N*m, no-load 12.37 rad/s (118.1 rpm) at 48 V.
+  CHECK_NEAR(c.limits(0).effort_max, 76.5, 1e-3);
+  CHECK_NEAR(c.limits(0).velocity_max, 12.3674, 1e-3);
   CHECK(c.limits(0).stiffness_max > 1000.0 && c.limits(0).damping_max > 10.0);
   CHECK_NEAR(c.state(0).temperature, 25.0, 1.0);
 
@@ -165,7 +165,7 @@ static void test_lifecycle_and_modes()
   CHECK(run(c, 1000));
   CHECK_NEAR(c.state(0).velocity, 1.0, 0.1);
 
-  // effort (CST): 5 N*m on armature 0.03 + load 0.05 kg*m^2, minus 1.4 N*m backdrive friction
+  // effort (CST): 5 N*m on armature 0.0279 + load 0.05 kg*m^2, minus 1.47 N*m backdrive friction
   CHECK(switch_to(c, {"knee/effort"}, {"knee/velocity"}));
   CHECK(c.mode(0) == ControlMode::kEffort);
   c.command(0).effort = 0.0;

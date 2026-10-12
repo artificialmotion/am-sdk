@@ -31,8 +31,8 @@ def test_name_count_mismatch():
 def test_modes_track():
     b = BridgeCore("sim:M", ["knee"], sim_load_inertia=[0.05])
     try:
-        assert b.effort_max[0] == pytest.approx(80.0)
-        assert b.velocity_max[0] == pytest.approx(12.6292, abs=1e-3)
+        assert b.effort_max[0] == pytest.approx(76.5)
+        assert b.velocity_max[0] == pytest.approx(12.3674, abs=1e-3)
         b.enable()
         assert b.drive_states() == ["OPERATION_ENABLED"]
         b.step(200)
