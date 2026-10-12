@@ -3,8 +3,8 @@
  "id": "AM-H-F",
  "vendor": "Artificial Motion",
  "model": "H-F",
- "status": "design target; SIMULATED, not built. Product preview: specifications are design targets for evaluation units shipping in Q1 2027.",
- "data_revision": "Data revision 2026-10-05",
+ "status": "design target; SIMULATED, not built. Product preview: fully designed and simulated. Specifications are design targets for evaluation units shipping in Q1 2027.",
+ "data_revision": "Data revision 2026-10-12",
  "sources": [
   {
    "url": "https://artificialmotion.com",
@@ -12,7 +12,7 @@
    "note": "per-unit download H-F_params.json, copied in am_sdk/data/H-F/"
   }
  ],
- "notes": "Continuous rating is the typical unit; end-of-life continuous 48.37 N m. Published continuous clamp 62 N m. Peak: 2 s event from a warm start.",
+ "notes": "Continuous rating is the typical unit; end-of-life continuous 47.02 N m. Published continuous clamp 62 N m. Peak: 2 s event from a warm start.",
  "assumptions": [
   {
    "field": "ratings.peak_recovery_s_per_s",
@@ -36,7 +36,7 @@
   },
   {
    "field": "thermal.nodes.c_j_per_k",
-   "value": 889.38,
+   "value": 902.8199999999999,
    "basis": "lumped heat capacity = 600 J/(kg K) x actuator mass (aluminium/steel/copper/magnet mix); an order-of-magnitude assumption; scales watts only"
   },
   {
@@ -62,21 +62,21 @@
  ],
  "mechanical": {
   "ratio": 22.5,
-  "mass_kg": 1.4823,
-  "reflected_inertia_kgm2": 0.0486,
+  "mass_kg": 1.5047,
+  "reflected_inertia_kgm2": 0.04635336274897429,
   "gear_efficiency": 0.9194,
   "backdrive_nm": 1.72
  },
  "ratings": {
-  "peak_nm": 120,
+  "peak_nm": 115,
   "peak_duration_s": 2.0,
   "peak_recovery_s_per_s": 0.1,
-  "continuous_nm": 56.18,
+  "continuous_nm": 54.73,
   "continuous_speed_rad_s": 6.283185307179586,
   "nominal_bus_v": 48,
   "no_load_speed_rad_s": {
-   "48": 13.47743248390021,
-   "36": 10.063568466999303
+   "48": 14.618877814704502,
+   "36": 10.84896663039675
   },
   "conditions": {
    "stated": true,
@@ -94,82 +94,62 @@
    "points": [
     [
      0,
-     120
-    ],
-    [
-     5,
-     120
+     115
     ],
     [
      10,
-     120
-    ],
-    [
-     15,
-     120
+     115
     ],
     [
      20,
-     120
-    ],
-    [
-     25,
-     120
+     115
     ],
     [
      30,
-     115.4
+     115
     ],
     [
      40,
-     108.6
-    ],
-    [
-     45,
-     106
+     115
     ],
     [
      50,
-     103.9333
+     115
     ],
     [
      60,
-     99.8
+     115
     ],
     [
      70,
-     96.95
+     115
     ],
     [
      80,
-     94.1
+     108.7
     ],
     [
      90,
-     91.25
-    ],
-    [
-     99.0582,
-     88.6684
+     89.8
     ],
     [
      100,
-     86.7
+     71.2
     ],
     [
      110,
-     65.4
-    ],
-    [
-     115,
-     54.1
+     51.9
     ],
     [
      120,
-     42.4
+     31.72
     ],
     [
-     128.7,
+     130,
+     21.35
+    ],
+    [
+     139.6,
      0
     ]
    ]
@@ -181,90 +161,62 @@
    "points": [
     [
      0,
-     55.2
-    ],
-    [
-     5,
-     55.2
+     56.61
     ],
     [
      10,
-     55.2
-    ],
-    [
-     15,
-     55.45
+     59.54
     ],
     [
      20,
-     55.7
-    ],
-    [
-     25,
-     55.95
+     58.73
     ],
     [
      30,
-     56.2
+     57.82
     ],
     [
      40,
-     56.5
-    ],
-    [
-     45,
-     56.7
+     56.85
     ],
     [
      50,
-     56.9
-    ],
-    [
-     51.9298,
-     56.9386
+     55.83
     ],
     [
      60,
-     56.18
+     54.73
     ],
     [
      70,
-     55.21
+     53.55
     ],
     [
      80,
-     54.19
+     52.34
     ],
     [
      90,
-     53.15
-    ],
-    [
-     99.0582,
-     52.1536
+     51.05
     ],
     [
      100,
-     52.05
+     49.74
     ],
     [
      110,
-     50.46
-    ],
-    [
-     115,
-     48.85
-    ],
-    [
-     117.5888,
-     48.04220799999999
+     45.61
     ],
     [
      120,
-     42.4
+     31.72
     ],
     [
-     128.7,
+     130,
+     21.35
+    ],
+    [
+     139.6,
      0
     ]
    ]
@@ -276,67 +228,55 @@
    "points": [
     [
      0,
-     120
-    ],
-    [
-     5,
-     120
+     115
     ],
     [
      10,
-     120
-    ],
-    [
-     15,
-     120
+     115
     ],
     [
      20,
-     120
-    ],
-    [
-     25,
-     120
+     115
     ],
     [
      30,
-     115.4
+     115
     ],
     [
      40,
-     108.6
+     115
     ],
     [
      45,
-     106
+     115
     ],
     [
      50,
-     103.9333
+     115
     ],
     [
      60,
-     99.8
-    ],
-    [
-     67.0236,
-     97.7983
+     97.7
     ],
     [
      70,
-     90
+     74.3
+    ],
+    [
+     75,
+     62.65
     ],
     [
      80,
-     63.8
+     51
     ],
     [
      90,
-     35.6
+     25.2
     ],
     [
-     96.1,
-     15
+     103.6,
+     0
     ]
    ]
   },
@@ -347,79 +287,35 @@
    "points": [
     [
      0,
-     55.2
-    ],
-    [
-     5,
-     55.2
+     56.61
     ],
     [
      10,
-     55.2
-    ],
-    [
-     15,
-     55.45
-    ],
-    [
-     20,
-     55.7
-    ],
-    [
-     25,
-     55.95
+     59.54
     ],
     [
      30,
-     56.2
-    ],
-    [
-     40,
-     56.5
+     57.82
     ],
     [
      45,
-     56.7
-    ],
-    [
-     50,
-     56.9
-    ],
-    [
-     51.7117,
-     56.9342
+     56.34
     ],
     [
      60,
-     56.18
+     54.7
     ],
     [
-     67.0236,
-     55.4987
-    ],
-    [
-     70,
-     55.21
-    ],
-    [
-     80,
-     54.19
-    ],
-    [
-     89.1263,
-     38.0638
+     75,
+     52.06
     ],
     [
      90,
-     35.6
+     19.74
     ],
     [
-     90.8017,
-     32.8926
-    ],
-    [
-     96.1,
-     8.92
+     103.6,
+     0
     ]
    ]
   }
@@ -446,7 +342,7 @@
   "copper_tempco_per_k": 0.00393,
   "nodes": {
    "tau_s": 210.0,
-   "c_j_per_k": 889.38
+   "c_j_per_k": 902.8199999999999
   },
   "iron_loss": {
    "k1_w_per_rad_s": 0.0,

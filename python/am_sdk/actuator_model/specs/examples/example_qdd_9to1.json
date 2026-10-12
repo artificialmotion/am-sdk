@@ -40,7 +40,7 @@
   {
    "field": "ratings.conditions.ambient_c",
    "value": 25.0,
-   "basis": "rating ambient not stated; 25 C assumed (common catalogue reference)"
+   "basis": "rating ambient not stated; 25 C assumed (common datasheet reference)"
   },
   {
    "field": "torque_speed",

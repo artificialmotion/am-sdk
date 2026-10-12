@@ -145,20 +145,21 @@ class Model(unittest.TestCase):
             pk = m.curve_limit(w)
             if w > 0:
                 self.assertAlmostEqual(pos, pk)
-                self.assertAlmostEqual(neg, 80.0)
+                self.assertAlmostEqual(neg, m.curve_limit(0.0))   # braking capped at the stall envelope (zero-speed hold)
             elif w < 0:
                 self.assertAlmostEqual(neg, pk)
-                self.assertAlmostEqual(pos, 80.0)
+                self.assertAlmostEqual(pos, m.curve_limit(0.0))
             tau = m.step(1e4, w)
             self.assertLessEqual(tau, max(pos, 0.0) + 1e-9)
         self.assertEqual(m.torque_limits(20.0)[0], 0.0)
 
     def test_peak_budget(self):
         m = ActuatorModel("AM-M", dt=0.001)
+        hold = m.curve_limit(0.0)          # locked M: 71.5 Nm zero-speed 2 s hold
         n_peak = 0
         for k in range(4000):
-            tau = m.step(80.0, 0.0)
-            if tau > 79.9:
+            tau = m.step(hold, 0.0)
+            if tau > hold - 0.1:
                 n_peak += 1
         self.assertEqual(n_peak, 2000)
         self.assertEqual(m.event_counts.get(AM.PEAK_BUDGET_EMPTY), 1)
@@ -251,9 +252,9 @@ class Model(unittest.TestCase):
         sp["friction"]["stribeck"] = {"static_nm": 2.0, "velocity_rad_s": 0.05}
         sp["friction"]["viscous_nm_s_per_rad"] = 0.1
         m = ActuatorModel(sp)
-        self.assertAlmostEqual(m.friction(1.0), 1.4 + 0.1, places=6)
-        self.assertGreater(m.friction(0.02), 1.4)
-        self.assertAlmostEqual(m.friction(-1.0), -1.5, places=6)
+        self.assertAlmostEqual(m.friction(1.0), 1.47 + 0.1, places=6)
+        self.assertGreater(m.friction(0.02), 1.47)
+        self.assertAlmostEqual(m.friction(-1.0), -1.57, places=6)
 
     def test_1khz_capable(self):
         m = ActuatorModel("AM-H-X")
@@ -327,8 +328,8 @@ class Mujoco(unittest.TestCase):
     def test_snippet_sets_plant_params(self):
         m, d = self._leg()
         jid = mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_JOINT, "knee")
-        self.assertAlmostEqual(float(m.dof_armature[m.jnt_dofadr[jid]]), 0.03)
-        self.assertAlmostEqual(float(m.dof_frictionloss[m.jnt_dofadr[jid]]), 1.4)
+        self.assertAlmostEqual(float(m.dof_armature[m.jnt_dofadr[jid]]), 0.0279)
+        self.assertAlmostEqual(float(m.dof_frictionloss[m.jnt_dofadr[jid]]), 1.47)
         self.assertEqual(m.nu, 2)
 
     def _run(self, with_motors):

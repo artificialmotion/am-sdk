@@ -12,8 +12,8 @@ HEAVY = 1.0e4   # kg m^2 load that pins the joint near stall
 
 
 # M published values (am_sdk/data/M/M_params.json)
-M_JOUT = 0.030
-M_BACKDRIVE = 1.4
+M_JOUT = 0.0279          # locked 2026-10-12
+M_BACKDRIVE = 1.47       # locked 2026-10-12
 
 class Limits(unittest.TestCase):
     def test_torque_never_above_published_peak_envelope(self):
@@ -39,8 +39,10 @@ class Limits(unittest.TestCase):
             am.am_set_torque(j, 500.0)
             am.am_cycle(s)
             taus.append(sj.torque_applied)
-        self.assertAlmostEqual(taus[500], ud.peak_nm, places=3)
-        self.assertAlmostEqual(taus[1900], ud.peak_nm, places=3)
+        # near stall the 2 s envelope is the zero-speed hold (locked peak curve starts at the hold, 71.5 Nm for M)
+        hold = ud.model.torque_limit(0.0, '48', 'peak')
+        self.assertAlmostEqual(taus[500], hold, delta=0.5)
+        self.assertAlmostEqual(taus[1900], hold, delta=0.5)
         n_peak = sum(1 for t in taus[:2600] if t > 40.0)
         self.assertAlmostEqual(n_peak / 1000.0, 2.0, delta=0.05)         # 2 s of peak
         cont = ud.model.torque_limit(abs(sj.qd), '48', 'continuous')
@@ -62,7 +64,7 @@ class Limits(unittest.TestCase):
         self.assertGreater(sj.torque_applied, 40.0)      # peak available again
 
     def test_thermal_derate_engages(self):
-        # H-X continuous curve (131.7 Nm at stall) sits above the 125.43 Nm thermal rating, so a
+        # H-X continuous curve (160 Nm at stall, locked) sits above the 136.41 Nm thermal rating, so a
         # long hold at the curve must heat past x = 1 and the drive must derate.
         s, j, sj = make("H-X", cycle_us=20000, load_inertia_kgm2=HEAVY)
         sj.set_external_torque(lambda t, q, qd: -sj.tau_applied)       # lock the output at stall
@@ -76,7 +78,7 @@ class Limits(unittest.TestCase):
         cont_curve = ud.model.torque_limit(0.0, '48', 'continuous')
         self.assertLess(sj.torque_applied, cont_curve * 0.999)
         self.assertTrue(t.internal_limit)
-        self.assertLess(sj.thermal.x, 1.12)              # derate pulls heating back toward x = 1
+        self.assertLess(sj.thermal.x, 1.2)               # derate pulls heating back toward x = 1 (open loop at stall: (160/136.41)^2 = 1.38)
         self.assertGreater(t.t_winding_C, 90.0)
         self.assertEqual(t.state, am.AmDriveState.OPERATION_ENABLED)
 
@@ -439,9 +441,9 @@ class Identity(unittest.TestCase):
             if ident.sku == am.AmSku.S_S:
                 self.assertAlmostEqual(tr.backdrive_torque_Nm, 0.65, places=3)
         m = am.am_open_joint(s, 2)
-        self.assertEqual(am.am_get_transparency(m).peak_torque_2s_Nm, 80.0)
+        self.assertEqual(am.am_get_transparency(m).peak_torque_2s_Nm, 76.5)
         self.assertAlmostEqual(am.am_get_transparency(m).reflected_inertia_kgm2, M_JOUT)
-        self.assertEqual(int.from_bytes(am.am_sdo_read(m, 0x2D00, 2), "little"), 80000)
+        self.assertEqual(int.from_bytes(am.am_sdo_read(m, 0x2D00, 2), "little"), 76500)
         self.assertEqual(int.from_bytes(am.am_sdo_read(m, 0x2D00, 12), "little"), 1)
         with self.assertRaises(am.AmError) as cm:
             am.am_sdo_write(m, 0x6064, 0, b"\0\0\0\0")

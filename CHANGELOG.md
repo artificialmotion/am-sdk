@@ -2,6 +2,14 @@
 
 All notable changes to am-sdk. The project follows semantic versioning; 0.x releases carry no compatibility promise.
 
+## Unit data update (2026-10-12, within 0.2.0)
+
+### Spec-locked unit data
+- Unit data for all six units (S-S, S-D, M, H-F, H-T, H-X) now carries the spec-locked values (simulated, pre-hardware): ratings, typical 48 / 36 V continuous and 2 s peak curves, zero-speed 2 s hold, mass, reflected inertia, ratio and backdrive. Main changes: M peak 76.5 Nm (hold 71.5 Nm), inertia 0.0279 kg m2, backdrive 1.47 Nm; H-X ratio 23.4, OD 140 mm, 2.65 kg, inertia 0.180 kg m2, 136.41 Nm continuous; H-F peak 115 Nm.
+- Peak curves start at the zero-speed 2 s hold, so a stalled joint is limited to the hold value rather than the rotating peak.
+- Regenerated: `c/src/am_unit_data.c`, actuator-model specs, ROS 2 xacro.
+- Tests updated to the locked values. The S-S estimator study uses Kd 3.5 (was 4.0) to stay inside the impedance envelope of the lower S-S inertia.
+
 ## 0.2.0 (release candidate; tagged at the public release)
 
 ### Public release preparation
