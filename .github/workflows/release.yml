@@ -1,0 +1,43 @@
+# Publish am-sdk to PyPI when a version tag (v*) is pushed. Uses PyPI trusted publishing (OIDC): no tokens are stored.
+name: release
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check the tag matches the package version
+        run: |
+          v=$(python -c "import re;print(re.search(r'^version = \"([^\"]+)\"', open('python/pyproject.toml').read(), re.M).group(1))")
+          test "v$v" = "${GITHUB_REF_NAME}" || { echo "tag ${GITHUB_REF_NAME} != package version v$v"; exit 1; }
+      - name: Test
+        run: |
+          python -m pip install -e "python[dev]"
+          cd python && python -m pytest -q
+      - name: Build
+        run: |
+          python -m pip install build
+          python -m build python -o dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

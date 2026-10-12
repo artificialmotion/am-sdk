@@ -16,5 +16,5 @@ Version strings are already 0.2.0 (`c/CMakeLists.txt`, headers, `python/pyprojec
 ## The flip
 1. Make the repository public.
 2. Tag and release: `git tag -a v0.2.0 -m "am-sdk 0.2.0" && git push origin v0.2.0`. Create the GitHub release with the 0.2.0 section of CHANGELOG.md.
-3. When the PyPI name is reserved: `python -m build python && twine upload python/dist/*` (founder account).
+3. PyPI: pushing the tag runs `.github/workflows/release.yml`, which tests, builds and publishes to PyPI through trusted publishing (pending publisher registered 2026-10-12: workflow `release.yml`, environment `pypi`). Then `pip install am-sdk` works.
 4. In repository settings, close outside pull requests per CONTRIBUTING.md (for example, a pull request template notice or disabling PRs from non-collaborators).
