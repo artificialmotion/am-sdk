@@ -270,7 +270,7 @@ class AmTelemetry:
 class AmLimits:
     torque_pos_Nm: float = 0.0
     torque_neg_Nm: float = 0.0
-    current_A: float = 0.0
+    current_A: float = 0.0          # phase current at the published 2 s peak torque (simulator); the drive command limit on the datasheet is higher
     speed_rad_s: float = 0.0
     pos_min_rad: float = -math.inf
     pos_max_rad: float = math.inf

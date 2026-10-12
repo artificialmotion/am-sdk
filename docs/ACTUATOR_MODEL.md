@@ -93,6 +93,10 @@ The limit is built in this order:
    - `sqrt` law: f = sqrt((T_derate - T_amb) / (T_w - T_amb)). This holds the winding near T_derate at
      the rated conditions. It is the SDK simulator's law.
    - `linear` law: f falls linearly from 1 at T_derate to 0 at T_trip.
+   For the AM units the model is normalised: `rated_winding_c` = `derate_c` = 105 C is the model winding
+   temperature at the published continuous rating, so derating starts exactly where the datasheet continuous
+   rating ends. These are model values, not the drive's sensor setpoints; the datasheet Protection Limits table
+   gives those (for example derating onset 130 C and trip 150 C on M and H).
 5. **Trip.** At T_w >= `trip_c` the torque is 0. The trip clears when the winding has cooled by
    `trip_hysteresis_k`. Pass `auto_reset_trip=False` to make the clear manual instead.
 

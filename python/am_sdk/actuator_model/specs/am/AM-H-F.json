@@ -17,7 +17,7 @@
   {
    "field": "ratings.peak_recovery_s_per_s",
    "value": 0.1,
-   "basis": "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating"
+   "basis": "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating. The one-node model is normalised so that 105 C is the winding temperature at the published continuous rating; the drive's own sensor thresholds (datasheet Protection Limits, e.g. derating onset 130 C and trip 150 C on M and H) use a different, physical scale"
   },
   {
    "field": "friction.coulomb_nm",
@@ -42,22 +42,22 @@
   {
    "field": "thermal.rated_winding_c",
    "value": 105.0,
-   "basis": "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating"
+   "basis": "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating. The one-node model is normalised so that 105 C is the winding temperature at the published continuous rating; the drive's own sensor thresholds (datasheet Protection Limits, e.g. derating onset 130 C and trip 150 C on M and H) use a different, physical scale"
   },
   {
    "field": "thermal.derate_c",
    "value": 105.0,
-   "basis": "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating"
+   "basis": "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating. The one-node model is normalised so that 105 C is the winding temperature at the published continuous rating; the drive's own sensor thresholds (datasheet Protection Limits, e.g. derating onset 130 C and trip 150 C on M and H) use a different, physical scale"
   },
   {
    "field": "thermal.trip_c",
    "value": 130.0,
-   "basis": "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating"
+   "basis": "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating. The one-node model is normalised so that 105 C is the winding temperature at the published continuous rating; the drive's own sensor thresholds (datasheet Protection Limits, e.g. derating onset 130 C and trip 150 C on M and H) use a different, physical scale"
   },
   {
    "field": "thermal.trip_hysteresis_k",
    "value": 5.0,
-   "basis": "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating"
+   "basis": "AM SDK simulator model value (am_sdk/backends/sim.py), not a published rating. The one-node model is normalised so that 105 C is the winding temperature at the published continuous rating; the drive's own sensor thresholds (datasheet Protection Limits, e.g. derating onset 130 C and trip 150 C on M and H) use a different, physical scale"
   }
  ],
  "mechanical": {
