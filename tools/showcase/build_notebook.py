@@ -28,7 +28,7 @@ import os, sys, math, importlib.util
 if "google.colab" in sys.modules:
     os.environ["MUJOCO_GL"] = "egl"          # offscreen rendering on Colab; must be set before importing mujoco
 if importlib.util.find_spec("am_sdk") is None:
-    %pip install -q "am-sdk[batch] @ git+https://github.com/artificialmotion/am-sdk#subdirectory=python" mujoco
+    %pip install -q "am-sdk[batch]" mujoco
 """)
 
 code("""

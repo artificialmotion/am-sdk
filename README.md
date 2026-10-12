@@ -12,7 +12,7 @@ All clips below are simulated (the SDK simulator, MuJoCo), not hardware.
 ![Simulated actuator model: a knee holds a load, winding temperature rises, the torque limit derates](docs/media/actuator_thermal_hold.gif)
 ![Simulated joint following a joint_trajectory_controller-style trajectory through the SDK simulator](docs/media/ros2_trajectory.gif)
 
-Try it without installing anything: [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/artificialmotion/am-sdk/blob/main/notebooks/check_your_actuator.ipynb) "Check your actuator in 2 minutes". (The badge works once the repository is public.)
+Try it without installing anything: [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/artificialmotion/am-sdk/blob/main/notebooks/check_your_actuator.ipynb) "Check your actuator in 2 minutes".
 
 ## What you get
 
@@ -64,6 +64,13 @@ On hardware you keep this code and pass your EtherCAT master or CAN driver in `c
 ## Quickstart: Python
 
 ```sh
+pip install am-sdk                 # from PyPI; extras: am-sdk[mujoco], am-sdk[batch], am-sdk[can], am-sdk[ecat]
+```
+
+The examples live in this repository. To run them, clone it and install in editable mode:
+
+```sh
+git clone https://github.com/artificialmotion/am-sdk && cd am-sdk
 pip install -e "python[dev]"
 python python/examples/01_impedance_sine.py
 ```
