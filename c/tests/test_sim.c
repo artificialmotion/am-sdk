@@ -102,8 +102,9 @@ static void test_peak_two_seconds_then_continuous(void)
         if (k == 1900) tau1900 = ta;
         if (k < 2600 && ta > 40.0) n_peak++;
     }
-    CHECK_NEAR(tau500, 80.0, 1e-3);
-    CHECK_NEAR(tau1900, 80.0, 1e-3);
+    /* near stall the 2 s envelope is the zero-speed hold (locked M: 71.5 Nm at 0 rpm) */
+    CHECK_NEAR(tau500, 71.5, 0.5);
+    CHECK_NEAR(tau1900, 71.5, 0.5);
     CHECK_NEAR(n_peak / 1000.0, 2.0, 0.05);
     am_read_telemetry(r.j, &t);
     CHECK(t.warning_word & AM_WARN_PEAK_BUDGET_EMPTY);
@@ -202,7 +203,7 @@ static void test_unpowered_breakaway_equals_backdrive(void)
         }
     }
     CHECK(broke > 0);
-    CHECK_NEAR(broke * 1e-3 * 0.5, 1.4, 0.02);
+    CHECK_NEAR(broke * 1e-3 * 0.5, 1.47, 0.02);
     am_deinit(r.s);
 }
 
@@ -442,10 +443,10 @@ static void test_identity_all_units(void)
             uint8_t b[8];
             size_t len = 0;
             char cal[1024];
-            CHECK_NEAR(tr.peak_torque_2s_Nm, 80.0, 1e-6);
-            CHECK_NEAR(tr.reflected_inertia_kgm2, 0.030, 1e-7);
+            CHECK_NEAR(tr.peak_torque_2s_Nm, 76.5, 1e-6);
+            CHECK_NEAR(tr.reflected_inertia_kgm2, 0.0279, 1e-7);
             CHECK_ST(am_sdo_read(j, 0x2D00, 2, b, sizeof b, &len), AM_OK);
-            CHECK(len == 4 && am__get_u32(b) == 80000);
+            CHECK(len == 4 && am__get_u32(b) == 76500);
             CHECK_ST(am_sdo_write(j, 0x6064, 0, b, 4), AM_ERR_SDO_ABORT);
             CHECK(am_last_abort_code(j) == 0x06010002u);
             CHECK_ST(am_sdo_read(j, 0x9999, 0, b, sizeof b, &len), AM_ERR_SDO_ABORT);

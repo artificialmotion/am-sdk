@@ -109,11 +109,11 @@ static void test_stick_band_and_temperature(void)
 
 /* Golden values from the Python implementation (am_sdk.estimation.current_model). The full
  * sequence comparison is python/tests/test_cross_check_est.py. */
-#define GOLD_M_TAU_OUT 7.738649759836342
-#define GOLD_M_TAU_DRIVE 8.0720097598363409
-#define GOLD_M_BOUND 0.39675589712816872
-#define GOLD_HX_TAU_OUT -15.128263449091662
-#define GOLD_HX_BOUND 2.5414121687781042
+#define GOLD_M_TAU_OUT 7.7153439516397775
+#define GOLD_M_TAU_DRIVE 8.025368751639776
+#define GOLD_M_BOUND 0.40799200153361465
+#define GOLD_HX_TAU_OUT -16.500651411346034
+#define GOLD_HX_BOUND 2.664259448237209
 
 static void test_golden_values_match_python(void)
 {

@@ -23,17 +23,17 @@
 
   <xacro:property name="am_units" value="['S-S', 'S-D', 'M', 'H-F', 'H-T', 'H-X']"/>
 
-  <!-- S-S: gear ratio 20:1, reflected inertia 0.00547515 kg m^2, rated (continuous) 15.6331 N m. Data revision 2026-10-05 -->
+  <!-- S-S: gear ratio 20:1, reflected inertia 0.004939 kg m^2, rated (continuous) 14.28 N m. Data revision 2026-10-12 -->
   <xacro:property name="am_S_S_peak_torque" value="30"/>
-  <xacro:property name="am_S_S_rated_torque" value="15.6331"/>
-  <xacro:property name="am_S_S_velocity" value="14.9769"/>
-  <xacro:property name="am_S_S_velocity_36v" value="11.1355"/>
+  <xacro:property name="am_S_S_rated_torque" value="14.28"/>
+  <xacro:property name="am_S_S_velocity" value="20.6612"/>
+  <xacro:property name="am_S_S_velocity_36v" value="15.3624"/>
   <xacro:property name="am_S_S_friction" value="0.65"/>
-  <xacro:property name="am_S_S_armature" value="0.00547515"/>
-  <xacro:property name="am_S_S_mass" value="0.550169"/>
+  <xacro:property name="am_S_S_armature" value="0.004939"/>
+  <xacro:property name="am_S_S_mass" value="0.5619"/>
   <xacro:property name="am_S_S_gear_ratio" value="20"/>
-  <xacro:property name="am_S_S_stiffness_max" value="778.141"/>
-  <xacro:property name="am_S_S_damping_max" value="4.12817"/>
+  <xacro:property name="am_S_S_stiffness_max" value="701.942"/>
+  <xacro:property name="am_S_S_damping_max" value="3.72392"/>
   <xacro:macro name="am_S_S_joint" params="name parent child *origin lower:=${-pi} upper:=${pi} axis:='0 0 1'">
     <joint name="${name}" type="revolute">
       <xacro:insert_block name="origin"/>
@@ -45,17 +45,17 @@
     </joint>
   </xacro:macro>
 
-  <!-- S-D: gear ratio 9:1, reflected inertia 0.0010848 kg m^2, rated (continuous) 7.6946 N m. Data revision 2026-10-05 -->
+  <!-- S-D: gear ratio 9:1, reflected inertia 0.000968 kg m^2, rated (continuous) 7.08 N m. Data revision 2026-10-12 -->
   <xacro:property name="am_S_D_peak_torque" value="15"/>
-  <xacro:property name="am_S_D_rated_torque" value="7.6946"/>
-  <xacro:property name="am_S_D_velocity" value="31.0295"/>
-  <xacro:property name="am_S_D_velocity_36v" value="23.0709"/>
+  <xacro:property name="am_S_D_rated_torque" value="7.08"/>
+  <xacro:property name="am_S_D_velocity" value="42.7466"/>
+  <xacro:property name="am_S_D_velocity_36v" value="31.772"/>
   <xacro:property name="am_S_D_friction" value="0.36"/>
-  <xacro:property name="am_S_D_armature" value="0.0010848"/>
-  <xacro:property name="am_S_D_mass" value="0.454029"/>
+  <xacro:property name="am_S_D_armature" value="0.000968"/>
+  <xacro:property name="am_S_D_mass" value="0.4678"/>
   <xacro:property name="am_S_D_gear_ratio" value="9"/>
-  <xacro:property name="am_S_D_stiffness_max" value="154.174"/>
-  <xacro:property name="am_S_D_damping_max" value="0.817917"/>
+  <xacro:property name="am_S_D_stiffness_max" value="137.574"/>
+  <xacro:property name="am_S_D_damping_max" value="0.729855"/>
   <xacro:macro name="am_S_D_joint" params="name parent child *origin lower:=${-pi} upper:=${pi} axis:='0 0 1'">
     <joint name="${name}" type="revolute">
       <xacro:insert_block name="origin"/>
@@ -67,17 +67,17 @@
     </joint>
   </xacro:macro>
 
-  <!-- M: gear ratio 21.6:1, reflected inertia 0.03 kg m^2, rated (continuous) 36 N m. Data revision 2026-10-05 -->
-  <xacro:property name="am_M_peak_torque" value="80"/>
-  <xacro:property name="am_M_rated_torque" value="36"/>
-  <xacro:property name="am_M_velocity" value="12.6292"/>
-  <xacro:property name="am_M_velocity_36v" value="9.43525"/>
-  <xacro:property name="am_M_friction" value="1.4"/>
-  <xacro:property name="am_M_armature" value="0.03"/>
-  <xacro:property name="am_M_mass" value="0.9446"/>
+  <!-- M: gear ratio 21.6:1, reflected inertia 0.0279 kg m^2, rated (continuous) 34.1 N m. Data revision 2026-10-12 -->
+  <xacro:property name="am_M_peak_torque" value="76.5"/>
+  <xacro:property name="am_M_rated_torque" value="34.1"/>
+  <xacro:property name="am_M_velocity" value="12.3674"/>
+  <xacro:property name="am_M_velocity_36v" value="9.23628"/>
+  <xacro:property name="am_M_friction" value="1.47"/>
+  <xacro:property name="am_M_armature" value="0.0279"/>
+  <xacro:property name="am_M_mass" value="0.99"/>
   <xacro:property name="am_M_gear_ratio" value="21.6"/>
-  <xacro:property name="am_M_stiffness_max" value="4263.67"/>
-  <xacro:property name="am_M_damping_max" value="22.6195"/>
+  <xacro:property name="am_M_stiffness_max" value="3965.21"/>
+  <xacro:property name="am_M_damping_max" value="21.0361"/>
   <xacro:macro name="am_M_joint" params="name parent child *origin lower:=${-pi} upper:=${pi} axis:='0 0 1'">
     <joint name="${name}" type="revolute">
       <xacro:insert_block name="origin"/>
@@ -89,17 +89,17 @@
     </joint>
   </xacro:macro>
 
-  <!-- H-F: gear ratio 22.5:1, reflected inertia 0.0486 kg m^2, rated (continuous) 56.18 N m. Data revision 2026-10-05 -->
-  <xacro:property name="am_H_F_peak_torque" value="120"/>
-  <xacro:property name="am_H_F_rated_torque" value="56.18"/>
-  <xacro:property name="am_H_F_velocity" value="13.4774"/>
-  <xacro:property name="am_H_F_velocity_36v" value="10.0636"/>
+  <!-- H-F: gear ratio 22.5:1, reflected inertia 0.0463534 kg m^2, rated (continuous) 54.73 N m. Data revision 2026-10-12 -->
+  <xacro:property name="am_H_F_peak_torque" value="115"/>
+  <xacro:property name="am_H_F_rated_torque" value="54.73"/>
+  <xacro:property name="am_H_F_velocity" value="14.6189"/>
+  <xacro:property name="am_H_F_velocity_36v" value="10.849"/>
   <xacro:property name="am_H_F_friction" value="1.72"/>
-  <xacro:property name="am_H_F_armature" value="0.0486"/>
-  <xacro:property name="am_H_F_mass" value="1.4823"/>
+  <xacro:property name="am_H_F_armature" value="0.0463534"/>
+  <xacro:property name="am_H_F_mass" value="1.5047"/>
   <xacro:property name="am_H_F_gear_ratio" value="22.5"/>
-  <xacro:property name="am_H_F_stiffness_max" value="6907.14"/>
-  <xacro:property name="am_H_F_damping_max" value="36.6435"/>
+  <xacro:property name="am_H_F_stiffness_max" value="6587.85"/>
+  <xacro:property name="am_H_F_damping_max" value="34.9496"/>
   <xacro:macro name="am_H_F_joint" params="name parent child *origin lower:=${-pi} upper:=${pi} axis:='0 0 1'">
     <joint name="${name}" type="revolute">
       <xacro:insert_block name="origin"/>
@@ -111,17 +111,17 @@
     </joint>
   </xacro:macro>
 
-  <!-- H-T: gear ratio 20.25:1, reflected inertia 0.0707 kg m^2, rated (continuous) 96.17 N m. Data revision 2026-10-05 -->
+  <!-- H-T: gear ratio 20.25:1, reflected inertia 0.0704769 kg m^2, rated (continuous) 93.3 N m. Data revision 2026-10-12 -->
   <xacro:property name="am_H_T_peak_torque" value="210"/>
-  <xacro:property name="am_H_T_rated_torque" value="96.17"/>
-  <xacro:property name="am_H_T_velocity" value="12.5768"/>
-  <xacro:property name="am_H_T_velocity_36v" value="9.39336"/>
+  <xacro:property name="am_H_T_rated_torque" value="93.3"/>
+  <xacro:property name="am_H_T_velocity" value="11.6972"/>
+  <xacro:property name="am_H_T_velocity_36v" value="8.69174"/>
   <xacro:property name="am_H_T_friction" value="1.58"/>
-  <xacro:property name="am_H_T_armature" value="0.0707"/>
-  <xacro:property name="am_H_T_mass" value="1.9658"/>
+  <xacro:property name="am_H_T_armature" value="0.0704769"/>
+  <xacro:property name="am_H_T_mass" value="1.9994"/>
   <xacro:property name="am_H_T_gear_ratio" value="20.25"/>
-  <xacro:property name="am_H_T_stiffness_max" value="10048"/>
-  <xacro:property name="am_H_T_damping_max" value="53.3065"/>
+  <xacro:property name="am_H_T_stiffness_max" value="10016.3"/>
+  <xacro:property name="am_H_T_damping_max" value="53.1384"/>
   <xacro:macro name="am_H_T_joint" params="name parent child *origin lower:=${-pi} upper:=${pi} axis:='0 0 1'">
     <joint name="${name}" type="revolute">
       <xacro:insert_block name="origin"/>
@@ -133,17 +133,17 @@
     </joint>
   </xacro:macro>
 
-  <!-- H-X: gear ratio 21.6:1, reflected inertia 0.1389 kg m^2, rated (continuous) 125.43 N m. Data revision 2026-10-05 -->
+  <!-- H-X: gear ratio 23.4:1, reflected inertia 0.179986 kg m^2, rated (continuous) 136.41 N m. Data revision 2026-10-12 -->
   <xacro:property name="am_H_X_peak_torque" value="262"/>
-  <xacro:property name="am_H_X_rated_torque" value="125.43"/>
-  <xacro:property name="am_H_X_velocity" value="12.4826"/>
-  <xacro:property name="am_H_X_velocity_36v" value="9.33053"/>
+  <xacro:property name="am_H_X_rated_torque" value="136.41"/>
+  <xacro:property name="am_H_X_velocity" value="12.1999"/>
+  <xacro:property name="am_H_X_velocity_36v" value="9.11062"/>
   <xacro:property name="am_H_X_friction" value="1.72"/>
-  <xacro:property name="am_H_X_armature" value="0.1389"/>
-  <xacro:property name="am_H_X_mass" value="2.4158"/>
-  <xacro:property name="am_H_X_gear_ratio" value="21.6"/>
-  <xacro:property name="am_H_X_stiffness_max" value="19740.8"/>
-  <xacro:property name="am_H_X_damping_max" value="104.728"/>
+  <xacro:property name="am_H_X_armature" value="0.179986"/>
+  <xacro:property name="am_H_X_mass" value="2.65"/>
+  <xacro:property name="am_H_X_gear_ratio" value="23.4"/>
+  <xacro:property name="am_H_X_stiffness_max" value="25580"/>
+  <xacro:property name="am_H_X_damping_max" value="135.706"/>
   <xacro:macro name="am_H_X_joint" params="name parent child *origin lower:=${-pi} upper:=${pi} axis:='0 0 1'">
     <joint name="${name}" type="revolute">
       <xacro:insert_block name="origin"/>

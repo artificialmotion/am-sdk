@@ -169,7 +169,7 @@ class Estimator(unittest.TestCase):
             q = 0.6 * math.sin(2 * math.pi * 0.5 * t)
             qd = 0.6 * 2 * math.pi * 0.5 * math.cos(2 * math.pi * 0.5 * t)
             am.am_set_impedance(j, am.AmImpedance(q_ref_rad=q, qd_ref_rad_s=qd, kp_Nm_per_rad=150.0,
-                                                  kd_Nm_s_per_rad=4.0, tau_ff_Nm=P["mgl"] * math.cos(q)))
+                                                  kd_Nm_s_per_rad=3.5, tau_ff_Nm=P["mgl"] * math.cos(q)))
             h.step()
         log = h.log[300:]
         tr = H.lp1([x.truth_tau_out_Nm for x in log], 30.0, 1e-3)

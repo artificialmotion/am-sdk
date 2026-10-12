@@ -1,30 +1,30 @@
-<!-- Artificial Motion S-D actuator, typical values. Data revision 2026-10-05. Product preview: specifications are design targets for evaluation units shipping in Q1 2027. -->
+<!-- Artificial Motion S-D actuator, typical values. Data revision 2026-10-12. Product preview: fully designed and simulated. Specifications are design targets for evaluation units shipping in Q1 2027. -->
 <!-- Usage: <include file="S-D_mujoco.xml"/> at top level of your <mujoco> model (before <worldbody>), then
        <joint class="am_S-D" .../>    on the joint driven by the actuator (OUTPUT side of the gearbox)
        <motor class="am_S-D" joint="YOUR_JOINT"/>              plain torque actuator, clipped to +/- peak
        <general class="am_S-D_dcdrop" joint="YOUR_JOINT"/>     optional: ctrl in [-1,1] = voltage fraction, linear torque drop
-     Actuator mass 0.454029 kg is NOT included here: add it to the link inertial. Gear ratio 9:1 is already
+     Actuator mass 0.4678 kg is NOT included here: add it to the link inertial. Gear ratio 9:1 is already
      applied (all values are at the output shaft; keep gear="1"). -->
-<!-- Limits: continuous 7.6946 Nm at 114.592 rpm (25 C, still air, bolted to the robot structure) is a THERMAL limit; MuJoCo cannot enforce it,
+<!-- Limits: continuous 7.08 Nm at 114.592 rpm (25 C, still air, bolted to the robot structure) is a THERMAL limit; MuJoCo cannot enforce it,
      so use am_s_d_model.py (ThermalState) or your own RMS check. Peak 15 Nm is a 2 s event from a warm start, not a continuous limit.
      MuJoCo has no native speed-dependent torque limit: forcerange below is the flat stall peak, which OVERSTATES torque at speed.
      Either use the dcdrop actuator or clip with torque_limit() from am_s_d_model.py in your control loop. -->
-<!-- Joint: armature = 0.0010848 kg m^2 (reflected inertia at output).
+<!-- Joint: armature = 0.000968 kg m^2 (reflected inertia at output).
      frictionloss = 0.36 Nm = backdrive torque (treated as Coulomb-like friction). Viscous damping: not specified (0). -->
-<!-- dcdrop approximation: force = peak*ctrl - (peak/w0)*qvel, w0 = no-load speed (48 V 31.0295 rad/s, 36 V 23.0709 rad/s).
+<!-- dcdrop approximation: force = peak*ctrl - (peak/w0)*qvel, w0 = no-load speed (48 V 42.7466 rad/s, 36 V 31.772 rad/s).
      This is the standard DC-motor line from stall peak to no-load. Versus the published 48 V peak curve its worst deviation is
-     -35% of peak at 104 rpm (positive = line above published curve). The published curve is authoritative. -->
+     -39% of peak at 160 rpm (positive = line above published curve). The published curve is authoritative. -->
 <mujocoinclude>
   <default>
     <default class="am_S-D">
-      <joint armature="0.0010848" damping="0" frictionloss="0.36"/>
+      <joint armature="0.000968" damping="0" frictionloss="0.36"/>
       <motor gear="1" ctrllimited="true" ctrlrange="-15 15" forcelimited="true" forcerange="-15 15"/>
     </default>
     <default class="am_S-D_dcdrop">
-      <general gaintype="fixed" biastype="affine" gainprm="15" biasprm="0 0 -0.483411" ctrllimited="true" ctrlrange="-1 1" forcelimited="true" forcerange="-15 15"/>
+      <general gaintype="fixed" biastype="affine" gainprm="15" biasprm="0 0 -0.350905" ctrllimited="true" ctrlrange="-1 1" forcelimited="true" forcerange="-15 15"/>
     </default>
     <default class="am_S-D_dcdrop_36v">
-      <general gaintype="fixed" biastype="affine" gainprm="15" biasprm="0 0 -0.650171" ctrllimited="true" ctrlrange="-1 1" forcelimited="true" forcerange="-15 15"/>
+      <general gaintype="fixed" biastype="affine" gainprm="15" biasprm="0 0 -0.472114" ctrllimited="true" ctrlrange="-1 1" forcelimited="true" forcerange="-15 15"/>
     </default>
   </default>
 </mujocoinclude>

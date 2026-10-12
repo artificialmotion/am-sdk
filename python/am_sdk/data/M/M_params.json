@@ -1,10 +1,10 @@
 {
   "actuator": "M",
-  "status": "Product preview: specifications are design targets for evaluation units shipping in Q1 2027.",
-  "revision": "Data revision 2026-10-05",
+  "status": "Product preview: fully designed and simulated. Specifications are design targets for evaluation units shipping in Q1 2027.",
+  "revision": "Data revision 2026-10-12",
   "parameters": {
     "output_inertia_armature": {
-      "value": 0.03,
+      "value": 0.0279,
       "unit": "kg m^2",
       "note": "reflected inertia at output shaft"
     },
@@ -13,17 +13,17 @@
       "unit": ":1"
     },
     "mass": {
-      "value": 0.9446,
+      "value": 0.99,
       "unit": "kg",
       "note": "typical mass, excluding mating cables and plugs"
     },
     "peak_torque_2s": {
-      "value": 80,
+      "value": 76.5,
       "unit": "Nm",
       "note": "2 s event from warm start"
     },
     "rated_torque_continuous_typical": {
-      "value": 36,
+      "value": 34.1,
       "unit": "Nm",
       "note": "25 C ambient, still air, bolted to the robot structure"
     },
@@ -32,18 +32,18 @@
       "unit": "rpm"
     },
     "rated_torque_continuous_end_of_life": {
-      "value": 31.1,
+      "value": 29.1,
       "unit": "Nm"
     },
     "no_load_speed_48V": {
-      "value": 12.629202467430968,
+      "value": 12.367403079631817,
       "unit": "rad/s",
-      "note": "120.6 rpm"
+      "note": "118.1 rpm"
     },
     "no_load_speed_36V": {
-      "value": 9.435249936281345,
+      "value": 9.236282401553991,
       "unit": "rad/s",
-      "note": "90.1 rpm"
+      "note": "88.2 rpm"
     },
     "thermal_time_constant": {
       "value": null,
@@ -51,7 +51,7 @@
       "note": "not specified; the Python helper uses the conservative family value of 210 s"
     },
     "friction_backdrive": {
-      "value": 1.4,
+      "value": 1.47,
       "unit": "Nm",
       "note": "backdrive torque, unpowered"
     },
@@ -71,67 +71,55 @@
       "points": [
         [
           0,
-          80
+          71.5
         ],
         [
           10,
-          80
+          76.5
         ],
         [
           20,
-          80
+          76.5
         ],
         [
           30,
-          80
-        ],
-        [
-          38.6,
-          80
+          76.5
         ],
         [
           40,
-          79.3
-        ],
-        [
-          45,
-          77.4
+          76.5
         ],
         [
           50,
-          75.8
+          76.5
         ],
         [
           60,
-          73.2
+          76.5
+        ],
+        [
+          65,
+          74.02
         ],
         [
           70,
-          71
-        ],
-        [
-          75,
-          66.2
+          68.42
         ],
         [
           80,
-          60.3
+          57.36
         ],
         [
           90,
-          48.4
+          46.45
         ],
         [
           100,
-          36.4
+          30.59
         ],
         [
           110,
-          23.9
-        ],
-        [
-          120.6,
-          8.1
+          29.15
         ]
       ]
     },
@@ -144,91 +132,51 @@
       "points": [
         [
           0,
-          36.3
+          34.95
         ],
         [
           10,
-          36.3
+          37.68
         ],
         [
           20,
-          36.5
+          37.03
         ],
         [
           30,
-          36.7
-        ],
-        [
-          38.6,
-          36.8433
+          36.36
         ],
         [
           40,
-          36.8667
-        ],
-        [
-          40.5882,
-          36.8765
-        ],
-        [
-          45,
-          36.7
+          35.62
         ],
         [
           50,
-          36.5
-        ],
-        [
-          55.539,
-          36.223
+          34.89
         ],
         [
           60,
-          36
+          34.1
         ],
         [
           70,
-          35.5
-        ],
-        [
-          75,
-          35.2
+          33.28
         ],
         [
           80,
-          34.9
+          32.43
         ],
         [
           90,
-          34.3
-        ],
-        [
-          91.8421,
-          34.2079
+          31.52
         ],
         [
           100,
-          33.49
-        ],
-        [
-          100.9422,
-          33.3383
-        ],
-        [
-          103.4211,
-          32.1236
+          30.59
         ],
         [
           110,
-          23.9
-        ],
-        [
-          117.9104,
-          12.109
-        ],
-        [
-          120.6,
-          6.4
+          29.15
         ]
       ]
     },
@@ -241,39 +189,59 @@
       "points": [
         [
           0,
-          80
+          71.5
+        ],
+        [
+          7.4682,
+          76.5
+        ],
+        [
+          10,
+          76.5
         ],
         [
           30,
-          80
+          76.5
         ],
         [
-          40,
-          79.3
+          37.3412,
+          76.5
         ],
         [
-          50,
-          66.2
+          44.8095,
+          76.5
+        ],
+        [
+          45,
+          76.3735
+        ],
+        [
+          48.5436,
+          74.02
+        ],
+        [
+          52.2777,
+          68.42
+        ],
+        [
+          59.746,
+          57.36
         ],
         [
           60,
-          52
+          56.9889
         ],
         [
-          70,
-          37.8
+          67.2142,
+          46.45
         ],
         [
           75,
-          30.6
+          33.16
         ],
         [
-          80,
-          23.1
-        ],
-        [
-          90.1,
-          6.4
+          88.2,
+          10.808
         ]
       ]
     },
@@ -286,63 +254,31 @@
       "points": [
         [
           0,
-          36.3
+          35.19
         ],
         [
           10,
-          36.3
-        ],
-        [
-          20,
-          36.5
+          37.97
         ],
         [
           30,
-          36.7
+          36.65
         ],
         [
-          40,
-          36.8667
-        ],
-        [
-          42.45,
-          36.9075
-        ],
-        [
-          50,
-          36.53
-        ],
-        [
-          55.3597,
-          36.2513
+          45,
+          35.57
         ],
         [
           60,
-          36.01
-        ],
-        [
-          70,
-          35.48
-        ],
-        [
-          71.8097,
-          35.194
+          34.39
         ],
         [
           75,
-          30.6
+          33.16
         ],
         [
-          80,
-          23.1
-        ],
-        [
-          85.6766,
-          13.7139
-        ],
-        [
-          90.1,
-          3.4
+          88.2,
+          10.808
         ]
       ]
     }

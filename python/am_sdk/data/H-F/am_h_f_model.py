@@ -1,6 +1,6 @@
 """Artificial Motion H-F actuator model (dependency-free).
-Data revision 2026-10-05
-Product preview: specifications are design targets for evaluation units shipping in Q1 2027.
+Data revision 2026-10-12
+Product preview: fully designed and simulated. Specifications are design targets for evaluation units shipping in Q1 2027.
 
 torque_limit(speed_rad_s, bus='48', kind='peak')
     Interpolates the published torque-speed curve at the OUTPUT shaft. Returns Nm, or None where the
@@ -16,7 +16,7 @@ import json
 import math
 import warnings
 
-_DATA = json.loads(r'''{"id":"H-F","curves":{"36":{"peak":{"points":[[0,120],[5,120],[10,120],[15,120],[20,120],[25,120],[30,115.4],[40,108.6],[45,106],[50,103.9333],[60,99.8],[67.0236,97.7983],[70,90],[80,63.8],[90,35.6],[96.1,15]],"interpolate":true,"hold_Nm":null},"continuous":{"points":[[0,55.2],[5,55.2],[10,55.2],[15,55.45],[20,55.7],[25,55.95],[30,56.2],[40,56.5],[45,56.7],[50,56.9],[51.7117,56.9342],[60,56.18],[67.0236,55.4987],[70,55.21],[80,54.19],[89.1263,38.0638],[90,35.6],[90.8017,32.8926],[96.1,8.92]],"interpolate":true,"hold_Nm":null}},"48":{"peak":{"points":[[0,120],[5,120],[10,120],[15,120],[20,120],[25,120],[30,115.4],[40,108.6],[45,106],[50,103.9333],[60,99.8],[70,96.95],[80,94.1],[90,91.25],[99.0582,88.6684],[100,86.7],[110,65.4],[115,54.1],[120,42.4],[128.7,0]],"interpolate":true,"hold_Nm":null},"continuous":{"points":[[0,55.2],[5,55.2],[10,55.2],[15,55.45],[20,55.7],[25,55.95],[30,56.2],[40,56.5],[45,56.7],[50,56.9],[51.9298,56.9386],[60,56.18],[70,55.21],[80,54.19],[90,53.15],[99.0582,52.1536],[100,52.05],[110,50.46],[115,48.85],[117.5888,48.04220799999999],[120,42.4],[128.7,0]],"interpolate":true,"hold_Nm":null}}},"cont_torque_nm":56.18,"peak_nm":120,"no_load_rad_s":{"36":10.063568466999303,"48":13.47743248390021},"thermal_tau_s":null,"family_tau_s":210}''')
+_DATA = json.loads(r'''{"id":"H-F","curves":{"36":{"peak":{"points":[[0,115],[10,115],[20,115],[30,115],[40,115],[45,115],[50,115],[60,97.7],[70,74.3],[75,62.65],[80,51],[90,25.2],[103.6,0]],"interpolate":true,"hold_Nm":null},"continuous":{"points":[[0,56.61],[10,59.54],[30,57.82],[45,56.34],[60,54.7],[75,52.06],[90,19.74],[103.6,0]],"interpolate":true,"hold_Nm":null}},"48":{"peak":{"points":[[0,115],[10,115],[20,115],[30,115],[40,115],[50,115],[60,115],[70,115],[80,108.7],[90,89.8],[100,71.2],[110,51.9],[120,31.72],[130,21.35],[139.6,0]],"interpolate":true,"hold_Nm":null},"continuous":{"points":[[0,56.61],[10,59.54],[20,58.73],[30,57.82],[40,56.85],[50,55.83],[60,54.73],[70,53.55],[80,52.34],[90,51.05],[100,49.74],[110,45.61],[120,31.72],[130,21.35],[139.6,0]],"interpolate":true,"hold_Nm":null}}},"cont_torque_nm":54.73,"peak_nm":115,"no_load_rad_s":{"36":10.84896663039675,"48":14.618877814704502},"thermal_tau_s":null,"family_tau_s":210}''')
 ID = _DATA["id"]
 CONT_TORQUE_NM = _DATA["cont_torque_nm"]
 PEAK_NM = _DATA["peak_nm"]

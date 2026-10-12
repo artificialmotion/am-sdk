@@ -35,7 +35,7 @@ TorqueFn = Callable[[float, float, float], float]
 # output bearing; link: inertia, gravity m*g*l, collision lever and speed. Not unit ratings.
 STUDY_S = {
     "S-S": dict(Tc=0.45, Ts=0.65, ws=0.05, b=0.04, eta_f=0.935, eta_r=0.861, Tb=0.04, J_L=0.06, mgl=3.5,
-                Kp=150.0, Kd=4.0, K_wall=3000.0, lever_m=0.30, v_coll=2.0, Imax=22.0),
+                Kp=150.0, Kd=3.5, K_wall=3000.0, lever_m=0.30, v_coll=2.0, Imax=22.0),
     "S-D": dict(Tc=0.25, Ts=0.36, ws=0.08, b=0.012, eta_f=0.965, eta_r=0.925, Tb=0.03, J_L=0.006, mgl=0.6,
                 Kp=30.0, Kd=0.8, K_wall=600.0, lever_m=0.10, v_coll=3.0, Imax=19.0),
 }
